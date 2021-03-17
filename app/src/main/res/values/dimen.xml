@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="instruction_text_top_margin">18dp</dimen>
+    <dimen name="instruction_text_bottom_margin">28dp</dimen>
+    <dimen name="instruction_text_side_margin">12dp</dimen>
+    <dimen name="instruction_text_size">18sp</dimen>
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Crossword Puzzle Solver</string>
+    <string name="text_placeholder">cro..w.r.</string>
+    <string name="text_instructions">Enter your letters below, using . to indicate an unknown letter</string>
+</resources>
