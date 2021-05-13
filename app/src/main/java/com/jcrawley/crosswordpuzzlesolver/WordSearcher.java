@@ -66,14 +66,9 @@ public class WordSearcher {
     }
 
 
-    private void log(String msg){
-        System.out.println("WordSearcher: " + msg);
-    }
-
     private boolean isCorrectLength(String word){
         return word.length() == expectedCharacters;
     }
-
 
 
 }

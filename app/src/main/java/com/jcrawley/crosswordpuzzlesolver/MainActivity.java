@@ -42,10 +42,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     private void search(){
-
-        String inputText = editText.getText().toString();
-        inputText = inputText.trim();
-        inputText = inputText.toLowerCase();
+        String inputText = getFormattedText(editText);
         if(inputText.isEmpty() || inputText.equals(previousSearch)){
             return;
         }
@@ -53,6 +50,12 @@ public class MainActivity extends AppCompatActivity{
         results.clear();
         results.addAll(wordSearcher.searchFor(inputText));
         arrayAdapter.notifyDataSetChanged();
+    }
+
+
+    private String getFormattedText(EditText editText){
+        String text = editText.getText().toString();
+        return text.trim().toLowerCase();
     }
 
 
