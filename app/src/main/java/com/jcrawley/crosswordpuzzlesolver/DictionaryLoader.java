@@ -25,8 +25,8 @@ public class DictionaryLoader {
         StringBuilder str = new StringBuilder();
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line = br.readLine();
-            wholeWordChecker.addWord(line.trim());
             while (line!= null){
+                wholeWordChecker.addWord(line.trim());
                 str.append(" ");
                 str.append(line);
                 line =br.readLine();

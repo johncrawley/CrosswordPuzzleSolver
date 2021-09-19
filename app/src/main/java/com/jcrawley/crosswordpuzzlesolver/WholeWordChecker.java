@@ -12,11 +12,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import androidx.annotation.RequiresApi;
+
 
 public class WholeWordChecker {
 
-    private Map<String, Set<String>> wordsMap;
+    private final Map<String, Set<String>> wordsMap;
+    private int wordCount;
 
     public WholeWordChecker(){
         wordsMap = new HashMap<>(40000);
@@ -24,6 +25,7 @@ public class WholeWordChecker {
 
 
     public void addWord(String word){
+        wordCount++;
         String sortedKey= getSortedWord(word);
         if(!wordsMap.containsKey(sortedKey)){
             Set<String> set = new HashSet<>();
@@ -48,6 +50,7 @@ public class WholeWordChecker {
         if(set!= null){
             return set.contains(word);
         }
+        System.out.println("^^^ WholeWordChecker.doesWordExist() word count: " + wordCount);
         return false;
     }
 

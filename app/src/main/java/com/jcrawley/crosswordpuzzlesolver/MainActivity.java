@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity{
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private WordSearcher wordSearcher;
+    private WholeWordChecker wholeWordChecker;
+    private EditText wholeWordCheckerEditText;
 
 
     @Override
@@ -31,7 +33,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         results = new ArrayList<>();
         long beginTime = System.currentTimeMillis();
-        WholeWordChecker wholeWordChecker = new WholeWordChecker();
+        wholeWordChecker = new WholeWordChecker();
+        wholeWordCheckerEditText = findViewById(R.id.wholeWordCheckEditText);
         DictionaryLoader dictionaryLoader = new DictionaryLoader(MainActivity.this, wholeWordChecker);
         wordSearcher = new WordSearcher(dictionaryLoader.getAllWords());
         long duration = System.currentTimeMillis() - beginTime;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity{
         context = MainActivity.this;
         editText = findViewById(R.id.wordInput);
         setupKeyAction(editText);
+        setupWholeWordCheckerKeyAction(wholeWordCheckerEditText);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
         ListView listView = findViewById(R.id.list);
         listView.setAdapter(arrayAdapter);
@@ -55,6 +59,13 @@ public class MainActivity extends AppCompatActivity{
         results.addAll(wordSearcher.searchFor(inputText));
         arrayAdapter.notifyDataSetChanged();
     }
+
+    private void searchForExistingWord(){
+        String inputText = getFormattedText(wholeWordCheckerEditText);
+        System.out.println("^^^ word exists?  " + inputText + " : " + wholeWordChecker.doesWordExist(inputText));
+    }
+
+
 
 
     private String getFormattedText(EditText editText){
@@ -74,6 +85,25 @@ public class MainActivity extends AppCompatActivity{
                     }
                     imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                     search();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+
+    private void setupWholeWordCheckerKeyAction(final EditText editText){
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(imm == null){
+                        return false;
+                    }
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                    searchForExistingWord();
                     return true;
                 }
                 return false;
