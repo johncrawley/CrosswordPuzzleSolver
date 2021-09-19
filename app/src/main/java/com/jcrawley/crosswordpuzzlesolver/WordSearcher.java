@@ -10,13 +10,12 @@ import java.util.regex.Pattern;
 
 public class WordSearcher {
 
-    private String words;
+    private final String words;
     private List<String> badCharacters;
-    private HashSet<String> foundWords;
+    private final HashSet<String> foundWords;
     private int expectedCharacters;
 
     public WordSearcher(String words){
-
         this.words = words;
         setupBadCharacters();
         foundWords = new HashSet<>();

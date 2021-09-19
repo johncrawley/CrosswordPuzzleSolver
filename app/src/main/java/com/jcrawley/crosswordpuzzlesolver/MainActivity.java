@@ -30,8 +30,12 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         results = new ArrayList<>();
-        DictionaryLoader dictionaryLoader = new DictionaryLoader(MainActivity.this);
+        long beginTime = System.currentTimeMillis();
+        WholeWordChecker wholeWordChecker = new WholeWordChecker();
+        DictionaryLoader dictionaryLoader = new DictionaryLoader(MainActivity.this, wholeWordChecker);
         wordSearcher = new WordSearcher(dictionaryLoader.getAllWords());
+        long duration = System.currentTimeMillis() - beginTime;
+        System.out.println("^^^ Load time: " + duration);
         context = MainActivity.this;
         editText = findViewById(R.id.wordInput);
         setupKeyAction(editText);

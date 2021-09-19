@@ -9,11 +9,13 @@ import java.io.InputStreamReader;
 
 public class DictionaryLoader {
 
-    private Context context;
+    private final Context context;
+    private final WholeWordChecker wholeWordChecker;
 
 
-    public DictionaryLoader(Context context){
+    public DictionaryLoader(Context context, WholeWordChecker wholeWordChecker){
         this.context = context;
+        this.wholeWordChecker = wholeWordChecker;
     }
 
 
@@ -23,7 +25,7 @@ public class DictionaryLoader {
         StringBuilder str = new StringBuilder();
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line = br.readLine();
-
+            wholeWordChecker.addWord(line.trim());
             while (line!= null){
                 str.append(" ");
                 str.append(line);
