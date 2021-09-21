@@ -35,38 +35,57 @@
         android:inputType="textPersonName"
         android:hint="@string/text_placeholder"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@id/list"
+        app:layout_constraintBottom_toTopOf="@id/wholeWordCheckLinearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructions" />
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/whole_word_check_layout"
-        android:layout_width="300dp"
+    <LinearLayout
+        android:id="@+id/wholeWordCheckLinearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="30dp"
         app:layout_constraintTop_toBottomOf="@id/wordInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:hint="@string/hint_enter_whole_word_check">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:id="@+id/wholeWordCheckEditText"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:layout_height="wrap_content" />
+        >
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/whole_word_check_layout"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_enter_whole_word_check">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/wholeWordCheckEditText"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/wordExistsStatusImageView"
+            android:layout_width="0dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="invisible"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/presence_online" />
+
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/whole_word_check_layout" />
+        app:layout_constraintTop_toBottomOf="@id/wholeWordCheckLinearLayout" />
 
 
 

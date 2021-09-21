@@ -1,25 +1,28 @@
-package com.jcrawley.crosswordpuzzlesolver;
+package com.jcrawley.crosswordpuzzlesolver.dictionary;
 
 import android.content.Context;
+
+import com.jcrawley.crosswordpuzzlesolver.R;
+import com.jcrawley.crosswordpuzzlesolver.WholeWordChecker;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class DictionaryLoader {
+public class DictionaryLoaderImpl implements DictionaryLoader{
 
     private final Context context;
     private final WholeWordChecker wholeWordChecker;
 
 
-    public DictionaryLoader(Context context, WholeWordChecker wholeWordChecker){
+    public DictionaryLoaderImpl(Context context, WholeWordChecker wholeWordChecker){
         this.context = context;
         this.wholeWordChecker = wholeWordChecker;
     }
 
-
-    String getAllWords(){
+    @Override
+    public String getAllWords(){
         String words = "";
         InputStream is = context.getResources().openRawResource(R.raw.british_english);
         StringBuilder str = new StringBuilder();

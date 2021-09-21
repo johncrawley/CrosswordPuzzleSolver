@@ -2,15 +2,22 @@ package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
+import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
+import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryTestLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +42,8 @@ public class MainActivity extends AppCompatActivity{
         long beginTime = System.currentTimeMillis();
         wholeWordChecker = new WholeWordChecker();
         wholeWordCheckerEditText = findViewById(R.id.wholeWordCheckEditText);
-        DictionaryLoader dictionaryLoader = new DictionaryLoader(MainActivity.this, wholeWordChecker);
+        //DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(MainActivity.this, wholeWordChecker);
+        DictionaryLoader dictionaryLoader = new DictionaryTestLoader(wholeWordChecker);
         wordSearcher = new WordSearcher(dictionaryLoader.getAllWords());
         long duration = System.currentTimeMillis() - beginTime;
         System.out.println("^^^ Load time: " + duration);
@@ -62,10 +70,25 @@ public class MainActivity extends AppCompatActivity{
 
     private void searchForExistingWord(){
         String inputText = getFormattedText(wholeWordCheckerEditText);
-        System.out.println("^^^ word exists?  " + inputText + " : " + wholeWordChecker.doesWordExist(inputText));
+        boolean doesWordExist = wholeWordChecker.doesWordExist(inputText);
+        System.out.println("^^^ word exists?  " + inputText + " : " + doesWordExist );
+        ImageView statusImageView = findViewById(R.id.wordExistsStatusImageView);
+
+        if(doesWordExist){
+            statusImageView.setVisibility(View.VISIBLE);
+            setImageDrawable(statusImageView, R.drawable.correct_icon);
+
+        }
+        else{
+            statusImageView.setVisibility(View.VISIBLE);
+            setImageDrawable(statusImageView, R.drawable.incorrect_icon);
+        }
     }
 
-
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void setImageDrawable(ImageView imageView, int drawableId){
+        imageView.setImageDrawable(getResources().getDrawable(drawableId, null));
+    }
 
 
     private String getFormattedText(EditText editText){
@@ -75,20 +98,17 @@ public class MainActivity extends AppCompatActivity{
 
 
     private void setupKeyAction(final EditText editText){
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if(imm == null){
-                        return false;
-                    }
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                    search();
-                    return true;
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(imm == null){
+                    return false;
                 }
-                return false;
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                search();
+                return true;
             }
+            return false;
         });
     }
 
