@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_instructions"
+        android:textSize="@dimen/instruction_text_size"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/instruction_text_top_margin"
+        android:layout_marginBottom="@dimen/instruction_text_bottom_margin"
+        android:layout_marginStart="@dimen/instruction_text_side_margin"
+        android:layout_marginEnd="@dimen/instruction_text_side_margin"
+        app:layout_constraintBottom_toTopOf="@+id/wordInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/wordInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/input_text_size"
+        android:maxLength="25"
+        android:ems="10"
+        android:imeOptions="actionSearch"
+        android:inputType="textPersonName"
+        android:hint="@string/text_placeholder"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@id/list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructions" />
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wordInput" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

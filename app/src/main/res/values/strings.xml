@@ -3,4 +3,6 @@
     <string name="text_placeholder" />
     <string name="text_instructions">Enter your letters below, using . to indicate an unknown letter</string>
     <string name="hint_enter_whole_word_check">Enter a word to see if it exists in the dictionary</string>
+    <string name="tab_item_crossword_helper">Crossword Helper</string>
+    <string name="tab_item_word_checker">Word Checker</string>
 </resources>
