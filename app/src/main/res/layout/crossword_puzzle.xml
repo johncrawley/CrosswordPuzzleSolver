@@ -18,13 +18,13 @@
         android:layout_marginBottom="@dimen/instruction_text_bottom_margin"
         android:layout_marginStart="@dimen/instruction_text_side_margin"
         android:layout_marginEnd="@dimen/instruction_text_side_margin"
-        app:layout_constraintBottom_toTopOf="@+id/wordInput"
+        app:layout_constraintBottom_toTopOf="@+id/wordInputEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/wordInput"
+        android:id="@+id/wordInputEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/input_text_size"
@@ -42,11 +42,11 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wordInput" />
+        app:layout_constraintTop_toBottomOf="@id/wordInputEditText" />
 
 
 

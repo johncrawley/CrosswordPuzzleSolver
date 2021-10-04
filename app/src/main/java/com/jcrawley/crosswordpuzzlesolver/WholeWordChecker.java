@@ -16,7 +16,7 @@ public class WholeWordChecker {
     private int wordCount;
 
     public WholeWordChecker(){
-        wordsMap = new HashMap<>(40000);
+        wordsMap = new HashMap<>(120_000);
     }
 
 

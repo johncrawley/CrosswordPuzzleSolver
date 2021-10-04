@@ -42,31 +42,33 @@ public class MainActivity extends AppCompatActivity{
         long beginTime = System.currentTimeMillis();
         wholeWordChecker = new WholeWordChecker();
         wholeWordCheckerEditText = findViewById(R.id.wholeWordCheckEditText);
-        //DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(MainActivity.this, wholeWordChecker);
-        DictionaryLoader dictionaryLoader = new DictionaryTestLoader(wholeWordChecker);
+        DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(MainActivity.this, wholeWordChecker);
+        //DictionaryLoader dictionaryLoader = new DictionaryTestLoader(wholeWordChecker);
         wordSearcher = new WordSearcher(dictionaryLoader.getAllWords());
         long duration = System.currentTimeMillis() - beginTime;
         System.out.println("^^^ Load time: " + duration);
         context = MainActivity.this;
-        editText = findViewById(R.id.wordInput);
+        editText = findViewById(R.id.wordInputEditText);
         setupKeyAction(editText);
         setupWholeWordCheckerKeyAction(wholeWordCheckerEditText);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView listView = findViewById(R.id.list);
-        listView.setAdapter(arrayAdapter);
+        ListView crosswordMatchesList = findViewById(R.id.list);
+        crosswordMatchesList.setAdapter(arrayAdapter);
     }
 
 
-    private void search(){
+    private void searchForCrosswordMatches(){
         String inputText = getFormattedText(editText);
         if(inputText.isEmpty() || inputText.equals(previousSearch)){
             return;
         }
         previousSearch = inputText;
         results.clear();
+        List<String> words = wordSearcher.searchFor(inputText);
         results.addAll(wordSearcher.searchFor(inputText));
         arrayAdapter.notifyDataSetChanged();
     }
+
 
     private void searchForExistingWord(){
         String inputText = getFormattedText(wholeWordCheckerEditText);
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity{
                     return false;
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                search();
+                searchForCrosswordMatches();
                 return true;
             }
             return false;
