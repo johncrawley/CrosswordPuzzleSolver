@@ -19,6 +19,13 @@ public class WholeWordChecker {
         wordsMap = new HashMap<>(120_000);
     }
 
+    public void createWordMapFile(){
+
+
+
+
+    }
+
 
     public void addWord(String word){
         wordCount++;

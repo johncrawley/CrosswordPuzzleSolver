@@ -11,16 +11,17 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
+import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class CrosswordHelperFragment extends Fragment {
 
@@ -30,6 +31,8 @@ public class CrosswordHelperFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private WordSearcher wordSearcher;
+    private MainViewModel viewModel;
+
 
     public CrosswordHelperFragment() {
         // Required empty public constructor
@@ -38,17 +41,19 @@ public class CrosswordHelperFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getContext();
-        DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(context, null);
-        //DictionaryLoader dictionaryLoader = new DictionaryTestLoader(wholeWordChecker);
 
         View view =  inflater.inflate(R.layout.crossword_puzzle, container, false);
-        wordSearcher = new WordSearcher(dictionaryLoader.getAllWords());
+        viewModel  = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        System.out.println("CrosswordHelperFragment: mainViewModel.test : " + viewModel.test);
+        wordSearcher = new WordSearcher(viewModel.wordsStr);
         results = new ArrayList<>();
         editText = view.findViewById(R.id.wordInputEditText);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
         ListView crosswordMatchesList = view.findViewById(R.id.list);
         crosswordMatchesList.setAdapter(arrayAdapter);
+
         setupKeyAction(editText);
+
         return view;
     }
 

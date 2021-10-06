@@ -2,25 +2,21 @@ package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryTestLoader;
+import com.jcrawley.crosswordpuzzlesolver.io.FileHandler;
+import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +29,16 @@ public class MainActivity extends AppCompatActivity{
     private EditText wholeWordCheckerEditText;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupTabLayout();
+        MainViewModel viewModel  = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel.test = viewModel.test + " from MainActivity!";
+        DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(this, viewModel);
+        dictionaryLoader.retrieveAllWords();
         long beginTime = System.currentTimeMillis();
         wholeWordChecker = new WholeWordChecker();
         wholeWordCheckerEditText = findViewById(R.id.wholeWordCheckEditText);
@@ -50,6 +51,21 @@ public class MainActivity extends AppCompatActivity{
        // arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
        // ListView crosswordMatchesList = findViewById(R.id.list);
        // crosswordMatchesList.setAdapter(arrayAdapter);
+        doFileStuff();
+    }
+
+
+    private void doFileStuff(){
+        FileHandler fileHandler = new FileHandler(this);
+        List<String> list = new ArrayList<>();
+        list.add("hello");
+        list.add("2nd line");
+        list.add("3rd line");
+        fileHandler.writeWordsToFile(list);
+        List<String> results = fileHandler.loadWordEntriesFromFile();
+        for(String str: results){
+            System.out.println("^^^ loaded line: " + str);
+        }
     }
 
     private void setupTabLayout(){

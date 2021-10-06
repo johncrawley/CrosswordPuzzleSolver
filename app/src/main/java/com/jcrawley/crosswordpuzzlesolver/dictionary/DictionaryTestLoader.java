@@ -16,7 +16,7 @@ public class DictionaryTestLoader  implements DictionaryLoader{
     }
 
 
-    public String getAllWords(){
+    public String retrieveAllWords(){
         StringBuilder str = new StringBuilder();
         for(String word: words){
             str.append(word);
