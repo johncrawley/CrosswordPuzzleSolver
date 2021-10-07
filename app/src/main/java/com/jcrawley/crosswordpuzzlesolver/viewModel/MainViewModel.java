@@ -1,5 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver.viewModel;
 
+import com.jcrawley.crosswordpuzzlesolver.trie.DictionaryTrie;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,5 +16,6 @@ public class MainViewModel extends ViewModel {
     public List<String> wordsList;
     public int wordCount;
     public String wordsStr;
+    public DictionaryTrie dictionaryTrie;
 
 }

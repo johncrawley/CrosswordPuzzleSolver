@@ -5,4 +5,6 @@
     <string name="hint_enter_whole_word_check">Enter a word to see if it exists in the dictionary</string>
     <string name="tab_item_crossword_helper">Crossword Helper</string>
     <string name="tab_item_word_checker">Word Checker</string>
+    <string name="word_exists_message">%1$s exists!</string>
+    <string name="word_does_not_exist_message">Could not find %1$s!</string>
 </resources>

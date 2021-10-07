@@ -16,8 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/wordExistsStatusImageView"
-
         android:hint="@string/hint_enter_whole_word_check">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -26,23 +24,22 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:layout_height="wrap_content" />
-
-
-
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <ImageView
-        android:id="@+id/wordExistsStatusImageView"
-        android:layout_width="0dp"
-        android:layout_gravity="center_vertical"
+
+    <TextView
+        android:id="@+id/wordExistsTextView"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/word_exists_status_message_margin"
         android:visibility="invisible"
+        android:textSize="@dimen/word_exists_status_message_text_size"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/whole_word_check_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/presence_online" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

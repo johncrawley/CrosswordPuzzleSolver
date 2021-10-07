@@ -3,6 +3,7 @@ package com.jcrawley.crosswordpuzzlesolver.dictionary;
 import android.content.Context;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
+import com.jcrawley.crosswordpuzzlesolver.trie.DictionaryTrie;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.io.BufferedReader;
@@ -21,6 +22,9 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     public DictionaryLoaderImpl(Context context, MainViewModel viewModel){
         this.context = context;
         this.viewModel = viewModel;
+        if(viewModel.dictionaryTrie == null){
+            viewModel.dictionaryTrie = new DictionaryTrie();
+        }
         wordMapCreator = new WordMapCreator(context, viewModel);
 
     }
@@ -40,6 +44,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
                 str.append(" ");
                 str.append(line);
                 wordMapCreator.addWord(line.trim());
+                viewModel.dictionaryTrie.addWord(line.trim());
                 line =br.readLine();
             }
             words = str.toString();

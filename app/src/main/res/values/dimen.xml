@@ -6,5 +6,7 @@
     <dimen name="instruction_text_size">18sp</dimen>
     <dimen name="input_text_size">26sp</dimen>
     <dimen name="pager_top_margin">18dp</dimen>
+    <dimen name="word_exists_status_message_margin">12dp</dimen>
+    <dimen name="word_exists_status_message_text_size">28sp</dimen>
 
 </resources>
