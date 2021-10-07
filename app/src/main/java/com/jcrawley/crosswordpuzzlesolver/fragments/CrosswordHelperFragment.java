@@ -42,14 +42,14 @@ public class CrosswordHelperFragment extends Fragment {
                              Bundle savedInstanceState) {
         context = getContext();
 
-        View view =  inflater.inflate(R.layout.crossword_puzzle, container, false);
+        View view =  inflater.inflate(R.layout.crossword_helper, container, false);
         viewModel  = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         System.out.println("CrosswordHelperFragment: mainViewModel.test : " + viewModel.test);
         wordSearcher = new WordSearcher(viewModel.wordsStr);
         results = new ArrayList<>();
         editText = view.findViewById(R.id.wordInputEditText);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView crosswordMatchesList = view.findViewById(R.id.list);
+        ListView crosswordMatchesList = view.findViewById(R.id.list1);
         crosswordMatchesList.setAdapter(arrayAdapter);
 
         setupKeyAction(editText);
