@@ -24,11 +24,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
-    private WholeWordChecker wholeWordChecker;
-    private EditText wholeWordCheckerEditText;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +34,6 @@ public class MainActivity extends AppCompatActivity{
         DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(this, viewModel);
         dictionaryLoader.retrieveAllWords();
         findViewById(R.id.loading_progress_indicator).setVisibility(View.GONE);
-        wholeWordChecker = new WholeWordChecker();
-        wholeWordCheckerEditText = findViewById(R.id.wholeWordCheckEditText);
         setupTabLayout();
     }
 
