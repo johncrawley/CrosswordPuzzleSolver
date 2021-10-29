@@ -13,8 +13,6 @@ import android.widget.ListView;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
-import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
-import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ public class CrosswordHelperFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private WordSearcher wordSearcher;
-    private MainViewModel viewModel;
 
 
     public CrosswordHelperFragment() {
@@ -43,8 +40,7 @@ public class CrosswordHelperFragment extends Fragment {
         context = getContext();
 
         View view =  inflater.inflate(R.layout.crossword_helper, container, false);
-        viewModel  = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        System.out.println("CrosswordHelperFragment: mainViewModel.test : " + viewModel.test);
+        MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel.wordsStr);
         results = new ArrayList<>();
         editText = view.findViewById(R.id.wordInputEditText);
@@ -84,7 +80,6 @@ public class CrosswordHelperFragment extends Fragment {
         results.addAll(wordSearcher.searchFor(inputText));
         arrayAdapter.notifyDataSetChanged();
     }
-
 
 
     private String getFormattedText(EditText editText){
