@@ -89,9 +89,10 @@ public class WordMapCreator {
             return;
         }
         viewModel.wordsMap = new HashMap<>();
+        createWordsMap();
         FileHandler fileHandler = new FileHandler(context);
         if(!fileHandler.doesFileExist()){
-            createWordsMap();
+           // createWordsMap();
             fileHandler.writeWordsToFile(createSavableWordsList());
             return;
         }

@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
-import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
+import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class FindWordsFragment extends Fragment {
     private String previousSearch;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
-    private WordSearcher wordSearcher;
+    private AnagramFinder anagramFinder;
 
 
     public FindWordsFragment() {
@@ -41,7 +41,7 @@ public class FindWordsFragment extends Fragment {
 
         View view =  inflater.inflate(R.layout.find_words, container, false);
         MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        wordSearcher = new WordSearcher(viewModel.wordsStr);
+        anagramFinder = new AnagramFinder(viewModel);
         results = new ArrayList<>();
         editText = view.findViewById(R.id.lettersInputEditText);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
@@ -62,7 +62,7 @@ public class FindWordsFragment extends Fragment {
                     return false;
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                searchForWords();
+                findWords();
                 return true;
             }
             return false;
@@ -70,15 +70,20 @@ public class FindWordsFragment extends Fragment {
     }
 
 
-    private void searchForWords(){
+    private void findWords(){
         String inputText = getFormattedText(editText);
         if(inputText.isEmpty() || inputText.equals(previousSearch)){
             return;
         }
         previousSearch = inputText;
         results.clear();
-        results.addAll(wordSearcher.searchFor(inputText));
+        log("running findWords()");
+        results.addAll(anagramFinder.getWordsFrom(inputText));
         arrayAdapter.notifyDataSetChanged();
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ FindWordsFragment: " + msg);
     }
 
 

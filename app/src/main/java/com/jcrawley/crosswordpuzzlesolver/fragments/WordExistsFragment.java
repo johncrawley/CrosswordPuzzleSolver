@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
+import java.util.Arrays;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 

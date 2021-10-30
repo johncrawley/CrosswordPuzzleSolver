@@ -17,6 +17,8 @@ public class BinaryCounter {
 
     public void init(int size){
         this.size = size;
+        this.isIndexAtLimit = false;
+        currentIndex = 0;
         generateMaxIndexString();
     }
 
@@ -43,11 +45,11 @@ public class BinaryCounter {
         StringBuilder str = new StringBuilder();
         String binaryStr = Integer.toBinaryString(currentIndex);
         int numberOfZerosToPrefix = size - binaryStr.length();
-        for(int i=0; i<numberOfZerosToPrefix; i++){
+        for(int i=0; i < numberOfZerosToPrefix; i++){
             str.append("0");
         }
         String printableString = str.toString() + binaryStr;
-        System.out.println("binStr for " + currentIndex + " is: " + printableString);
+        System.out.println("binStr for " + currentIndex + " is: " + printableString + " is at max Index: " + isIndexAtLimit + "  maxIndexString: " + maxIndexString);
         return printableString;
     }
 

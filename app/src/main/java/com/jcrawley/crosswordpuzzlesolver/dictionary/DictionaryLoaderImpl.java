@@ -26,7 +26,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             viewModel.dictionaryTrie = new DictionaryTrie();
         }
         wordMapCreator = new WordMapCreator(context, viewModel);
-
     }
 
 
