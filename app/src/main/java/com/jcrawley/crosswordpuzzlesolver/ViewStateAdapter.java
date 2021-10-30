@@ -1,6 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
 import com.jcrawley.crosswordpuzzlesolver.fragments.CrosswordHelperFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 
 import androidx.annotation.NonNull;
@@ -22,12 +23,15 @@ public class ViewStateAdapter extends FragmentStateAdapter {
         if (position == 0) {
             return new CrosswordHelperFragment();
         }
-        return new WordExistsFragment();
+        else if(position == 1){
+            return new WordExistsFragment();
+        }
+        return new FindWordsFragment();
     }
 
     @Override
     public int getItemCount() {
         // Hardcoded, use lists
-        return 2;
+        return 3;
     }
 }

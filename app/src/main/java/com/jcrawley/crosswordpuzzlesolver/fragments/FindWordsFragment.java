@@ -21,7 +21,7 @@ import java.util.List;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class CrosswordHelperFragment extends Fragment {
+public class FindWordsFragment extends Fragment {
 
     private EditText editText;
     private Context context;
@@ -31,23 +31,22 @@ public class CrosswordHelperFragment extends Fragment {
     private WordSearcher wordSearcher;
 
 
-    public CrosswordHelperFragment() {
+    public FindWordsFragment() {
         // Required empty public constructor
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getContext();
 
-        View view =  inflater.inflate(R.layout.crossword_helper, container, false);
+        View view =  inflater.inflate(R.layout.find_words, container, false);
         MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel.wordsStr);
         results = new ArrayList<>();
-        editText = view.findViewById(R.id.wordInputEditText);
+        editText = view.findViewById(R.id.lettersInputEditText);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView crosswordMatchesList = view.findViewById(R.id.list1);
-        crosswordMatchesList.setAdapter(arrayAdapter);
+        ListView foundWordsList = view.findViewById(R.id.findWordsList);
+        foundWordsList.setAdapter(arrayAdapter);
 
         setupKeyAction(editText);
 
@@ -63,7 +62,7 @@ public class CrosswordHelperFragment extends Fragment {
                     return false;
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                searchForCrosswordMatches();
+                searchForWords();
                 return true;
             }
             return false;
@@ -71,7 +70,7 @@ public class CrosswordHelperFragment extends Fragment {
     }
 
 
-    private void searchForCrosswordMatches(){
+    private void searchForWords(){
         String inputText = getFormattedText(editText);
         if(inputText.isEmpty() || inputText.equals(previousSearch)){
             return;
