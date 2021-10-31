@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
 
-    public String test = "hello there!";
     public Map<String, Set<String>> wordsMap;
     public List<String> savableWordsList;
     public List<String> wordsList;

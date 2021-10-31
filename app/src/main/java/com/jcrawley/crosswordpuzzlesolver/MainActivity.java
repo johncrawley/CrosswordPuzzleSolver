@@ -21,6 +21,7 @@ import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -30,9 +31,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         MainViewModel viewModel  = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.test = viewModel.test + " from MainActivity!";
         DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(this, viewModel);
-        dictionaryLoader.retrieveAllWords();
+        Executors.newSingleThreadExecutor().submit(dictionaryLoader::retrieveAllWords);
         findViewById(R.id.loading_progress_indicator).setVisibility(View.GONE);
         setupTabLayout();
     }
