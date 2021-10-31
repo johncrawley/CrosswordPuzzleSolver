@@ -2,11 +2,12 @@ package com.jcrawley.crosswordpuzzlesolver.anagram;
 
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AnagramFinder {
 
@@ -26,7 +27,10 @@ public class AnagramFinder {
         while(!binaryCounter.isIndexAtLimit()){
             foundWords.addAll(getAllWordsFromMap(getSearchLetters(sortedLetters)));
         }
-        return new ArrayList<>(foundWords);
+        return foundWords.stream()
+                .filter(x -> x.length() > 1)
+                .sorted(Comparator.comparingInt(String::length).reversed())
+                .collect(Collectors.toList());
     }
 
 
@@ -48,29 +52,16 @@ public class AnagramFinder {
     }
 
 
-
     private String getSearchLetters(String letters){
-        String searchLetters = "";
         binaryCounter.inc();
         String binaryFlag = binaryCounter.getFlag();
+        StringBuilder str = new StringBuilder();
         for(int i=0; i< letters.length();i++){
             if(binaryFlag.charAt(i) == '1'){
-                searchLetters += letters.charAt(i);
+                str.append(letters.charAt(i));
             }
         }
-        return searchLetters;
+        return str.toString();
     }
-
-
-    private boolean[] getFlagArray(int size){
-        boolean[] flagArray = new boolean[size];
-        for(int i=0; i< size; i++){
-            flagArray[i] = false;
-        }
-        return flagArray;
-    }
-
-
-
 
 }
