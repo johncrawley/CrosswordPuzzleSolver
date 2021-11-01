@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 public class FindWordsFragment extends Fragment {
 
     private EditText editText;
+    private TextView resultsCountTextView;
     private Context context;
     private String previousSearch;
     private ArrayAdapter<String> arrayAdapter;
@@ -44,6 +46,7 @@ public class FindWordsFragment extends Fragment {
         anagramFinder = new AnagramFinder(viewModel);
         results = new ArrayList<>();
         editText = view.findViewById(R.id.lettersInputEditText);
+        resultsCountTextView = view.findViewById(R.id.resultsCountTextView);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
         ListView foundWordsList = view.findViewById(R.id.findWordsList);
         foundWordsList.setAdapter(arrayAdapter);
@@ -80,7 +83,21 @@ public class FindWordsFragment extends Fragment {
         log("running findWords()");
         results.addAll(anagramFinder.getWordsFrom(inputText));
         arrayAdapter.notifyDataSetChanged();
+        setResultsText();
     }
+
+
+    private void setResultsText(){
+        String resultsText = "";
+        if(results.size() == 1){
+            resultsText = context.getResources().getString(R.string.one_result_found_text);
+        }
+        else if(results.size() > 1){
+            resultsText = context.getResources().getString(R.string.results_found_text, results.size());
+        }
+        resultsCountTextView.setText(resultsText);
+    }
+
 
     private void log(String msg){
         System.out.println("^^^ FindWordsFragment: " + msg);

@@ -19,6 +19,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/wordInputEditText"
+            android:maxLength="@integer/max_input_size"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:layout_height="wrap_content" />

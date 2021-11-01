@@ -19,11 +19,24 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/lettersInputEditText"
+            android:maxLength="@integer/max_input_size"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <TextView
+        android:id="@+id/resultsCountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/results_count_padding_start"
+        android:paddingEnd="@dimen/results_count_padding_end"
+        android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
+        android:text="" />
+
 
     <ListView
         android:id="@+id/findWordsList"
@@ -33,5 +46,6 @@
         android:layout_margin="8dp"
         app:layout_constraintTop_toBottomOf="@+id/wordInputEditTextLayout"
         />
+
 
 </LinearLayout>

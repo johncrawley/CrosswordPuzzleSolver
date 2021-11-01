@@ -8,5 +8,8 @@
     <dimen name="pager_top_margin">18dp</dimen>
     <dimen name="word_exists_status_message_margin">12dp</dimen>
     <dimen name="word_exists_status_message_text_size">28sp</dimen>
+    <dimen name="results_count_padding_start">12dp</dimen>
+    <dimen name="results_count_padding_end">6dp</dimen>
+    <dimen name="results_count_horizontal_margin">6dp</dimen>
 
 </resources>
