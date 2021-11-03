@@ -27,7 +27,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
     <TextView
         android:id="@+id/resultsCountTextView"
         android:layout_width="match_parent"
@@ -36,7 +35,6 @@
         android:paddingEnd="@dimen/results_count_padding_end"
         android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
         android:text="" />
-
 
     <ListView
         android:id="@+id/findWordsList"

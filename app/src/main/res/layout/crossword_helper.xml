@@ -26,6 +26,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <TextView
+        android:id="@+id/crosswordResultsCountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/results_count_padding_start"
+        android:paddingEnd="@dimen/results_count_padding_end"
+        android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
+        android:text="" />
+
     <ListView
         android:id="@+id/list1"
         android:isScrollContainer="false"

@@ -1,5 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
+import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,13 +12,13 @@ import java.util.regex.Pattern;
 
 public class WordSearcher {
 
-    private final String words;
     private List<String> badCharacters;
     private final HashSet<String> foundWords;
     private int expectedCharacters;
+    private final MainViewModel viewModel;
 
-    public WordSearcher(String words){
-        this.words = words;
+    public WordSearcher(MainViewModel viewModel){
+        this.viewModel = viewModel;
         setupBadCharacters();
         foundWords = new HashSet<>();
     }
@@ -37,7 +39,10 @@ public class WordSearcher {
 
     private List<String> getMatchingWords(Pattern tagMatcher) {
         foundWords.clear();
-        Matcher matcher = tagMatcher.matcher(this.words);
+        if(viewModel.wordsStr == null){
+            return Collections.emptyList();
+        }
+        Matcher matcher = tagMatcher.matcher(viewModel.wordsStr);
         while(matcher.find()) {
             processResult(matcher.group());
         }

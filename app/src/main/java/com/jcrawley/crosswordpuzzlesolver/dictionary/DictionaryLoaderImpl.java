@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 public class DictionaryLoaderImpl implements DictionaryLoader{
@@ -26,6 +27,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     public DictionaryLoaderImpl(Context context, MainViewModel viewModel){
         this.context = context;
         this.viewModel = viewModel;
+        viewModel.dictionaryLatch = new CountDownLatch(1);
         if(viewModel.dictionaryTrie == null){
             viewModel.dictionaryTrie = new DictionaryTrie();
         }
@@ -58,6 +60,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             e.printStackTrace();
         }
         viewModel.wordsStr = words;
+        viewModel.dictionaryLatch.countDown();
         return words;
     }
 
