@@ -36,24 +36,23 @@ public class FindWordsFragment extends Fragment {
     public FindWordsFragment() {
         // Required empty public constructor
     }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getContext();
-
-        View view =  inflater.inflate(R.layout.find_words, container, false);
+        View parentView = inflater.inflate(R.layout.find_words, container, false);
         MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         anagramFinder = new AnagramFinder(viewModel);
         results = new ArrayList<>();
-        editText = view.findViewById(R.id.lettersInputEditText);
-        resultsCountTextView = view.findViewById(R.id.resultsCountTextView);
+        editText = parentView.findViewById(R.id.lettersInputEditText);
+        resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView foundWordsList = view.findViewById(R.id.findWordsList);
+        ListView foundWordsList = parentView.findViewById(R.id.findWordsList);
         foundWordsList.setAdapter(arrayAdapter);
-
         setupKeyAction(editText);
-
-        return view;
+        return parentView;
     }
 
 
@@ -80,7 +79,6 @@ public class FindWordsFragment extends Fragment {
         }
         previousSearch = inputText;
         results.clear();
-        log("running findWords()");
         results.addAll(anagramFinder.getWordsFrom(inputText));
         arrayAdapter.notifyDataSetChanged();
         setResultsText();
@@ -96,11 +94,6 @@ public class FindWordsFragment extends Fragment {
             resultsText = context.getResources().getString(R.string.results_found_text, results.size());
         }
         resultsCountTextView.setText(resultsText);
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ FindWordsFragment: " + msg);
     }
 
 

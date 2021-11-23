@@ -2,6 +2,8 @@ package com.jcrawley.crosswordpuzzlesolver.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,31 +34,39 @@ public class CrosswordHelperFragment extends Fragment {
     private List<String> results;
     private WordSearcher wordSearcher;
     private TextView resultsCountTextView;
-
+    private boolean hasASearchStarted;
+    private ListView crosswordMatchesList;
+    private MainViewModel viewModel;
 
     public CrosswordHelperFragment() {
         // Required empty public constructor
     }
 
-    private MainViewModel viewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getContext();
-
-        View view =  inflater.inflate(R.layout.crossword_helper, container, false);
+        View parentView = inflater.inflate(R.layout.crossword_helper, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel);
-        results = new ArrayList<>();
-        editText = view.findViewById(R.id.wordInputEditText);
-        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView crosswordMatchesList = view.findViewById(R.id.list1);
-        crosswordMatchesList.setAdapter(arrayAdapter);
-        resultsCountTextView = view.findViewById(R.id.crosswordResultsCountTextView);
+        setupViews(parentView);
+        setupList(parentView);
         setupKeyAction(editText);
+        return parentView;
+    }
 
-        return view;
+
+    private void setupViews(View parentView){
+        editText = parentView.findViewById(R.id.wordInputEditText);
+        resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
+    }
+
+
+    private void setupList(View parentView){
+        results = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
+        crosswordMatchesList = parentView.findViewById(R.id.crosswordHelperList);
+        crosswordMatchesList.setAdapter(arrayAdapter);
     }
 
 
@@ -69,7 +79,7 @@ public class CrosswordHelperFragment extends Fragment {
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 if(!hasASearchStarted) {
-                    Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
+                   Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
                 }
                 return true;
             }
@@ -77,26 +87,33 @@ public class CrosswordHelperFragment extends Fragment {
         });
     }
 
-    private boolean hasASearchStarted;
 
     private void searchForCrosswordMatches(){
         hasASearchStarted = true;
         try {
             viewModel.dictionaryLatch.await();
-            String inputText = getFormattedText(editText);
-            if (inputText.isEmpty() || inputText.equals(previousSearch)) {
-                return;
-            }
-            previousSearch = inputText;
-            results.clear();
-            results.addAll(wordSearcher.searchFor(inputText));
-            setResultsText();
-            arrayAdapter.notifyDataSetChanged();
+            runSearch();
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally{
             hasASearchStarted = false;
         }
+    }
+
+
+    private void runSearch(){
+        String inputText = getFormattedText(editText);
+        if (inputText.isEmpty() || inputText.equals(previousSearch)) {
+            return;
+        }
+        previousSearch = inputText;
+        results.clear();
+        results.addAll(wordSearcher.searchFor(inputText));
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(()-> {
+            arrayAdapter.notifyDataSetChanged();
+            setResultsText();
+        });
     }
 
 
