@@ -35,7 +35,6 @@ public class CrosswordHelperFragment extends Fragment {
     private WordSearcher wordSearcher;
     private TextView resultsCountTextView;
     private boolean hasASearchStarted;
-    private ListView crosswordMatchesList;
     private MainViewModel viewModel;
 
     public CrosswordHelperFragment() {
@@ -65,7 +64,7 @@ public class CrosswordHelperFragment extends Fragment {
     private void setupList(View parentView){
         results = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        crosswordMatchesList = parentView.findViewById(R.id.crosswordHelperList);
+        ListView crosswordMatchesList = parentView.findViewById(R.id.crosswordHelperList);
         crosswordMatchesList.setAdapter(arrayAdapter);
     }
 
