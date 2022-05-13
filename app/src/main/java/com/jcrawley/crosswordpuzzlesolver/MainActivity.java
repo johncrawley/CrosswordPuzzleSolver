@@ -8,6 +8,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,8 +35,20 @@ public class MainActivity extends AppCompatActivity{
         MainViewModel viewModel  = new ViewModelProvider(this).get(MainViewModel.class);
         DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(this, viewModel);
         Executors.newSingleThreadExecutor().submit(dictionaryLoader::retrieveAllWords);
-        findViewById(R.id.loading_progress_indicator).setVisibility(View.GONE);
         setupTabLayout();
+    }
+
+
+    public void hideProgressIndicator(){
+        new Handler(Looper.getMainLooper()).post(() -> {
+         //   findViewById(R.id.loading_progress_indicator).setVisibility(View.GONE);
+            findViewById(R.id.tabLayout).setVisibility(View.VISIBLE);
+            findViewById(R.id.pager).setVisibility(View.VISIBLE);
+        });
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ MainActivity: " + msg);
     }
 
 

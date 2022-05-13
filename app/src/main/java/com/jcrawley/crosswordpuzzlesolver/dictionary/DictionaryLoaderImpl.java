@@ -2,6 +2,7 @@ package com.jcrawley.crosswordpuzzlesolver.dictionary;
 
 import android.content.Context;
 
+import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.trie.DictionaryTrie;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
@@ -20,12 +21,12 @@ import java.util.stream.Collectors;
 
 public class DictionaryLoaderImpl implements DictionaryLoader{
 
-    private final Context context;
     private final MainViewModel viewModel;
+    private final MainActivity mainActivity;
 
 
-    public DictionaryLoaderImpl(Context context, MainViewModel viewModel){
-        this.context = context;
+    public DictionaryLoaderImpl(MainActivity mainActivity, MainViewModel viewModel){
+        this.mainActivity = mainActivity;
         this.viewModel = viewModel;
         viewModel.dictionaryLatch = new CountDownLatch(1);
         if(viewModel.dictionaryTrie == null){
@@ -37,13 +38,14 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     @Override
     public String retrieveAllWords(){
         if(viewModel.wordsStr != null){
+            mainActivity.hideProgressIndicator();
             return viewModel.wordsStr;
         }
         String words = "";
         if(viewModel.wordsMap == null){
             viewModel.wordsMap = new HashMap<>(50_000);
         }
-        InputStream is = context.getResources().openRawResource(R.raw.british_english);
+        InputStream is = mainActivity.getResources().openRawResource(R.raw.british_english);
         StringBuilder str = new StringBuilder();
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line = br.readLine();
@@ -61,6 +63,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         }
         viewModel.wordsStr = words;
         viewModel.dictionaryLatch.countDown();
+        mainActivity.hideProgressIndicator();
         return words;
     }
 
