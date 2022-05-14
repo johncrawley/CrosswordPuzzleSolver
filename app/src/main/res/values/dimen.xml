@@ -11,5 +11,6 @@
     <dimen name="results_count_padding_start">12dp</dimen>
     <dimen name="results_count_padding_end">6dp</dimen>
     <dimen name="results_count_horizontal_margin">6dp</dimen>
+    <dimen name="loading_text_size">18sp</dimen>
 
 </resources>

@@ -11,4 +11,5 @@
     <string name="find_words_instructions">Enter letters</string>
     <string name="results_found_text">%1$d results found</string>
     <string name="one_result_found_text">1 result found</string>
+    <string name="loading_text">Loading</string>
 </resources>

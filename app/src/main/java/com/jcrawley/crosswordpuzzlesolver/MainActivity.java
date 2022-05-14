@@ -41,9 +41,8 @@ public class MainActivity extends AppCompatActivity{
 
     public void hideProgressIndicator(){
         new Handler(Looper.getMainLooper()).post(() -> {
-         //   findViewById(R.id.loading_progress_indicator).setVisibility(View.GONE);
-            findViewById(R.id.tabLayout).setVisibility(View.VISIBLE);
-            findViewById(R.id.pager).setVisibility(View.VISIBLE);
+            findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
+            findViewById(R.id.loadingLayout).setVisibility(View.GONE);
         });
     }
 
