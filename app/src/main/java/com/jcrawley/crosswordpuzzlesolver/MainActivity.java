@@ -5,24 +5,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
-import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryTestLoader;
-import com.jcrawley.crosswordpuzzlesolver.io.FileHandler;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity{
@@ -44,10 +36,6 @@ public class MainActivity extends AppCompatActivity{
             findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
             findViewById(R.id.loadingLayout).setVisibility(View.GONE);
         });
-    }
-
-    private void log(String msg){
-        System.out.println("^^^ MainActivity: " + msg);
     }
 
 

@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 public class FindWordsFragment extends Fragment {
 
     private EditText editText;
-    private TextView resultsCountTextView;
+    private TextView resultsCountTextView, noResultsFoundTextView;
     private Context context;
     private String previousSearch;
     private ArrayAdapter<String> arrayAdapter;
@@ -50,8 +50,11 @@ public class FindWordsFragment extends Fragment {
         resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
         ListView foundWordsList = parentView.findViewById(R.id.findWordsList);
+        noResultsFoundTextView = parentView.findViewById(R.id.noResultsFoundText);
         foundWordsList.setAdapter(arrayAdapter);
+        foundWordsList.setEmptyView(noResultsFoundTextView);
         setupKeyAction(editText);
+        noResultsFoundTextView.setVisibility(View.GONE);
         return parentView;
     }
 

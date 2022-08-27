@@ -1,7 +1,5 @@
 package com.jcrawley.crosswordpuzzlesolver.dictionary;
 
-import android.content.Context;
-
 import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.trie.DictionaryTrie;
@@ -37,6 +35,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
     @Override
     public String retrieveAllWords(){
+        long startTime = System.currentTimeMillis();
         if(viewModel.wordsStr != null){
             mainActivity.hideProgressIndicator();
             return viewModel.wordsStr;
@@ -52,16 +51,16 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             while (line!= null){
                 str.append(" ");
                 str.append(line);
-                String trimmed = line.trim();
-                addWordToMap(trimmed);
-                viewModel.dictionaryTrie.addWord(trimmed);
+                addWordToMap(line);
+                viewModel.dictionaryTrie.addWord(line);
                 line =br.readLine();
             }
-            words = str.toString();
+            viewModel.wordsStr = str.toString();
         }catch (IOException e){
             e.printStackTrace();
         }
-        viewModel.wordsStr = words;
+        long timeElapsed =  System.currentTimeMillis() - startTime;
+        System.out.println("time taken to create words String: " + timeElapsed );
         viewModel.dictionaryLatch.countDown();
         mainActivity.hideProgressIndicator();
         return words;
