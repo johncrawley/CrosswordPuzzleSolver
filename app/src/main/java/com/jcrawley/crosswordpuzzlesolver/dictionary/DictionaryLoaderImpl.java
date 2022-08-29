@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
     private final MainViewModel viewModel;
     private final MainActivity mainActivity;
+    private StringBuilder str;
 
 
     public DictionaryLoaderImpl(MainActivity mainActivity, MainViewModel viewModel){
@@ -34,7 +36,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
     @Override
     public String retrieveAllWords(){
-        long startTime = System.currentTimeMillis();
         if(viewModel.wordsStr != null){
             mainActivity.hideProgressIndicator();
             return viewModel.wordsStr;
@@ -43,23 +44,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         if(viewModel.wordsMap == null){
             viewModel.wordsMap = new HashMap<>(50_000);
         }
-        InputStream is = mainActivity.getResources().openRawResource(R.raw.british_english);
-        StringBuilder str = new StringBuilder();
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            String line = br.readLine();
-            while (line!= null){
-                str.append(" ");
-                str.append(line);
-                viewModel.dictionaryTrie.addWord(line);
-                line =br.readLine();
-            }
-            viewModel.wordsStr = str.toString();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
         createWordMap();
-        long timeElapsed =  System.currentTimeMillis() - startTime;
-        System.out.println("time taken to create words String: " + timeElapsed );
         viewModel.dictionaryLatch.countDown();
         mainActivity.hideProgressIndicator();
         return words;
@@ -67,7 +52,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
 
     private void createWordMap(){
-       // long startTime = System.currentTimeMillis();
+        str = new StringBuilder();
         InputStream is = mainActivity.getResources().openRawResource(R.raw.sorted_british_english);
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line = br.readLine();
@@ -78,19 +63,24 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         }catch (IOException e){
             e.printStackTrace();
         }
-       // long timeElapsed =  System.currentTimeMillis() - startTime;
-       // System.out.println("time taken to create words String: " + timeElapsed );
+        viewModel.wordsStr = str.toString();
     }
 
 
     public void addWordSetToMap(String wordsLine){
         viewModel.wordCount++;
-        String[] words = wordsLine.split(" ");
-        String key = words[0];
+        String[] lineArray = wordsLine.split(" ");
+        String key = lineArray[0];
+        Set<String> wordSet = new HashSet<>(Arrays.asList(lineArray).subList(1, lineArray.length));
+        addWordsToStr(lineArray);
+        viewModel.wordsMap.put(key, wordSet);
+    }
 
-        if(!viewModel.wordsMap.containsKey(key)){
-            Set<String> wordSet = new HashSet<>(Arrays.asList(words).subList(1, words.length));
-            viewModel.wordsMap.put(key, wordSet);
+
+    private void addWordsToStr(String[] wordsArray){
+        for(int i=1; i< wordsArray.length; i++){
+            str.append(" ");
+            str.append(wordsArray[i]);
         }
     }
 

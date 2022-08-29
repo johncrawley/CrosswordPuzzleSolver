@@ -14,6 +14,8 @@ import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -48,12 +50,27 @@ public class WordExistsFragment  extends Fragment {
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 String word = editText.getText().toString().trim();
-                boolean doesWordExist = viewModel.dictionaryTrie.doesWordExist(word);
-                showStatusMessage(word, doesWordExist);
+                //boolean doesWordExist = viewModel.dictionaryTrie.doesWordExist(word);
+                showStatusMessage(word, doesWordExist(word));
                 return true;
             }
             return false;
         });
+    }
+
+
+    private boolean doesWordExist(String word){
+        String sortedWord = getSortedWord(word);
+        if(viewModel.wordsMap.containsKey(sortedWord)){
+            Set<String> words = viewModel.wordsMap.get(sortedWord);
+            return words != null && words.contains(word);
+        }
+        return false;
+    }
+
+
+    public String getSortedWord(String word){
+        return Arrays.stream(word.split("")).sorted().collect(Collectors.joining(""));
     }
 
 

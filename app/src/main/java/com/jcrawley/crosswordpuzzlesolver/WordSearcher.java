@@ -37,18 +37,29 @@ public class WordSearcher {
     }
 
 
+    /*
+        It's quicker to search for a pattern with all the dictionary words in a single string,
+         than iterating through a list of words and running the pattern against each item
+            using single string: 15, 335, 373, 343 millis,
+            using list of words: 824,927, 862, 961  millis
+     */
     private List<String> getMatchingWords(Pattern tagMatcher) {
         foundWords.clear();
         if(viewModel.wordsStr == null){
             return Collections.emptyList();
         }
+        processResults(tagMatcher);
+        List<String> results = new ArrayList<>(foundWords);
+        Collections.sort(results);
+        return results;
+    }
+
+
+    private void processResults(Pattern tagMatcher){
         Matcher matcher = tagMatcher.matcher(viewModel.wordsStr);
         while(matcher.find()) {
             processResult(matcher.group());
         }
-        List<String> results = new ArrayList<>(foundWords);
-        Collections.sort(results);
-        return results;
     }
 
 
