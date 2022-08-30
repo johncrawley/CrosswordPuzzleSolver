@@ -46,18 +46,27 @@ public class FindWordsFragment extends Fragment {
         MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         anagramFinder = new AnagramFinder(viewModel);
         results = new ArrayList<>();
+        setupViews(parentView);
+        setupList(parentView);
+        setupKeyAction(editText);
+        return parentView;
+    }
+
+
+    private void setupViews(View parentView){
         editText = parentView.findViewById(R.id.lettersInputEditText);
         resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
+    }
+
+
+    private void setupList(View parentView){
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
         ListView foundWordsList = parentView.findViewById(R.id.findWordsList);
         noResultsFoundTextView = parentView.findViewById(R.id.noResultsFoundText);
         foundWordsList.setAdapter(arrayAdapter);
         foundWordsList.setEmptyView(noResultsFoundTextView);
-        setupKeyAction(editText);
         noResultsFoundTextView.setVisibility(View.GONE);
-        return parentView;
     }
-
 
     private void setupKeyAction(final EditText editText){
         editText.setOnEditorActionListener((v, actionId, event) -> {
@@ -67,6 +76,7 @@ public class FindWordsFragment extends Fragment {
                     return false;
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                noResultsFoundTextView.setVisibility(View.GONE);
                 findWords();
                 return true;
             }

@@ -35,6 +35,7 @@ public class CrosswordHelperFragment extends Fragment {
     private WordSearcher wordSearcher;
     private TextView resultsCountTextView;
     private boolean hasASearchStarted;
+    private View noResultsFoundView;
     private MainViewModel viewModel;
 
     public CrosswordHelperFragment() {
@@ -65,7 +66,10 @@ public class CrosswordHelperFragment extends Fragment {
         results = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
         ListView crosswordMatchesList = parentView.findViewById(R.id.crosswordHelperList);
+        noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
+        crosswordMatchesList.setEmptyView(noResultsFoundView);
         crosswordMatchesList.setAdapter(arrayAdapter);
+        noResultsFoundView.setVisibility(View.GONE);
     }
 
 
@@ -78,7 +82,8 @@ public class CrosswordHelperFragment extends Fragment {
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 if(!hasASearchStarted) {
-                   Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
+                    noResultsFoundView.setVisibility(View.GONE);
+                    Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
                 }
                 return true;
             }
