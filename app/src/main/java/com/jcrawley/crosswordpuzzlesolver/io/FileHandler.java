@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 
 public class FileHandler {
@@ -81,6 +82,22 @@ public class FileHandler {
             e.printStackTrace();
         }
         return wordsEntries;
+    }
+
+
+    public void processWordsFromMapFile(Consumer<String> lineConsumer){
+        File file = new File(context.getFilesDir(), filename);
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader buffer = new BufferedReader(fileReader);
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                lineConsumer.accept(line);
+            }
+            buffer.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 

@@ -8,8 +8,14 @@ public final class DbContract {
 
     static class WordsEntry implements BaseColumns {
         static final String TABLE_NAME = "Words";
-        static final String COL_CATEGORY_NAME = "word";
-        static final String COL_CATEGORY_KEY = "key";
+        static final String COL_WORD = "word";
+        static final String COL_KEY_ID = "key_id";
+    }
+
+
+    static class WordKeyEntry implements BaseColumns {
+        static final String TABLE_NAME = "Keys";
+        static final String COL_KEY = "key";
     }
 
 }

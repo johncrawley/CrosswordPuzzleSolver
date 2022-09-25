@@ -52,6 +52,22 @@ public class WordMapCreator {
     }
 
 
+    public void setupWordMap(){
+        if(viewModel.wordsMap != null) {
+            return;
+        }
+        viewModel.wordsMap = new HashMap<>();
+        createWordsMap();
+        FileHandler fileHandler = new FileHandler(context);
+        if(!fileHandler.doesFileExist()){
+           // createWordsMap();
+            fileHandler.writeWordsToFile(createSavableWordsList());
+            return;
+        }
+        parseSavedWordsList(fileHandler.loadWordEntriesFromFile());
+    }
+
+
     private List<String> createSavableWordsList(){
         List<String> savableWordsList = new ArrayList<>(80_000);
         for(String key: viewModel.wordsMap.keySet()){
@@ -81,22 +97,6 @@ public class WordMapCreator {
                 viewModel.wordsMap.put(key, wordsSet);
             }
         }
-    }
-
-
-    public void setupWordMap(){
-        if(viewModel.wordsMap != null) {
-            return;
-        }
-        viewModel.wordsMap = new HashMap<>();
-        createWordsMap();
-        FileHandler fileHandler = new FileHandler(context);
-        if(!fileHandler.doesFileExist()){
-           // createWordsMap();
-            fileHandler.writeWordsToFile(createSavableWordsList());
-            return;
-        }
-        parseSavedWordsList(fileHandler.loadWordEntriesFromFile());
     }
 
 
