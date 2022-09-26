@@ -5,27 +5,36 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.jcrawley.crosswordpuzzlesolver.io.FileHandler;
 import java.util.List;
 
 public class WordsRepositoryImpl implements WordsRepository {
 
 
     private final SQLiteDatabase db;
+    private final Context context;
 
 
     public WordsRepositoryImpl(Context context){
+        this.context = context;
         DbHelper dbHelper = DbHelper.getInstance(context);
         db = dbHelper.getWritableDatabase();
     }
 
 
-    public void addWord(List<String> words, String key) {
+    public void saveWordsFromMapFile(){
+        FileHandler fileHandler = new FileHandler(context);
+        fileHandler.processWordsFromMapFile(this::parseSavedWordsList);
+    }
+
+
+    private void parseSavedWordsList(String line){
+        String delimiter = " ";
+        String[] wordsArray = line.split(delimiter);
+        String key = wordsArray[0];
         long keyId = saveWordKey(key);
-        if(keyId == -1){
-            return;
-        }
-        for(String word : words){
-            saveWord(keyId, word);
+        for(int i=1; i< wordsArray.length;i++){
+            saveWord(keyId, wordsArray[i]);
         }
     }
 
