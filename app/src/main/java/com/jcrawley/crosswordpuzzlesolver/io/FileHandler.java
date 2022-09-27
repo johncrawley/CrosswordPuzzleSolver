@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class FileHandler {
 
     private final Context context;
-    private final String filename = "wordMap.dat";
+    private final String filename = "sorted_british_english.txt";
 
     public FileHandler(Context context){
         this.context = context;

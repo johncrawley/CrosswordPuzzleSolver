@@ -1,6 +1,5 @@
 package com.jcrawley.crosswordpuzzlesolver.anagram;
 
-import java.util.stream.IntStream;
 
 public class BinaryCounter {
 
@@ -49,7 +48,10 @@ public class BinaryCounter {
             str.append("0");
         }
         String printableString = str.toString() + binaryStr;
-        System.out.println("binStr for " + currentIndex + " is: " + printableString + " is at max Index: " + isIndexAtLimit + "  maxIndexString: " + maxIndexString);
+        System.out.println("binStr for " + currentIndex
+                + " is: " + printableString
+                + " is at max Index: " + isIndexAtLimit
+                + "  maxIndexString: " + maxIndexString);
         return printableString;
     }
 

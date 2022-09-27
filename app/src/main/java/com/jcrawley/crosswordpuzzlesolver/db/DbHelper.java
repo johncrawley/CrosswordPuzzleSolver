@@ -30,7 +30,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     + DbContract.WordsEntry.TABLE_NAME
                     + OPENING_BRACKET
                     + DbContract.WordsEntry._ID + INTEGER + PRIMARY_KEY + COMMA
-                    + DbContract.WordsEntry.COL_WORD + TEXT
+                    + DbContract.WordsEntry.COL_WORD + TEXT + COMMA
                     + DbContract.WordsEntry.COL_KEY_ID + INTEGER
                     + CLOSING_BRACKET;
 
@@ -40,7 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     + DbContract.WordKeyEntry.TABLE_NAME
                     + OPENING_BRACKET
                     + DbContract.WordKeyEntry._ID + INTEGER + PRIMARY_KEY + COMMA
-                    + DbContract.WordKeyEntry.COL_KEY + TEXT
+                    + DbContract.WordKeyEntry.COL_KEY + INTEGER
                     + CLOSING_BRACKET;
 
 

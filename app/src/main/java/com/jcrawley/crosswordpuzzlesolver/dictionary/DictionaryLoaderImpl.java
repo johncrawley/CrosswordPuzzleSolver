@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class DictionaryLoaderImpl implements DictionaryLoader{
@@ -57,6 +58,23 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             String line = br.readLine();
             while (line!= null){
                 addWordSetToMap(line);
+                line =br.readLine();
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        viewModel.wordsStr = str.toString();
+    }
+
+
+    public void loadWordsIntoDb(Consumer<String> lineConsumer){
+        str = new StringBuilder();
+        InputStream is = mainActivity.getResources().openRawResource(R.raw.sorted_british_english);
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            String line = br.readLine();
+            while (line!= null){
+                lineConsumer.accept(line);
+                //addWordSetToMap(line);
                 line =br.readLine();
             }
         }catch (IOException e){

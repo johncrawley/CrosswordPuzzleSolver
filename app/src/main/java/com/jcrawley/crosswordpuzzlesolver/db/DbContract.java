@@ -15,7 +15,7 @@ public final class DbContract {
 
     static class WordKeyEntry implements BaseColumns {
         static final String TABLE_NAME = "Keys";
-        static final String COL_KEY = "key";
+        static final String COL_KEY = "key_value";
     }
 
 }

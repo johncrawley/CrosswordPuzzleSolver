@@ -44,7 +44,7 @@ public class FindWordsFragment extends Fragment {
         context = getContext();
         View parentView = inflater.inflate(R.layout.find_words, container, false);
         MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        anagramFinder = new AnagramFinder(viewModel);
+        anagramFinder = new AnagramFinder(viewModel, context);
         results = new ArrayList<>();
         setupViews(parentView);
         setupList(parentView);
@@ -67,6 +67,7 @@ public class FindWordsFragment extends Fragment {
         foundWordsList.setEmptyView(noResultsFoundTextView);
         noResultsFoundTextView.setVisibility(View.GONE);
     }
+
 
     private void setupKeyAction(final EditText editText){
         editText.setOnEditorActionListener((v, actionId, event) -> {
