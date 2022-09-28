@@ -44,20 +44,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    private void populateDbOnFirstLoad(){
-        final String DB_POPULATED_PREF = "is_DB_Populated";
-        SharedPreferences sharedPreferences = getSharedPreferences("DictionaryPrefs", MODE_PRIVATE);
-        if(!sharedPreferences.contains(DB_POPULATED_PREF)){
-            SharedPreferences.Editor editor = sharedPreferences.edit().putBoolean(DB_POPULATED_PREF, true);
-            editor.apply();
-            Executors.newSingleThreadExecutor().submit(this::populateDb);
-        }
-        else{
-            System.out.println("DB is apparently already populated!");
-        }
-    }
-
-
     private void populateDbIfEmpty(DictionaryLoader dictionaryLoader){
         WordsRepository wordsRepository = new WordsRepositoryImpl(MainActivity.this);
         if(wordsRepository.hasAnyWords()){
@@ -72,7 +58,6 @@ public class MainActivity extends AppCompatActivity{
         WordsRepository wordsRepository = new WordsRepositoryImpl(MainActivity.this);
         wordsRepository.saveWordsFromMapFile();
     }
-
 
 
     private void setupTabLayout(){
