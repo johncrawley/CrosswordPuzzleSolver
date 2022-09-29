@@ -37,7 +37,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     @Override
     public String retrieveAllWords(){
         if(viewModel.wordsStr != null){
-            mainActivity.hideProgressIndicator();
+            mainActivity.hideProgressIndicatorQuickly();
             return viewModel.wordsStr;
         }
         String words = "";

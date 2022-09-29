@@ -1,11 +1,9 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,18 +40,19 @@ public class MainActivity extends AppCompatActivity{
 
 
     public void hideProgressIndicator(){
-       /*
         new Handler(Looper.getMainLooper()).post(() -> {
-            findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
-            findViewById(R.id.loadingLayout).setVisibility(View.GONE);
-        });*/
-        startFadeOutAnimation();
+            loadingLayout.startAnimation(fadeOutAnimation);
+        });
     }
 
 
+    public void hideProgressIndicatorQuickly(){
+        loadingLayout.setVisibility(View.GONE);
+        findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
+    }
+
 
     private void setupFadeOutAnimation(){
-
         loadingLayout = findViewById(R.id.loadingLayout);
         fadeOutAnimation = new AlphaAnimation(1, 0);
         fadeOutAnimation.setInterpolator(new AccelerateInterpolator());
@@ -68,21 +67,12 @@ public class MainActivity extends AppCompatActivity{
             public void onAnimationStart(Animation animation) { }
             public void onAnimationRepeat(Animation animation) { }
         });
-
-    }
-
-
-    private void startFadeOutAnimation(){
-        new Handler(Looper.getMainLooper()).post(() -> {
-            loadingLayout.startAnimation(fadeOutAnimation);
-        });
     }
 
 
     private int getInt(int resId){
         return getResources().getInteger(resId);
     }
-
 
 
     private void populateDbIfEmpty(DictionaryLoader dictionaryLoader){
@@ -115,6 +105,5 @@ public class MainActivity extends AppCompatActivity{
             @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
-
 
 }
