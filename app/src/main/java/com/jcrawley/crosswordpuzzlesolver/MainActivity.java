@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -25,21 +27,25 @@ public class MainActivity extends AppCompatActivity{
 
     private Animation fadeOutAnimation;
     private View loadingLayout;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupFadeOutAnimation();
-        MainViewModel viewModel  = new ViewModelProvider(this).get(MainViewModel.class);
-        DictionaryLoader dictionaryLoader = new DictionaryLoaderImpl(this, viewModel);
-        Executors.newSingleThreadExecutor().submit(dictionaryLoader::retrieveAllWords);
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         //populateDbIfEmpty(dictionaryLoader);
-        setupTabLayout();
+        setupTabsOnViewLoaded();
     }
 
 
+    private void setupDictionaryAndRetrieveWords() {
+            new DictionaryLoaderImpl(this, viewModel).retrieveAllWords();
+    }
+
     public void hideProgressIndicator(){
+        setupFadeOutAnimation();
         new Handler(Looper.getMainLooper()).post(() -> {
             loadingLayout.startAnimation(fadeOutAnimation);
         });
@@ -91,7 +97,23 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+    private void setupTabsOnViewLoaded(){
+        final ViewGroup mainLayout = findViewById(R.id.mainLayout);
+        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (viewModel.wordsStr == null) {
+                    Executors.newSingleThreadExecutor().submit(()->setupDictionaryAndRetrieveWords());
+                }
+                setupTabLayout();
+            }
+        });
+    }
+
+
     private void setupTabLayout(){
+
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewStateAdapter viewStateAdapter = new ViewStateAdapter(getSupportFragmentManager(), getLifecycle());
         final ViewPager2 viewPager = findViewById(R.id.pager);

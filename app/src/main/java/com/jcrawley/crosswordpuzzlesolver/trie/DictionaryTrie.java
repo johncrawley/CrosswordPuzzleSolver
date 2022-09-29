@@ -2,7 +2,7 @@ package com.jcrawley.crosswordpuzzlesolver.trie;
 
 public class DictionaryTrie {
 
-    public Node rootNode;
+    private final Node rootNode;
 
     public DictionaryTrie(){
         this.rootNode = new Node();
