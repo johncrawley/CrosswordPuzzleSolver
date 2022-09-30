@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity{
 
 
     private void setupTabLayout(){
-
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewStateAdapter viewStateAdapter = new ViewStateAdapter(getSupportFragmentManager(), getLifecycle());
         final ViewPager2 viewPager = findViewById(R.id.pager);

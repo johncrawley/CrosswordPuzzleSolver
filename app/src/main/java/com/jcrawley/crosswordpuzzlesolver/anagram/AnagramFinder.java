@@ -6,10 +6,13 @@ import com.jcrawley.crosswordpuzzlesolver.db.WordsRepository;
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepositoryImpl;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +39,62 @@ public class AnagramFinder {
             addWordsTo(foundWords, sortedLetters);
             //addWordsFromRepositoryTo(foundWords, sortedLetters);
         }
-        return foundWords.stream()
+        return getSortedListOf(foundWords);
+    }
+
+
+    // used to get words containing the provided letters and including unknown letters
+    public List<String> getWordsMatching(String providedLetters){
+        List<String> matchingWords = new ArrayList<>();
+        String[] lettersArray = createLettersArrayFrom(providedLetters);
+        Map<String, Set<String>> wordsMap = viewModel.wordsByLengthMap.get(providedLetters.length());
+        if(wordsMap == null){
+            return List.of();
+        }
+        for(String key : wordsMap.keySet()) {
+            matchingWords.addAll(getWordsFromSuitableKey(wordsMap, key, lettersArray));
+        }
+        Collections.sort(matchingWords);
+        return matchingWords;
+    }
+
+
+    private String[] createLettersArrayFrom(String providedLetters){
+        String removedUnknowns = removeUnknownCharactersFrom(providedLetters);
+        String sortedLetters= sort(removedUnknowns);
+        return sortedLetters.split("");
+    }
+
+
+    private Set<String> getWordsFromSuitableKey(Map<String, Set<String>> wordsMap, String key, String[] lettersArray){
+        boolean isKeySuitable = true;
+        String tempKey = key;
+        for (String s : lettersArray) {
+            if (tempKey.contains(s)) {
+                tempKey = tempKey.replaceFirst(s, "");
+                continue;
+            }
+            isKeySuitable = false;
+            break;
+        }
+        if(isKeySuitable){
+            Set<String> suitableWords = wordsMap.get(key);
+            if(suitableWords != null) {
+                return suitableWords;
+            }
+        }
+        return new HashSet<>();
+    }
+
+
+    private String removeUnknownCharactersFrom(String str){
+        char UNKNOWN_CHAR = '.';
+        return str.replace( String.valueOf(UNKNOWN_CHAR), "");
+    }
+
+
+    private List<String> getSortedListOf(Set<String> wordsSet){
+        return wordsSet.stream()
                 .filter(x -> x.length() > 1)
                 .sorted(Comparator.comparingInt(String::length).reversed())
                 .collect(Collectors.toList());

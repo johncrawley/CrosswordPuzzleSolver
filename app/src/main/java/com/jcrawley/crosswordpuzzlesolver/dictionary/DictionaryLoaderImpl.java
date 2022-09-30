@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
@@ -41,17 +42,30 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             return viewModel.wordsStr;
         }
         String words = "";
-        if(viewModel.wordsMap == null){
-            viewModel.wordsMap = new HashMap<>(50_000);
-        }
-        createWordMap();
+        initMaps();
+        loadWordsFromFileToMaps();
         viewModel.dictionaryLatch.countDown();
         mainActivity.hideProgressIndicator();
         return words;
     }
 
+    private void initMaps(){
+        if(viewModel.wordsMap == null){
+            viewModel.wordsMap = new HashMap<>(50_000);
+        }
+        if(viewModel.wordsByLengthMap == null){
+            viewModel.wordsByLengthMap = new HashMap<>(30);
+            for(int i=1; i< 28; i++){
+                Map<String, Set<String>> map = new HashMap<>(500);
+                viewModel.wordsByLengthMap.put(i, map);
+            }
+        }
 
-    private void createWordMap(){
+
+    }
+
+
+    private void loadWordsFromFileToMaps(){
         str = new StringBuilder();
         InputStream is = mainActivity.getResources().openRawResource(R.raw.sorted_british_english);
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -84,13 +98,22 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     }
 
 
-    public void addWordSetToMap(String wordsLine){
+    public void addWordSetToMap(String wordsLine) {
         viewModel.wordCount++;
         String[] lineArray = wordsLine.split(" ");
         String key = lineArray[0];
         Set<String> wordSet = new HashSet<>(Arrays.asList(lineArray).subList(1, lineArray.length));
         addWordsToStr(lineArray);
         viewModel.wordsMap.put(key, wordSet);
+        addWordSetToLengthMap(key, wordSet);
+    }
+
+
+    private void addWordSetToLengthMap(String key, Set<String> words){
+        Map<String, Set<String>> lengthMap = viewModel.wordsByLengthMap.get(key.length());
+        if (lengthMap != null) {
+            lengthMap.put(key, words);
+        }
     }
 
 
