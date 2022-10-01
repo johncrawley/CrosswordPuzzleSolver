@@ -19,5 +19,6 @@ public class MainViewModel extends ViewModel {
     public String wordsStr;
     public DictionaryTrie dictionaryTrie;
     public CountDownLatch dictionaryLatch;
+    public boolean isUsingAnagramsForCrossword;
 
 }

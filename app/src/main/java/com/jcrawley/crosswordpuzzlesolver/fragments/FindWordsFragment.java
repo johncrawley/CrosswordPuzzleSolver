@@ -93,8 +93,7 @@ public class FindWordsFragment extends Fragment {
         }
         previousSearch = inputText;
         results.clear();
-       // results.addAll(anagramFinder.getWordsFrom(inputText));
-        results.addAll(anagramFinder.getWordsMatching(inputText));
+        results.addAll(anagramFinder.getWordsFrom(inputText));
         arrayAdapter.notifyDataSetChanged();
         setResultsText();
     }

@@ -12,5 +12,6 @@
     <string name="results_found_text">%1$d results found</string>
     <string name="one_result_found_text">1 result found</string>
     <string name="no_result_found_text">No results found</string>
+    <string name="allow_anagrams_switch_label">Allow Anagrams</string>
     <string name="loading_text">Loading</string>
 </resources>

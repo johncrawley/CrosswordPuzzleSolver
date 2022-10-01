@@ -14,5 +14,7 @@
     <dimen name="loading_text_size">48sp</dimen>
     <dimen name="no_results_found_text_size">32sp</dimen>
     <dimen name="input_text_margin_horizontal">12dp</dimen>
+    <dimen name="switch_padding_horizontal">12dp</dimen>
+    <dimen name="switch_padding_vertical">12dp</dimen>
 
 </resources>

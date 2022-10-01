@@ -14,8 +14,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
+import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -34,9 +36,10 @@ public class CrosswordHelperFragment extends Fragment {
     private List<String> results;
     private WordSearcher wordSearcher;
     private TextView resultsCountTextView;
-    private boolean hasASearchStarted;
+    private boolean hasSearchStarted;
     private View noResultsFoundView;
     private MainViewModel viewModel;
+    private AnagramFinder anagramFinder;
 
     public CrosswordHelperFragment() {
         // Required empty public constructor
@@ -49,6 +52,7 @@ public class CrosswordHelperFragment extends Fragment {
         View parentView = inflater.inflate(R.layout.crossword_helper, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel);
+        anagramFinder = new AnagramFinder(viewModel, context);
         setupViews(parentView);
         setupList(parentView);
         setupKeyAction(editText);
@@ -59,6 +63,16 @@ public class CrosswordHelperFragment extends Fragment {
     private void setupViews(View parentView){
         editText = parentView.findViewById(R.id.wordInputEditText);
         resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
+        setupSwitch(parentView);
+    }
+
+
+    public void setupSwitch(View parentView){
+        SwitchMaterial switchMaterial = parentView.findViewById(R.id.allowAnagramsSwitch);
+        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) ->{
+            viewModel.isUsingAnagramsForCrossword = isChecked;
+            previousSearch = "";
+        });
     }
 
 
@@ -81,7 +95,7 @@ public class CrosswordHelperFragment extends Fragment {
                     return false;
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                if(!hasASearchStarted) {
+                if(!hasSearchStarted) {
                     noResultsFoundView.setVisibility(View.GONE);
                     Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
                 }
@@ -93,14 +107,14 @@ public class CrosswordHelperFragment extends Fragment {
 
 
     private void searchForCrosswordMatches(){
-        hasASearchStarted = true;
+        hasSearchStarted = true;
         try {
             viewModel.dictionaryLatch.await();
             runSearch();
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally{
-            hasASearchStarted = false;
+            hasSearchStarted = false;
         }
     }
 
@@ -112,7 +126,12 @@ public class CrosswordHelperFragment extends Fragment {
         }
         previousSearch = inputText;
         results.clear();
-        results.addAll(wordSearcher.searchFor(inputText));
+        if(viewModel.isUsingAnagramsForCrossword){
+            results.addAll(anagramFinder.getWordsMatching(inputText));
+        }
+        else{
+            results.addAll(wordSearcher.searchFor(inputText));
+        }
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(()-> {
             arrayAdapter.notifyDataSetChanged();

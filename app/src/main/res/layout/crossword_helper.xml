@@ -27,6 +27,25 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <LinearLayout
+        android:id="@+id/anagramsSwitchLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="2dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="8dp"
+        tools:ignore="UselessParent">
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/allowAnagramsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:checked="false"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/switch_padding_horizontal"
+        android:paddingVertical="@dimen/switch_padding_vertical"
+        android:text="@string/allow_anagrams_switch_label" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/crosswordResultsCountTextView"
