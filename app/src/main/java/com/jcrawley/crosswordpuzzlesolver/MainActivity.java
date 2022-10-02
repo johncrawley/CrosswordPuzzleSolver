@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity{
             new DictionaryLoaderImpl(this, viewModel).retrieveAllWords();
     }
 
+
     public void hideProgressIndicator(){
         setupFadeOutAnimation();
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     public void hideProgressIndicatorQuickly(){
-        loadingLayout.setVisibility(View.GONE);
+        findViewById(R.id.loadingLayout).setVisibility(View.GONE);
         findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
     }
 
@@ -105,6 +106,9 @@ public class MainActivity extends AppCompatActivity{
                 mainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 if (viewModel.wordsStr == null) {
                     Executors.newSingleThreadExecutor().submit(()->setupDictionaryAndRetrieveWords());
+                }
+                else{
+                    hideProgressIndicatorQuickly();
                 }
                 setupTabLayout();
             }
