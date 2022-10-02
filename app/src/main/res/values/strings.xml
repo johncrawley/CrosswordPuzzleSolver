@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Crossword Puzzle Solver</string>
     <string name="text_placeholder" />
-    <string name="text_instructions">Enter your letters below, . indicates an unknown letter</string>
+    <string name="text_instructions">Enter known letters; indicate an unknown letter with a \'.\'</string>
     <string name="hint_enter_whole_word_check">Enter a word to see if it exists in the dictionary</string>
     <string name="tab_item_crossword_helper">Crossword Helper</string>
-    <string name="tab_item_word_checker">Checker</string>
-    <string name="tab_item_word_finder">Finder</string>
+    <string name="tab_item_word_checker">Word Checker</string>
+    <string name="tab_item_word_finder">Word Finder</string>
     <string name="word_exists_message">%1$s exists!</string>
     <string name="word_does_not_exist_message">Could not find %1$s!</string>
-    <string name="find_words_instructions">Enter letters</string>
+    <string name="find_words_instructions">Enter letters to create words from</string>
     <string name="results_found_text">%1$d results found</string>
     <string name="one_result_found_text">1 result found</string>
     <string name="no_result_found_text">No results found</string>
