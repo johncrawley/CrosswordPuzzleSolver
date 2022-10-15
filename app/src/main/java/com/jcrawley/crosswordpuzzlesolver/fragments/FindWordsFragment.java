@@ -2,6 +2,8 @@ package com.jcrawley.crosswordpuzzlesolver.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,6 +35,7 @@ public class FindWordsFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private AnagramFinder anagramFinder;
+    private Executor findWordsExecutor;
 
 
     public FindWordsFragment() {
@@ -49,6 +54,7 @@ public class FindWordsFragment extends Fragment {
         setupViews(parentView);
         setupList(parentView);
         setupKeyAction(editText);
+        findWordsExecutor = Executors.newSingleThreadExecutor();
         return parentView;
     }
 
@@ -78,7 +84,7 @@ public class FindWordsFragment extends Fragment {
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 noResultsFoundTextView.setVisibility(View.GONE);
-                findWords();
+                findWordsExecutor.execute(this::findWords);
                 return true;
             }
             return false;
@@ -94,8 +100,10 @@ public class FindWordsFragment extends Fragment {
         previousSearch = inputText;
         results.clear();
         results.addAll(anagramFinder.getWordsFrom(inputText));
-        arrayAdapter.notifyDataSetChanged();
-        setResultsText();
+        new Handler(Looper.getMainLooper()).post(()->{
+            arrayAdapter.notifyDataSetChanged();
+            setResultsText();
+        });
     }
 
 

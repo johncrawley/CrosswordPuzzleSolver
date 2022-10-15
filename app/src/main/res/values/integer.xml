@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="max_input_size">27</integer>
+    <integer name="find_words_max_input_size">14</integer>
 
     <integer name="loading_view_fade_out_duration">900</integer>
     <integer name="loading_view_fade_out_start_offset">1000</integer>
