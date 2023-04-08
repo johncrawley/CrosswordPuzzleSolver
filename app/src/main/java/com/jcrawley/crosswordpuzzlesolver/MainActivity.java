@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void hideProgressIndicator(){
         setupFadeOutAnimation();
-        new Handler(Looper.getMainLooper()).post(() -> {
-            loadingLayout.startAnimation(fadeOutAnimation);
-        });
+        new Handler(Looper.getMainLooper()).post(() -> loadingLayout.startAnimation(fadeOutAnimation));
     }
 
 
@@ -105,7 +103,7 @@ public class MainActivity extends AppCompatActivity{
             public void onGlobalLayout() {
                 mainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 if (viewModel.wordsStr == null) {
-                    Executors.newSingleThreadExecutor().submit(()->setupDictionaryAndRetrieveWords());
+                    Executors.newSingleThreadExecutor().submit(() -> setupDictionaryAndRetrieveWords());
                 }
                 else{
                     hideProgressIndicatorQuickly();

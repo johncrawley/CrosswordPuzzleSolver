@@ -21,17 +21,18 @@ import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 public class CrosswordHelperFragment extends Fragment {
 
-    private EditText editText;
+    private EditText lettersEditText, excludedLettersEditText;
     private Context context;
-    private String previousSearch;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private WordSearcher wordSearcher;
@@ -55,13 +56,15 @@ public class CrosswordHelperFragment extends Fragment {
         anagramFinder = new AnagramFinder(viewModel, context);
         setupViews(parentView);
         setupList(parentView);
-        setupKeyAction(editText);
         return parentView;
     }
 
 
     private void setupViews(View parentView){
-        editText = parentView.findViewById(R.id.wordInputEditText);
+        lettersEditText = parentView.findViewById(R.id.wordInputEditText);
+        setupKeyAction(lettersEditText);
+        excludedLettersEditText = parentView.findViewById(R.id.excludeLettersEditText);
+        setupKeyAction(excludedLettersEditText);
         resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
         setupSwitch(parentView);
     }
@@ -69,10 +72,7 @@ public class CrosswordHelperFragment extends Fragment {
 
     public void setupSwitch(View parentView){
         SwitchMaterial switchMaterial = parentView.findViewById(R.id.allowAnagramsSwitch);
-        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) ->{
-            viewModel.isUsingAnagramsForCrossword = isChecked;
-            previousSearch = "";
-        });
+        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> viewModel.isUsingAnagramsForCrossword = isChecked);
     }
 
 
@@ -120,23 +120,42 @@ public class CrosswordHelperFragment extends Fragment {
 
 
     private void runSearch(){
-        String inputText = getFormattedText(editText);
-        if (inputText.isEmpty() || inputText.equals(previousSearch)) {
+        String inputText = getFormattedText(lettersEditText);
+        if (inputText.isEmpty()) {
             return;
         }
-        previousSearch = inputText;
         results.clear();
-        if(viewModel.isUsingAnagramsForCrossword){
-            results.addAll(anagramFinder.getWordsMatching(inputText));
-        }
-        else{
-            results.addAll(wordSearcher.searchFor(inputText));
-        }
+        List<String> initialResults = new ArrayList<>(viewModel.isUsingAnagramsForCrossword ?
+                anagramFinder.getWordsMatching(inputText) : wordSearcher.searchFor(inputText));
+
+        results.addAll(excludeWordsWithBanishedLetters(initialResults));
+        log("runSearch() results size after excluding words: " + results.size());
+
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(()-> {
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
         });
+    }
+
+    private List<String> excludeWordsWithBanishedLetters(List<String> initialResults){
+        String excludedLettersStr = excludedLettersEditText.getText().toString();
+        if(excludedLettersStr.isEmpty()){
+            return new ArrayList<>(initialResults);
+        }
+        List<String> excludedLetters = Arrays.asList(excludedLettersStr.split(""));
+        return createListOfAllowedWords(initialResults, excludedLetters);
+    }
+
+
+    private List<String> createListOfAllowedWords(List<String> inputList, List<String> excludedLetters){
+        return inputList.stream().filter(word -> isWordFreeOfExcludedLetters(word, excludedLetters)).collect(Collectors.toList());
+    }
+
+
+    private boolean isWordFreeOfExcludedLetters(String word, List<String> excludedLetters){
+        String lowercaseWord = word.toLowerCase();
+        return excludedLetters.stream().noneMatch(lowercaseWord::contains);
     }
 
 
@@ -145,6 +164,10 @@ public class CrosswordHelperFragment extends Fragment {
         return text.trim().toLowerCase();
     }
 
+
+    private void log(String msg){
+        System.out.println("^^^ CrosswordHelperFragment: " + msg);
+    }
 
     private void setResultsText(){
         String resultsText = "";

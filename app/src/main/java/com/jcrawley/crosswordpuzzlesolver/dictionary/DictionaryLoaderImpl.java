@@ -49,6 +49,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         return words;
     }
 
+
     private void initMaps(){
         if(viewModel.wordsMap == null){
             viewModel.wordsMap = new HashMap<>(50_000);
@@ -60,8 +61,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
                 viewModel.wordsByLengthMap.put(i, map);
             }
         }
-
-
     }
 
 
