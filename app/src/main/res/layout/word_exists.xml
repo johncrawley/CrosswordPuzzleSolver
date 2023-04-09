@@ -7,11 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/page_padding_top"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="?android:attr/listDivider"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/whole_word_check_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/page_padding_top"
+        app:layout_constraintTop_toBottomOf="@+id/topDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"

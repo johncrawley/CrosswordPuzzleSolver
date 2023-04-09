@@ -9,6 +9,14 @@
     android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/page_padding_top"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"/>
+
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wordInputEditTextLayout"
         android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
@@ -65,6 +73,7 @@
         android:text="@string/allow_anagrams_switch_label" />
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/crosswordResultsCountTextView"
         android:layout_width="match_parent"
@@ -73,13 +82,19 @@
         android:paddingEnd="@dimen/results_count_padding_end"
         android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
         android:text="" />
+    <View
+        android:id="@+id/listDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
 
+        />
     <ListView
         android:id="@+id/crosswordHelperList"
         android:isScrollContainer="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginHorizontal="@dimen/list_horizontal_margin"
         app:layout_constraintTop_toBottomOf="@+id/wordInputEditTextLayout"
         />
 
