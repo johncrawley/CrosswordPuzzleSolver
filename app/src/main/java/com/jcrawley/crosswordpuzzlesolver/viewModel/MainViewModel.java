@@ -20,5 +20,6 @@ public class MainViewModel extends ViewModel {
     public DictionaryTrie dictionaryTrie;
     public CountDownLatch dictionaryLatch;
     public boolean isUsingAnagramsForCrossword;
+    public int currentTabIndex;
 
 }

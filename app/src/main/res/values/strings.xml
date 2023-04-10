@@ -4,7 +4,7 @@
     <string name="text_instructions">Known Letters, use \'.\' for unknown letters</string>
     <string name="excluded_letters_text_instructions">Excluded letters</string>
     <string name="hint_enter_whole_word_check">Enter a word to see if it exists in the dictionary</string>
-    <string name="tab_item_crossword_helper">Crossword Helper</string>
+    <string name="tab_item_puzzle_helper">Puzzle Helper</string>
     <string name="tab_item_word_checker">Word Checker</string>
     <string name="tab_item_word_finder">Word Finder</string>
     <string name="word_exists_message">%1$s exists!</string>

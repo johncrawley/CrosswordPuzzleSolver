@@ -79,17 +79,17 @@ public class FindWordsFragment extends Fragment {
 
     private void setupKeyAction(final EditText editText){
         editText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(imm == null){
-                    return false;
-                }
-                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                noResultsFoundTextView.setVisibility(View.GONE);
-                findWordsExecutor.execute(this::findWords);
-                return true;
+            if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
+                return false;
             }
-            return false;
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(imm == null){
+                return false;
+            }
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            noResultsFoundTextView.setVisibility(View.GONE);
+            findWordsExecutor.execute(this::findWords);
+            return true;
         });
     }
 

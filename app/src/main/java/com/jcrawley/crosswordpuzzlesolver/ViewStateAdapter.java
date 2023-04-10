@@ -1,6 +1,6 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
-import com.jcrawley.crosswordpuzzlesolver.fragments.CrosswordHelperFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 
@@ -21,7 +21,7 @@ public class ViewStateAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         // Hardcoded in this order, you'll want to use lists and make sure the titles match
         if (position == 0) {
-            return new CrosswordHelperFragment();
+            return new PuzzleHelperFragment();
         }
         else if(position == 1){
             return new WordExistsFragment();

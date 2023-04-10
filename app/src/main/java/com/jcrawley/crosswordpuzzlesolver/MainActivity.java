@@ -2,6 +2,7 @@ package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.jcrawley.crosswordpuzzlesolver.db.WordsRepository;
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepositoryImpl;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
+import com.jcrawley.crosswordpuzzlesolver.tab.TabHelper;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.concurrent.Executors;
@@ -28,12 +30,14 @@ public class MainActivity extends AppCompatActivity{
     private Animation fadeOutAnimation;
     private View loadingLayout;
     private MainViewModel viewModel;
+    private TabHelper tabHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        tabHelper = new TabHelper(viewModel);
 
         //populateDbIfEmpty(dictionaryLoader);
         setupTabsOnViewLoaded();
@@ -90,7 +94,6 @@ public class MainActivity extends AppCompatActivity{
 
 
     private void populateDb(){
-        System.out.println("Populating Database from Map file!");
         WordsRepository wordsRepository = new WordsRepositoryImpl(MainActivity.this);
         wordsRepository.saveWordsFromMapFile();
     }
@@ -118,15 +121,8 @@ public class MainActivity extends AppCompatActivity{
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewStateAdapter viewStateAdapter = new ViewStateAdapter(getSupportFragmentManager(), getLifecycle());
         final ViewPager2 viewPager = findViewById(R.id.pager);
+        tabHelper.setupTabLayout(tabLayout, viewPager);
         viewPager.setAdapter(viewStateAdapter);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) {}
-        });
     }
 
 }

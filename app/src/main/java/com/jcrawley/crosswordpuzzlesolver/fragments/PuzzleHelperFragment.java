@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class CrosswordHelperFragment extends Fragment {
+public class PuzzleHelperFragment extends Fragment {
 
     private EditText lettersEditText, excludedLettersEditText;
     private View listDivider;
@@ -43,7 +43,7 @@ public class CrosswordHelperFragment extends Fragment {
     private MainViewModel viewModel;
     private AnagramFinder anagramFinder;
 
-    public CrosswordHelperFragment() {
+    public PuzzleHelperFragment() {
         // Required empty public constructor
     }
 
@@ -51,7 +51,7 @@ public class CrosswordHelperFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getContext();
-        View parentView = inflater.inflate(R.layout.crossword_helper, container, false);
+        View parentView = inflater.inflate(R.layout.puzzle_helper, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel);
         anagramFinder = new AnagramFinder(viewModel, context);
