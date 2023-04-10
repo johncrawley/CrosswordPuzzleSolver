@@ -16,42 +16,54 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"/>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/wordInputEditTextLayout"
-        android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/puzzle_helper_edit_text_margin_bottom"
-        android:hint="@string/text_instructions">
+        android:weightSum="1"
+        android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:id="@+id/wordInputEditText"
-            android:maxLength="@integer/max_input_size"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:layout_height="wrap_content" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/wordInputEditTextLayout"
+            android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/puzzle_helper_edit_text_margin_bottom"
+            android:hint="@string/text_instructions">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/excludeLettersEditTextLayout"
-        android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/puzzle_helper_edit_text_margin_bottom"
-        android:hint="@string/excluded_letters_text_instructions">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/wordInputEditText"
+                android:maxLength="@integer/max_input_size"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:id="@+id/excludeLettersEditText"
-            android:maxLength="@integer/max_input_size"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/excludeLettersEditTextLayout"
+            android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/puzzle_helper_edit_text_margin_bottom"
+            android:hint="@string/excluded_letters_text_instructions">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/excludeLettersEditText"
+                android:maxLength="@integer/max_input_size"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/anagramsSwitchLayout"
