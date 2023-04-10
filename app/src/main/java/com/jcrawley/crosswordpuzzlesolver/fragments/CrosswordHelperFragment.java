@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProvider;
 public class CrosswordHelperFragment extends Fragment {
 
     private EditText lettersEditText, excludedLettersEditText;
+    private View listDivider;
     private Context context;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
@@ -66,6 +67,7 @@ public class CrosswordHelperFragment extends Fragment {
         excludedLettersEditText = parentView.findViewById(R.id.excludeLettersEditText);
         setupKeyAction(excludedLettersEditText);
         resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
+        listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
     }
 
@@ -129,14 +131,24 @@ public class CrosswordHelperFragment extends Fragment {
                 anagramFinder.getWordsMatching(inputText) : wordSearcher.searchFor(inputText));
 
         results.addAll(excludeWordsWithBanishedLetters(initialResults));
-        log("runSearch() results size after excluding words: " + results.size());
+        updateViewWithResults();
+    }
 
+
+    private void updateViewWithResults(){
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(()-> {
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
+            updateVisibilityOnListDivider();
         });
     }
+
+
+    private void updateVisibilityOnListDivider(){
+        listDivider.setVisibility(results.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
 
     private List<String> excludeWordsWithBanishedLetters(List<String> initialResults){
         String excludedLettersStr = excludedLettersEditText.getText().toString();

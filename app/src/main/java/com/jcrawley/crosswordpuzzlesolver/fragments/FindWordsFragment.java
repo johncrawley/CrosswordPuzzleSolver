@@ -30,6 +30,7 @@ public class FindWordsFragment extends Fragment {
 
     private EditText editText;
     private TextView resultsCountTextView, noResultsFoundTextView;
+    private View listDivider;
     private Context context;
     private String previousSearch;
     private ArrayAdapter<String> arrayAdapter;
@@ -61,6 +62,7 @@ public class FindWordsFragment extends Fragment {
 
     private void setupViews(View parentView){
         editText = parentView.findViewById(R.id.lettersInputEditText);
+        listDivider = parentView.findViewById(R.id.listDivider);
         resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
     }
 
@@ -100,11 +102,24 @@ public class FindWordsFragment extends Fragment {
         previousSearch = inputText;
         results.clear();
         results.addAll(anagramFinder.getWordsFrom(inputText));
+        updateViewWithResults();
+
+    }
+
+
+    private void updateViewWithResults(){
         new Handler(Looper.getMainLooper()).post(()->{
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
+            setVisibilityOnListDivider(results.size());
         });
     }
+
+
+    private void setVisibilityOnListDivider(int numberOfResults){
+        listDivider.setVisibility(numberOfResults > 0 ? View.VISIBLE : View.GONE);
+    }
+
 
 
     private void setResultsText(){

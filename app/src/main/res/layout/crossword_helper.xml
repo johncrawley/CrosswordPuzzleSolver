@@ -82,13 +82,15 @@
         android:paddingEnd="@dimen/results_count_padding_end"
         android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
         android:text="" />
+
     <View
         android:id="@+id/listDivider"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
+        android:background="?android:attr/listDivider" />
 
-        />
+
     <ListView
         android:id="@+id/crosswordHelperList"
         android:isScrollContainer="false"
@@ -97,7 +99,6 @@
         android:layout_marginHorizontal="@dimen/list_horizontal_margin"
         app:layout_constraintTop_toBottomOf="@+id/wordInputEditTextLayout"
         />
-
 
     <TextView
         android:id="@+id/noCrosswordResultsFoundText"
