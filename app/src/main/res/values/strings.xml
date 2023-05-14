@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Crossword Puzzle Solver</string>
+    <string name="app_name">Word Helper</string>
     <string name="text_placeholder" />
     <string name="text_instructions">Known Letters, use \'.\' for unknown letters</string>
     <string name="excluded_letters_text_instructions">Excluded letters</string>
@@ -10,6 +10,7 @@
     <string name="word_exists_message">%1$s exists!</string>
     <string name="word_does_not_exist_message">Could not find %1$s!</string>
     <string name="find_words_instructions">Enter letters to create words from</string>
+    <string name="required_letters_exit_text_title">Additional required letters</string>
     <string name="results_found_text">%1$d results found</string>
     <string name="one_result_found_text">1 result found</string>
     <string name="no_result_found_text">No results found</string>

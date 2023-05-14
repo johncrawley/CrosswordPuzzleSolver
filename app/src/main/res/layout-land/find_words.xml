@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:orientation="vertical"
@@ -16,41 +15,55 @@
         android:layout_marginBottom="@dimen/page_padding_top"
         android:background="?android:attr/listDivider"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/lettersInputEditTextLayout"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
-        android:layout_marginBottom="12dp"
-        android:hint="@string/find_words_instructions">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:id="@+id/lettersInputEditText"
-            android:maxLength="@integer/find_words_max_input_size"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:weightSum="1"
+        android:orientation="horizontal">
 
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/lettersInputEditTextLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+            android:layout_marginBottom="12dp"
+            android:hint="@string/find_words_instructions">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/requiredLettersInputEditTextLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
-        android:layout_marginBottom="12dp"
-        android:hint="@string/required_letters_exit_text_title">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/lettersInputEditText"
+                android:maxLength="@integer/find_words_max_input_size"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:id="@+id/requiredLettersInputEditText"
-            android:maxLength="@integer/find_words_max_input_for_required_letters_size"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/requiredLettersInputEditTextLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+            android:layout_marginBottom="12dp"
+            android:hint="@string/required_letters_exit_text_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/requiredLettersInputEditText"
+                android:maxLength="@integer/find_words_max_input_for_required_letters_size"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/resultsCountTextView"

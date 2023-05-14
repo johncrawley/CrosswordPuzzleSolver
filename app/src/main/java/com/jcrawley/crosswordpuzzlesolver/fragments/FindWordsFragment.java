@@ -19,16 +19,19 @@ import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 public class FindWordsFragment extends Fragment {
 
-    private EditText editText;
+    private EditText lettersEditText, requiredLettersEditText;
     private TextView resultsCountTextView, noResultsFoundTextView;
     private View listDivider;
     private Context context;
@@ -54,14 +57,16 @@ public class FindWordsFragment extends Fragment {
         results = new ArrayList<>();
         setupViews(parentView);
         setupList(parentView);
-        setupKeyAction(editText);
+        setupKeyAction(lettersEditText);
+        setupKeyAction(requiredLettersEditText);
         findWordsExecutor = Executors.newSingleThreadExecutor();
         return parentView;
     }
 
 
     private void setupViews(View parentView){
-        editText = parentView.findViewById(R.id.lettersInputEditText);
+        lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
+        requiredLettersEditText = parentView.findViewById(R.id.requiredLettersInputEditText);
         listDivider = parentView.findViewById(R.id.listDivider);
         resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
     }
@@ -95,15 +100,35 @@ public class FindWordsFragment extends Fragment {
 
 
     private void findWords(){
-        String inputText = getFormattedText(editText);
+        String inputText = getFormattedText(lettersEditText) + getFormattedText(requiredLettersEditText);
         if(inputText.isEmpty() || inputText.equals(previousSearch)){
             return;
         }
         previousSearch = inputText;
         results.clear();
-        results.addAll(anagramFinder.getWordsFrom(inputText));
+        results.addAll(filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(inputText)));
         updateViewWithResults();
 
+    }
+
+    private List<String> filterResultsWithRequiredLetters(List<String> words){
+        List<String> requiredLetters = createRequiredLettersList();
+        if(requiredLetters.isEmpty()){
+            return words;
+        }
+        return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLetters)).collect(Collectors.toList());
+    }
+
+
+    private List<String> createRequiredLettersList(){
+        String requiredLettersStr = requiredLettersEditText.getText().toString().trim();
+        String azRequiredLetters = requiredLettersStr.replaceAll("[^A-za-z]", "");
+        return azRequiredLetters.isEmpty() ? Collections.emptyList() : Arrays.asList(azRequiredLetters.split(""));
+    }
+
+
+    private boolean doesWordHaveAllLetters(String word, List<String> letters){
+        return letters.stream().allMatch(word::contains);
     }
 
 
@@ -119,7 +144,6 @@ public class FindWordsFragment extends Fragment {
     private void setVisibilityOnListDivider(int numberOfResults){
         listDivider.setVisibility(numberOfResults > 0 ? View.VISIBLE : View.GONE);
     }
-
 
 
     private void setResultsText(){
