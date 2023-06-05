@@ -2,7 +2,6 @@ package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -16,9 +15,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 import com.google.android.material.tabs.TabLayout;
-import com.jcrawley.crosswordpuzzlesolver.db.WordsRepository;
-import com.jcrawley.crosswordpuzzlesolver.db.WordsRepositoryImpl;
-import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.tab.TabHelper;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
@@ -38,14 +34,13 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         tabHelper = new TabHelper(viewModel);
-
-        //populateDbIfEmpty(dictionaryLoader);
         setupTabsOnViewLoaded();
     }
 
 
-    private void setupDictionaryAndRetrieveWords() {
-            new DictionaryLoaderImpl(this, viewModel).retrieveAllWords();
+    public void hideProgressIndicatorQuickly(){
+        findViewById(R.id.loadingLayout).setVisibility(View.GONE);
+        findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
     }
 
 
@@ -54,11 +49,6 @@ public class MainActivity extends AppCompatActivity{
         new Handler(Looper.getMainLooper()).post(() -> loadingLayout.startAnimation(fadeOutAnimation));
     }
 
-
-    public void hideProgressIndicatorQuickly(){
-        findViewById(R.id.loadingLayout).setVisibility(View.GONE);
-        findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
-    }
 
 
     private void setupFadeOutAnimation(){
@@ -84,21 +74,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    private void populateDbIfEmpty(DictionaryLoader dictionaryLoader){
-        WordsRepository wordsRepository = new WordsRepositoryImpl(MainActivity.this);
-        if(wordsRepository.hasAnyWords()){
-            return;
-        }
-        wordsRepository.saveWordsFromDictionary(dictionaryLoader);
-    }
-
-
-    private void populateDb(){
-        WordsRepository wordsRepository = new WordsRepositoryImpl(MainActivity.this);
-        wordsRepository.saveWordsFromMapFile();
-    }
-
-
     private void setupTabsOnViewLoaded(){
         final ViewGroup mainLayout = findViewById(R.id.mainLayout);
         mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -114,6 +89,11 @@ public class MainActivity extends AppCompatActivity{
                 setupTabLayout();
             }
         });
+    }
+
+
+    private void setupDictionaryAndRetrieveWords() {
+        new DictionaryLoaderImpl(this, viewModel).retrieveAllWords();
     }
 
 

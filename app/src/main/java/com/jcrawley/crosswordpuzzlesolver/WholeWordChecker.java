@@ -21,9 +21,6 @@ public class WholeWordChecker {
 
     public void createWordMapFile(){
 
-
-
-
     }
 
 

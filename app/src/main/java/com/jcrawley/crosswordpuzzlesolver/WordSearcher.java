@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class WordSearcher {
 
@@ -34,6 +35,15 @@ public class WordSearcher {
         String inputText = WORD_SEPARATOR + searchText + WORD_SEPARATOR;
         Pattern pattern = Pattern.compile(inputText);
         return getMatchingWords(pattern);
+    }
+
+
+    public List<String> searchForPattern(String patternStr){
+
+        Pattern tagMatcher = Pattern.compile(patternStr);
+        return viewModel.wordsList.parallelStream()
+                .filter(word -> tagMatcher.matcher(word).find())
+                        .collect(Collectors.toList());
     }
 
 

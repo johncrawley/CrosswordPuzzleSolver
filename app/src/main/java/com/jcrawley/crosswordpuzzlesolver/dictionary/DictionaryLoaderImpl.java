@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class DictionaryLoaderImpl implements DictionaryLoader{
 
@@ -51,12 +51,17 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
 
     private void initMaps(){
+        final int MIN_LENGTH_OF_WORD = 1;
+        final int MAX_LENGTH_OF_WORD = 28;
         if(viewModel.wordsMap == null){
             viewModel.wordsMap = new HashMap<>(50_000);
         }
+        if(viewModel.wordsList == null){
+            viewModel.wordsList = new ArrayList<>(50_000);
+        }
         if(viewModel.wordsByLengthMap == null){
             viewModel.wordsByLengthMap = new HashMap<>(30);
-            for(int i=1; i< 28; i++){
+            for(int i = MIN_LENGTH_OF_WORD; i< MAX_LENGTH_OF_WORD; i++){
                 Map<String, Set<String>> map = new HashMap<>(500);
                 viewModel.wordsByLengthMap.put(i, map);
             }
@@ -70,8 +75,8 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line = br.readLine();
             while (line!= null){
-                addWordSetToMap(line);
-                line =br.readLine();
+                addWordSetToDataStructures(line);
+                line = br.readLine();
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -97,7 +102,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     }
 
 
-    public void addWordSetToMap(String wordsLine) {
+    public void addWordSetToDataStructures(String wordsLine) {
         viewModel.wordCount++;
         String[] lineArray = wordsLine.split(" ");
         String key = lineArray[0];
@@ -120,11 +125,8 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         for(int i=1; i< wordsArray.length; i++){
             str.append(" ");
             str.append(wordsArray[i]);
+            viewModel.wordsList.add(wordsArray[i]);
         }
     }
 
-
-    public String getSortedWord(String word){
-        return Arrays.stream(word.split("")).sorted().collect(Collectors.joining(""));
-    }
 }
