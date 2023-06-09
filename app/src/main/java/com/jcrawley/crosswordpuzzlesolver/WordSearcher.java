@@ -39,7 +39,6 @@ public class WordSearcher {
 
 
     public List<String> searchForPattern(String patternStr){
-
         Pattern tagMatcher = Pattern.compile(patternStr);
         return viewModel.wordsList.parallelStream()
                 .filter(word -> tagMatcher.matcher(word).find())

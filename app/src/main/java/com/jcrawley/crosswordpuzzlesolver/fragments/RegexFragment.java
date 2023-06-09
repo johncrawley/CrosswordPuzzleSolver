@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
-import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -27,20 +27,18 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class FindWordsUsingPatternFragment extends Fragment {
+public class RegexFragment extends Fragment {
 
     private EditText lettersEditText;
     private TextView resultsCountTextView, noResultsFoundTextView;
     private View listDivider;
     private Context context;
-    private String previousSearch;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
-    private AnagramFinder anagramFinder;
     private Executor findWordsExecutor;
 
     private WordSearcher wordSearcher;
-    public FindWordsUsingPatternFragment() {
+    public RegexFragment() {
         // Required empty public constructor
     }
 
@@ -51,7 +49,6 @@ public class FindWordsUsingPatternFragment extends Fragment {
         context = getContext();
         View parentView = inflater.inflate(R.layout.find_words_with_pattern, container, false);
         MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        anagramFinder = new AnagramFinder(viewModel, context);
         wordSearcher = new WordSearcher(viewModel);
         results = new ArrayList<>();
         setupViews(parentView);
@@ -66,6 +63,7 @@ public class FindWordsUsingPatternFragment extends Fragment {
         lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
         listDivider = parentView.findViewById(R.id.listDivider);
         resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
+        setupSearchButton(parentView);
     }
 
 
@@ -76,6 +74,12 @@ public class FindWordsUsingPatternFragment extends Fragment {
         foundWordsList.setAdapter(arrayAdapter);
         foundWordsList.setEmptyView(noResultsFoundTextView);
         noResultsFoundTextView.setVisibility(View.GONE);
+    }
+
+
+    private void setupSearchButton(View parentView){
+        ImageButton searchButton = parentView.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(v -> findWords());
     }
 
 
@@ -90,16 +94,18 @@ public class FindWordsUsingPatternFragment extends Fragment {
             }
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             noResultsFoundTextView.setVisibility(View.GONE);
-            findWordsExecutor.execute(this::findWords);
+            findWords();
             return true;
         });
     }
 
 
     private void findWords(){
-        results.clear();
-        results.addAll(wordSearcher.searchForPattern(getFormattedText(lettersEditText)));
-        updateViewWithResults();
+        findWordsExecutor.execute(()-> {
+                results.clear();
+                results.addAll(wordSearcher.searchForPattern(getFormattedText(lettersEditText)));
+                updateViewWithResults();
+        });
     }
 
 

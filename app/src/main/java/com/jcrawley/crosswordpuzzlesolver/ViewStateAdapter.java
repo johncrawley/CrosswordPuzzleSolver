@@ -1,6 +1,6 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
-import com.jcrawley.crosswordpuzzlesolver.fragments.FindWordsUsingPatternFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
@@ -25,7 +25,7 @@ public class ViewStateAdapter extends FragmentStateAdapter {
         fragmentsList.add(PuzzleHelperFragment::new);
         fragmentsList.add(WordExistsFragment::new);
         fragmentsList.add(FindWordsFragment::new);
-        fragmentsList.add(FindWordsUsingPatternFragment::new);
+        fragmentsList.add(RegexFragment::new);
     }
 
     @NonNull
