@@ -18,4 +18,9 @@
     <string name="no_result_found_text">No results found</string>
     <string name="allow_anagrams_switch_label">Allow Anagrams</string>
     <string name="loading_text">Loading</string>
+
+    <string name="menu_button_puzzle_helper"> Puzzle Helper</string>
+    <string name="menu_button_word_finder"> Word Finder</string>
+    <string name="menu_button_word_checker"> Word Checker</string>
+    <string name="menu_button_regular_expressions"> Regular Expressions</string>
 </resources>

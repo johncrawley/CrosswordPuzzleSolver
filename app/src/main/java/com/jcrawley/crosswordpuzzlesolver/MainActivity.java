@@ -1,6 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -38,6 +39,18 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+
+    private void setupFragmentsIf(boolean isSavedStateNull) {
+        if(!isSavedStateNull){
+            return;
+        }
+        Fragment mainMenuFragment = new MainMenuFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, mainMenuFragment)
+                .commit();
+    }
+
+
     public void hideProgressIndicatorQuickly(){
         findViewById(R.id.loadingLayout).setVisibility(View.GONE);
         findViewById(R.id.contentLayout).setVisibility(View.VISIBLE);
@@ -48,7 +61,6 @@ public class MainActivity extends AppCompatActivity{
         setupFadeOutAnimation();
         new Handler(Looper.getMainLooper()).post(() -> loadingLayout.startAnimation(fadeOutAnimation));
     }
-
 
 
     private void setupFadeOutAnimation(){

@@ -6,17 +6,26 @@
 
     <Button
         android:id="@+id/puzzleHelperButton"
+        android:text="@string/menu_button_puzzle_helper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/wordCheckerButton"
+        android:text="@string/menu_button_word_checker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/findWordsButton"
+        android:text="@string/menu_button_word_finder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-
+    <Button
+        android:id="@+id/patternWordsButton"
+        android:text="@string/menu_button_regular_expressions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
