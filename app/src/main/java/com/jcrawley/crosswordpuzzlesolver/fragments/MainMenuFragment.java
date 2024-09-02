@@ -27,6 +27,7 @@ public class MainMenuFragment extends Fragment {
 
 
     private void setupViews(View parentView){
+        setupButton(parentView, R.id.puzzleHelperButton, ()-> FragmentUtils.loadPuzzleHelper(this));
         setupButton(parentView, R.id.findWordsButton, ()-> FragmentUtils.loadFindWords(this));
         setupButton(parentView, R.id.wordCheckerButton, ()-> FragmentUtils.loadCheckWord(this));
         setupButton(parentView, R.id.patternWordsButton, ()-> FragmentUtils.loadRegex(this));

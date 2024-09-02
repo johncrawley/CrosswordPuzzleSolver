@@ -38,14 +38,12 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     @Override
     public String retrieveAllWords(){
         if(viewModel.wordsStr != null){
-            mainActivity.hideProgressIndicatorQuickly();
             return viewModel.wordsStr;
         }
         String words = "";
         initMaps();
         loadWordsFromFileToMaps();
         viewModel.dictionaryLatch.countDown();
-        mainActivity.hideProgressIndicator();
         return words;
     }
 
