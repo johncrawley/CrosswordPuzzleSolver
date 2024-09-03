@@ -11,4 +11,5 @@
     <color name="background_color">#E6D8D8</color>
     <color name="search_button_background_tint">#8CC5BF</color>
     <color name="search_button_background_tint2">#BFB65F</color>
+    <color name="fragment_background">#E6D8D8</color>
 </resources>
