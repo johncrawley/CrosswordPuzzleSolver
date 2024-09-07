@@ -2,4 +2,5 @@
 <resources>
     <attr name="fragment_background"/>
     <attr name="main_menu_background"/>
+    <attr name="panel_background"/>
 </resources>

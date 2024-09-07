@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="fragment_background">@color/fragment_background</item>
         <item name="main_menu_background">@color/main_menu_background</item>
+        <item name="panel_background">@color/panel_background</item>
     </style>
 
 </resources>
