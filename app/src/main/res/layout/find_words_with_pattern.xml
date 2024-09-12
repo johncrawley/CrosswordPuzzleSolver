@@ -9,16 +9,10 @@
     android:background="?attr/fragment_background"
     tools:context=".MainActivity">
 
-    <View
-        android:id="@+id/topDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/page_padding_top"
-        android:background="?android:attr/listDivider"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/panel_background"
         android:layout_gravity="center">
 
 
@@ -26,7 +20,7 @@
             android:id="@+id/lettersInputEditTextLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/input_text_margin_horizontal"
+            android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
             android:layout_marginBottom="12dp"
             android:hint="@string/hint_pattern_input"
             app:layout_constraintBottom_toBottomOf="parent"
