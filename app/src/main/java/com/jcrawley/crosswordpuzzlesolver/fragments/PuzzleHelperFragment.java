@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class PuzzleHelperFragment extends Fragment {
         anagramFinder = new AnagramFinder(viewModel, context);
         setupViews(parentView);
         setupList(parentView);
+        setupSearchButton(parentView);
         return parentView;
     }
 
@@ -69,6 +71,12 @@ public class PuzzleHelperFragment extends Fragment {
         resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
         listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
+    }
+
+
+    private void setupSearchButton(View parentView){
+        Button searchButton = parentView.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(v -> runSearch());
     }
 
 
@@ -127,11 +135,16 @@ public class PuzzleHelperFragment extends Fragment {
             return;
         }
         results.clear();
-        List<String> initialResults = new ArrayList<>(viewModel.isUsingAnagramsForCrossword ?
-                anagramFinder.getWordsMatching(inputText) : wordSearcher.searchFor(inputText));
-
+        var initialResults = getInitialResultsFor(inputText);
         results.addAll(excludeWordsWithBanishedLetters(initialResults));
         updateViewWithResults();
+    }
+
+
+    private List<String> getInitialResultsFor(String inputText){
+        var words = viewModel.isUsingAnagramsForCrossword ?
+                anagramFinder.getWordsMatching(inputText) : wordSearcher.searchFor(inputText);
+        return new ArrayList<>(words);
     }
 
 

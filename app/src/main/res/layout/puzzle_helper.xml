@@ -45,12 +45,12 @@
                     android:text="@string/allow_anagrams_switch_label" />
             </LinearLayout>
 
-
             <ImageButton
                 android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:contentDescription="@string/search_button_content_description"
                 android:minWidth="132dp"
                 android:src="@drawable/baseline_search_24"
                 android:background="@drawable/button_background"
@@ -63,11 +63,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
 
 

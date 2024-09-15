@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Word Helper</string>
     <string name="text_placeholder" />
-    <string name="text_instructions">Known Letters, use \'.\' for unknown letters</string>
+    <string name="text_instructions">Word letters, add a \'.\' for every unknown letter</string>
     <string name="excluded_letters_text_instructions">Excluded letters</string>
     <string name="hint_enter_whole_word_check">Enter a word to see if it exists in the dictionary</string>
     <string name="hint_pattern_input">Specify a Java Regular Expression</string>
@@ -19,8 +19,11 @@
     <string name="allow_anagrams_switch_label">Allow Anagrams&#160;&#160;</string>
     <string name="loading_text">Loading</string>
 
+
     <string name="menu_button_puzzle_helper"> Puzzle Helper</string>
     <string name="menu_button_word_finder"> Word Finder</string>
     <string name="menu_button_word_checker"> Word Checker</string>
     <string name="menu_button_regular_expressions"> Regular Expressions</string>
+
+    <string name="search_button_content_description">Search For Results</string>
 </resources>
