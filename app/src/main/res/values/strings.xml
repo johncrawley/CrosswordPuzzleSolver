@@ -24,6 +24,7 @@
     <string name="menu_button_word_finder"> Word Finder</string>
     <string name="menu_button_word_checker"> Word Checker</string>
     <string name="menu_button_regular_expressions"> Regular Expressions</string>
+    <string name="menu_button_dictionaries"> Dictionaries</string>
 
     <string name="search_button_content_description">Search For Results</string>
 </resources>
