@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="2"
+    android:orientation="horizontal">
+    
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lettersInputEditTextLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+        android:layout_marginBottom="12dp"
+        android:hint="@string/find_words_instructions">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:id="@+id/lettersInputEditText"
+            android:maxLength="@integer/find_words_max_input_size"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+    
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/requiredLettersInputEditTextLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/input_text_margin_horizontal"
+        android:layout_marginBottom="12dp"
+        android:hint="@string/required_letters_exit_text_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:id="@+id/requiredLettersInputEditText"
+            android:maxLength="@integer/find_words_max_input_for_required_letters_size"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>
