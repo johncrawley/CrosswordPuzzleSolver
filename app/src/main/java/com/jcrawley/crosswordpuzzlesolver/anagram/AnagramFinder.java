@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepository;
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepositoryImpl;
+import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsViewModel;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
 public class AnagramFinder {
 
     private final BinaryCounter binaryCounter;
-    private final MainViewModel viewModel;
+    private final FindWordsViewModel viewModel;
     private final WordsRepository wordsRepository;
 
-    public AnagramFinder(MainViewModel viewModel, Context context){
+    public AnagramFinder(FindWordsViewModel viewModel, Context context){
         this.viewModel = viewModel;
         this.binaryCounter = new BinaryCounter(2);
         wordsRepository = new WordsRepositoryImpl(context);

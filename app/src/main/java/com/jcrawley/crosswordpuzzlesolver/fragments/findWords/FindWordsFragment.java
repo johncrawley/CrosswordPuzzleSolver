@@ -1,4 +1,4 @@
-package com.jcrawley.crosswordpuzzlesolver.fragments;
+package com.jcrawley.crosswordpuzzlesolver.fragments.findWords;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
-import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
@@ -52,23 +52,38 @@ public class FindWordsFragment extends Fragment {
                              Bundle savedInstanceState) {
         context = getContext();
         View parentView = inflater.inflate(R.layout.find_words, container, false);
-        MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        FindWordsViewModel viewModel = new ViewModelProvider(this).get(FindWordsViewModel.class);
+
         anagramFinder = new AnagramFinder(viewModel, context);
         results = new ArrayList<>();
-        setupViews(parentView);
+        setupViews(parentView, viewModel);
         setupList(parentView);
-        setupKeyAction(lettersEditText);
-        setupKeyAction(requiredLettersEditText);
+        setupKeyAction(lettersEditText, (text)-> viewModel.lettersText = text);
+        setupKeyAction(requiredLettersEditText, (text) -> viewModel.requiredLettersText = text);
         findWordsExecutor = Executors.newSingleThreadExecutor();
         return parentView;
     }
 
 
-    private void setupViews(View parentView){
-        lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
-        requiredLettersEditText = parentView.findViewById(R.id.requiredLettersInputEditText);
+    private void setupViews(View parentView, FindWordsViewModel viewModel){
+        lettersEditText = setupEditTextView(parentView, R.id.lettersInputEditText, viewModel.lettersText);
+        requiredLettersEditText = setupEditTextView(parentView, R.id.requiredLettersInputEditText, viewModel.requiredLettersText);
+        resultsCountTextView = setupTextView(parentView, R.id.resultsCountTextView, viewModel.lettersText);
         listDivider = parentView.findViewById(R.id.listDivider);
-        resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
+    }
+
+
+    private EditText setupEditTextView(View parentView, int id, String viewModelStr){
+        EditText editText = parentView.findViewById(id);
+        editText.setText(viewModelStr);
+        return editText;
+    }
+
+
+    private TextView setupTextView(View parentView, int id, String viewModelStr){
+        TextView textView = parentView.findViewById(id);
+        textView.setText(viewModelStr);
+        return textView;
     }
 
 
@@ -82,8 +97,9 @@ public class FindWordsFragment extends Fragment {
     }
 
 
-    private void setupKeyAction(final EditText editText){
+    private void setupKeyAction(final EditText editText, Consumer<String> viewModelConsumer){
         editText.setOnEditorActionListener((v, actionId, event) -> {
+            viewModelConsumer.accept(editText.getText().toString());
             if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
                 return false;
             }
@@ -108,8 +124,8 @@ public class FindWordsFragment extends Fragment {
         results.clear();
         results.addAll(filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(inputText)));
         updateViewWithResults();
-
     }
+
 
     private List<String> filterResultsWithRequiredLetters(List<String> words){
         List<String> requiredLetters = createRequiredLettersList();
