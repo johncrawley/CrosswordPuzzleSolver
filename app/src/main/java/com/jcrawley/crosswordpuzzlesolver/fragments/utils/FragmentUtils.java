@@ -2,14 +2,12 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.utils;
 
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.jcrawley.crosswordpuzzlesolver.fragments.FindWordsFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
@@ -49,11 +47,6 @@ public class FragmentUtils {
     }
 
 
-    public static void loadFragmentOnBackButtonPressed(Fragment parentFragment, Fragment destinationFragment, String fragmentTag){
-        onBackButtonPressed(parentFragment, () -> loadFragment(parentFragment, destinationFragment, fragmentTag));
-    }
-
-
     public static void loadFragment(Fragment parentFragment, Fragment fragment, String tag, Bundle bundle){
         FragmentManager fragmentManager = parentFragment.getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -64,17 +57,6 @@ public class FragmentUtils {
                 .replace(R.id.fragment_container, fragment, tag)
                 .addToBackStack(null)
                 .commit();
-    }
-
-
-    public static void onBackButtonPressed(Fragment parentFragment, Runnable action){
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                action.run();
-            }
-        };
-        parentFragment.requireActivity().getOnBackPressedDispatcher().addCallback(parentFragment.getViewLifecycleOwner(), callback);
     }
 
 
