@@ -55,7 +55,7 @@ public class PuzzleHelperFragment extends Fragment {
         View parentView = inflater.inflate(R.layout.puzzle_helper, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel);
-        anagramFinder = new AnagramFinder(viewModel, context);
+        anagramFinder = new AnagramFinder(viewModel.wordsMap, viewModel.wordsByLengthMap, context);
         setupViews(parentView);
         setupList(parentView);
         setupSearchButton(parentView);

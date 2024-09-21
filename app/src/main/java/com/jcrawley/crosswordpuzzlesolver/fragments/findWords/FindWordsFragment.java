@@ -54,7 +54,7 @@ public class FindWordsFragment extends Fragment {
         View parentView = inflater.inflate(R.layout.find_words, container, false);
         FindWordsViewModel viewModel = new ViewModelProvider(this).get(FindWordsViewModel.class);
 
-        anagramFinder = new AnagramFinder(viewModel, context);
+        anagramFinder = new AnagramFinder(viewModel.wordsMap, viewModel.wordsByLengthMap, context);
         results = new ArrayList<>();
         setupViews(parentView, viewModel);
         setupList(parentView);

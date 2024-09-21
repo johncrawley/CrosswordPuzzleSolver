@@ -12,7 +12,7 @@ import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 import java.util.concurrent.Executors;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private MainViewModel viewModel;
 
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     private void setupViewModel(){
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(MainActivity.this).get(MainViewModel.class);
         if(viewModel.wordsList == null || viewModel.wordsList.isEmpty()){
             Executors.newSingleThreadExecutor().submit(
                     ()->  new DictionaryLoaderImpl(this, viewModel).retrieveAllWords());
@@ -43,6 +43,5 @@ public class MainActivity extends AppCompatActivity{
                 .add(R.id.fragment_container, mainMenuFragment)
                 .commit();
     }
-
 
 }

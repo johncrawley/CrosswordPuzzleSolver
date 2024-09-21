@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepository;
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepositoryImpl;
-import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsViewModel;
-import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,12 +18,15 @@ import java.util.stream.Collectors;
 public class AnagramFinder {
 
     private final BinaryCounter binaryCounter;
-    private final FindWordsViewModel viewModel;
     private final WordsRepository wordsRepository;
+    private final Map<String, Set<String>> wordsMap;
+    private final Map<Integer, Map<String, Set<String>>> wordsByLengthMap;
 
-    public AnagramFinder(FindWordsViewModel viewModel, Context context){
-        this.viewModel = viewModel;
+    public AnagramFinder(
+            Map<String, Set<String>> wordsMap, Map<Integer, Map<String, Set<String>>> wordsByLengthMap, Context context){
         this.binaryCounter = new BinaryCounter(2);
+        this.wordsMap = wordsMap;
+        this.wordsByLengthMap = wordsByLengthMap;
         wordsRepository = new WordsRepositoryImpl(context);
         wordsRepository.getAllWords();
     }
@@ -48,7 +49,7 @@ public class AnagramFinder {
     public List<String> getWordsMatching(String providedLetters){
         List<String> matchingWords = new ArrayList<>();
         String[] lettersArray = createLettersArrayFrom(providedLetters);
-        Map<String, Set<String>> wordsMap = viewModel.wordsByLengthMap.get(providedLetters.length());
+        Map<String, Set<String>> wordsMap = wordsByLengthMap.get(providedLetters.length());
         if(wordsMap == null){
             return List.of();
         }
@@ -114,8 +115,8 @@ public class AnagramFinder {
 
     private Set<String> getAllWordsFromMap(String searchLetters){
         Set<String> foundWords = new HashSet<>();
-        if(viewModel.wordsMap.containsKey(searchLetters)) {
-            Set<String> words = viewModel.wordsMap.get(searchLetters);
+        if(wordsMap.containsKey(searchLetters)) {
+            Set<String> words = wordsMap.get(searchLetters);
             if (words != null) {
                 foundWords.addAll(words);
             }
