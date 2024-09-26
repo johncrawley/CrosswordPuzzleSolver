@@ -8,10 +8,17 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <service
             android:name=".DictionaryService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"
+            android:label="DictionaryService"
+            android:stopWithTask="true">
+            <intent-filter>
+                <action android:name="com.jcrawley.crosswordpuzzlesolver.DictionaryService" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".MainActivity"
