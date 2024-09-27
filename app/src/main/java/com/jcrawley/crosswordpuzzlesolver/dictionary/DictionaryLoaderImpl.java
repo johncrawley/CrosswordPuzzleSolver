@@ -2,7 +2,6 @@ package com.jcrawley.crosswordpuzzlesolver.dictionary;
 
 import android.content.Context;
 
-import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
 import java.io.BufferedReader;
@@ -54,6 +53,26 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         loadWordsFromFileToMaps();
         dictionaryLatch.countDown();
         return words;
+    }
+
+
+    public Map<String, Set<String>> getWordsMap(){
+        return wordsMap;
+    }
+
+
+    public Map<Integer, Map<String, Set<String>>> getWordsByLengthMap(){
+       return getWordsByLengthMap();
+    }
+
+
+    public List<String> getWordsList(){
+        return wordsList;
+    }
+
+
+    public int getWordCount(){
+        return wordCount;
     }
 
 

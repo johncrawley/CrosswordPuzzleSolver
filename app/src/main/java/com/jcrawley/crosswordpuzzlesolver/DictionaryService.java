@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 
 import java.util.concurrent.Executors;
@@ -13,16 +14,22 @@ public class DictionaryService extends Service {
 
     IBinder binder = new LocalBinder();
     private MainActivity mainActivity;
+    private DictionaryLoader dictionaryLoader;
 
 
     public DictionaryService() {
-
+        loadDictionaryWords();
     }
 
-    private void loadDictionaryWords(){
 
+    private void loadDictionaryWords(){
         Executors.newSingleThreadExecutor().submit(
-                ()->  new DictionaryLoaderImpl(getApplicationContext()).retrieveAllWords());
+                ()->  dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext()));
+    }
+
+
+    public DictionaryLoader getDictionaryLoader(){
+        return dictionaryLoader;
     }
 
 

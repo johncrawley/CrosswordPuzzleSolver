@@ -7,14 +7,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.fragments.MainMenuFragment;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -49,7 +52,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupViewModel();
         setupFragmentsIf(savedInstanceState == null);
+        setupDictionaryService();
     }
+
+    public DictionaryLoader getDictionaryLoader(){
+        return null;
+    }
+
+
+    public Optional<DictionaryService> getDictionaryService(){
+        return Optional.ofNullable(dictionaryService);
+    }
+
+
+    private void setupDictionaryService() {
+        Intent intent = new Intent(getApplicationContext(), DictionaryService.class);
+        getApplicationContext().startService(intent);
+        getApplicationContext().bindService(intent, connection, 0);
+    }
+
 
 
     private void setupViewModel(){
