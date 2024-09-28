@@ -1,7 +1,5 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.sendMessage;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,7 +53,11 @@ public class MainActivity extends AppCompatActivity {
         setupDictionaryService();
     }
 
+
     public DictionaryLoader getDictionaryLoader(){
+        if(getDictionaryService().isPresent()){
+            return getDictionaryService().get().getDictionaryLoader();
+        }
         return null;
     }
 

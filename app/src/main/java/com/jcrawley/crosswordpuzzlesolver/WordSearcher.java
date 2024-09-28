@@ -16,10 +16,21 @@ public class WordSearcher {
     private List<String> badCharacters;
     private final HashSet<String> foundWords;
     private int expectedCharacters;
-    private final MainViewModel viewModel;
+    private final List<String> wordsList;
+    private final String wordsStr;
+
 
     public WordSearcher(MainViewModel viewModel){
-        this.viewModel = viewModel;
+        this.wordsList = viewModel.wordsList;
+        this.wordsStr = viewModel.wordsStr;
+        setupBadCharacters();
+        foundWords = new HashSet<>();
+    }
+
+
+    public WordSearcher(List<String> wordsList, String wordsStr){
+        this.wordsList = wordsList;
+        this.wordsStr = wordsStr;
         setupBadCharacters();
         foundWords = new HashSet<>();
     }
@@ -40,7 +51,7 @@ public class WordSearcher {
 
     public List<String> searchForPattern(String patternStr){
         Pattern tagMatcher = Pattern.compile(patternStr);
-        return viewModel.wordsList.parallelStream()
+        return wordsList.parallelStream()
                 .filter(word -> tagMatcher.matcher(word).find())
                         .collect(Collectors.toList());
     }
@@ -54,7 +65,7 @@ public class WordSearcher {
      */
     private List<String> getMatchingWords(Pattern tagMatcher) {
         foundWords.clear();
-        if(viewModel.wordsStr == null){
+        if(wordsStr == null){
             return Collections.emptyList();
         }
         processResults(tagMatcher);
@@ -65,7 +76,7 @@ public class WordSearcher {
 
 
     private void processResults(Pattern tagMatcher){
-        Matcher matcher = tagMatcher.matcher(viewModel.wordsStr);
+        Matcher matcher = tagMatcher.matcher(wordsStr);
         while(matcher.find()) {
             processResult(matcher.group());
         }

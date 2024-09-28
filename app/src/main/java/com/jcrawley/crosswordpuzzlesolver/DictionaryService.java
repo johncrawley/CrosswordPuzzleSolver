@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 
@@ -15,10 +16,15 @@ public class DictionaryService extends Service {
     IBinder binder = new LocalBinder();
     private MainActivity mainActivity;
     private DictionaryLoader dictionaryLoader;
+    private WordSearcher wordSearcher;
+    private AnagramFinder anagramFinder;
 
 
     public DictionaryService() {
         loadDictionaryWords();
+
+      //  wordSearcher = new WordSearcher();
+      //  anagramFinder = new AnagramFinder(viewModel.wordsMap, viewModel.wordsByLengthMap, context);
     }
 
 

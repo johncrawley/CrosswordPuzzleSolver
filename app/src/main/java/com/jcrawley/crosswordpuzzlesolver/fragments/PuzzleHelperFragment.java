@@ -38,11 +38,11 @@ public class PuzzleHelperFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private WordSearcher wordSearcher;
+    private AnagramFinder anagramFinder;
     private TextView resultsCountTextView;
     private boolean hasSearchStarted;
     private View noResultsFoundView;
     private MainViewModel viewModel;
-    private AnagramFinder anagramFinder;
 
     public PuzzleHelperFragment() {
         // Required empty public constructor
