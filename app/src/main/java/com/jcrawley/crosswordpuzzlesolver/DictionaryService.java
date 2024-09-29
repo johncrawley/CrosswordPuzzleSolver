@@ -30,7 +30,11 @@ public class DictionaryService extends Service {
 
     private void loadDictionaryWords(){
         Executors.newSingleThreadExecutor().submit(
-                ()->  dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext()));
+                ()-> {
+                    dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext());
+                    wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
+                    anagramFinder = new AnagramFinder(dictionaryLoader.getWordsMap(), dictionaryLoader.getWordsByLengthMap(), getApplicationContext());
+                } );
     }
 
 
