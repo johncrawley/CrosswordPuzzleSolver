@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
@@ -23,8 +24,11 @@ import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
@@ -38,7 +42,6 @@ public class PuzzleHelperFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private WordSearcher wordSearcher;
-    private AnagramFinder anagramFinder;
     private TextView resultsCountTextView;
     private boolean hasSearchStarted;
     private View noResultsFoundView;
@@ -55,7 +58,6 @@ public class PuzzleHelperFragment extends Fragment {
         View parentView = inflater.inflate(R.layout.puzzle_helper, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         wordSearcher = new WordSearcher(viewModel);
-        anagramFinder = new AnagramFinder(viewModel.wordsMap, viewModel.wordsByLengthMap, context);
         setupViews(parentView);
         setupList(parentView);
         setupSearchButton(parentView);
@@ -71,6 +73,18 @@ public class PuzzleHelperFragment extends Fragment {
         resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
         listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
+    }
+
+    public Optional<AnagramFinder> getAnagramFinder(){
+       MainActivity mainActivity = (MainActivity) getActivity();
+       if(mainActivity == null){
+           return Optional.empty();
+       }
+       var dictionaryService = mainActivity.getDictionaryService();
+       if(!dictionaryService.isPresent()){
+           return Optional.empty();
+       }
+        return Optional.of(dictionaryService.get().getAnagramFinder());
     }
 
 
@@ -143,8 +157,17 @@ public class PuzzleHelperFragment extends Fragment {
 
     private List<String> getInitialResultsFor(String inputText){
         var words = viewModel.isUsingAnagramsForCrossword ?
-                anagramFinder.getWordsMatching(inputText) : wordSearcher.searchFor(inputText);
+                getAnagramWordsFrom(inputText) : wordSearcher.searchFor(inputText);
         return new ArrayList<>(words);
+    }
+
+
+    private List<String> getAnagramWordsFrom(String inputText){
+        var anagramFinder = getAnagramFinder();
+        if(anagramFinder.isPresent()){
+            return anagramFinder.get().getWordsMatching(inputText);
+        }
+        return Collections.emptyList();
     }
 
 

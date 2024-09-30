@@ -27,6 +27,15 @@ public class DictionaryService extends Service {
       //  anagramFinder = new AnagramFinder(viewModel.wordsMap, viewModel.wordsByLengthMap, context);
     }
 
+    public AnagramFinder getAnagramFinder(){
+        return anagramFinder;
+    }
+
+
+    public WordSearcher getWordSearcher(){
+        return wordSearcher;
+    }
+
 
     private void loadDictionaryWords(){
         Executors.newSingleThreadExecutor().submit(
