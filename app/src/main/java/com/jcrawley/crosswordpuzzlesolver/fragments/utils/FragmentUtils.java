@@ -7,13 +7,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
+import com.jcrawley.crosswordpuzzlesolver.MainActivity;
+import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
+import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class FragmentUtils {
 
@@ -103,5 +109,24 @@ public class FragmentUtils {
         return  bundle.getBoolean(tag.name());
     }
 
+
+    public static Optional<AnagramFinder> getAnagramFinder(Fragment fragment){
+        return getDictionaryObj(DictionaryService::getAnagramFinder, fragment);
+    }
+
+
+    public static Optional<WordSearcher> getWordSearcher(Fragment fragment) {
+        return getDictionaryObj(DictionaryService::getWordSearcher, fragment);
+    }
+
+
+    public static <T> Optional<T> getDictionaryObj(Function<DictionaryService, T> getter, Fragment fragment){
+        MainActivity mainActivity = (MainActivity) fragment.getActivity();
+        if(mainActivity == null){
+            return Optional.empty();
+        }
+        var dictionaryService = mainActivity.getDictionaryService();
+        return dictionaryService.map(getter);
+    }
 
 }

@@ -20,10 +20,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
+import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -37,7 +40,6 @@ public class RegexFragment extends Fragment {
     private List<String> results;
     private Executor findWordsExecutor;
 
-    private WordSearcher wordSearcher;
     public RegexFragment() {
         // Required empty public constructor
     }
@@ -48,8 +50,6 @@ public class RegexFragment extends Fragment {
                              Bundle savedInstanceState) {
         context = getContext();
         View parentView = inflater.inflate(R.layout.find_words_with_pattern, container, false);
-        MainViewModel viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        wordSearcher = new WordSearcher(viewModel);
         results = new ArrayList<>();
         setupViews(parentView);
         setupList(parentView);
@@ -103,9 +103,18 @@ public class RegexFragment extends Fragment {
     private void findWords(){
         findWordsExecutor.execute(()-> {
                 results.clear();
-                results.addAll(wordSearcher.searchForPattern(getFormattedText(lettersEditText)));
+                results.addAll(getResultsForPattern(getFormattedText(lettersEditText)));
                 updateViewWithResults();
         });
+    }
+
+
+    private List<String> getResultsForPattern(String pattern){
+        Optional<WordSearcher> wordSearcher = FragmentUtils.getWordSearcher(this);
+       if(wordSearcher.isPresent()){
+            return wordSearcher.get().searchForPattern(pattern);
+        };
+       return Collections.emptyList();
     }
 
 

@@ -21,6 +21,7 @@ import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
+import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -72,25 +73,6 @@ public class PuzzleHelperFragment extends Fragment {
         resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
         listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
-    }
-
-    public Optional<AnagramFinder> getAnagramFinder(){
-        return getDictionaryObj(DictionaryService::getAnagramFinder);
-    }
-
-
-    public Optional<WordSearcher> getWordSearcher() {
-        return getDictionaryObj(DictionaryService::getWordSearcher);
-    }
-
-
-    public <T> Optional<T> getDictionaryObj(Function<DictionaryService, T> getter){
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if(mainActivity == null){
-            return Optional.empty();
-        }
-        var dictionaryService = mainActivity.getDictionaryService();
-        return dictionaryService.map(getter);
     }
 
 
@@ -169,7 +151,7 @@ public class PuzzleHelperFragment extends Fragment {
 
 
     private List<String> getWordSearcherResultsFor(String inputText){
-        var wordSearcher = getWordSearcher();
+        var wordSearcher = FragmentUtils.getWordSearcher(this);
         if(wordSearcher.isPresent()){
             return wordSearcher.get().searchFor(inputText);
         }
@@ -178,7 +160,7 @@ public class PuzzleHelperFragment extends Fragment {
 
 
     private List<String> getAnagramWordsFrom(String inputText){
-        var anagramFinder = getAnagramFinder();
+        var anagramFinder = FragmentUtils.getAnagramFinder(this);
         if(anagramFinder.isPresent()){
             return anagramFinder.get().getWordsMatching(inputText);
         }
