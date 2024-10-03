@@ -36,6 +36,15 @@ public class DictionaryService extends Service {
         return wordSearcher;
     }
 
+    public void getAnagramsFor(String letters, WordListView wordListView){
+        if(anagramFinder == null){
+            return;
+        }
+        Executors.newSingleThreadExecutor().submit( ()->{
+            wordListView.setWords(anagramFinder.getWordsMatching(letters));
+        });
+    }
+
 
     private void loadDictionaryWords(){
         Executors.newSingleThreadExecutor().submit(

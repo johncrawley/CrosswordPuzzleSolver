@@ -16,11 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
-import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
-import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
-import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
+import com.jcrawley.crosswordpuzzlesolver.WordListView;
 import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
@@ -28,15 +25,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class PuzzleHelperFragment extends Fragment {
+public class PuzzleHelperFragment extends Fragment implements WordListView {
 
     private EditText lettersEditText, excludedLettersEditText;
     private View listDivider;
@@ -225,4 +220,12 @@ public class PuzzleHelperFragment extends Fragment {
         resultsCountTextView.setText(resultsText);
     }
 
+    @Override
+    public void setWords(List<String> words) {
+        new Handler(Looper.getMainLooper()).post(()-> {
+            arrayAdapter.notifyDataSetChanged();
+            setResultsText();
+            updateVisibilityOnListDivider();
+        });
+    }
 }
