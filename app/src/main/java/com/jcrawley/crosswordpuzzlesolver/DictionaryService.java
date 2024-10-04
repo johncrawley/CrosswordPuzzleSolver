@@ -8,8 +8,14 @@ import android.os.IBinder;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
+import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class DictionaryService extends Service {
 
@@ -43,6 +49,52 @@ public class DictionaryService extends Service {
         Executors.newSingleThreadExecutor().submit( ()->{
             wordListView.setWords(anagramFinder.getWordsMatching(letters));
         });
+    }
+
+
+    private void getPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
+        String formattedInput = inputText.trim().toLowerCase();
+        if (formattedInput.isEmpty()) {
+            return;
+        }
+        List<String> results = new ArrayList<>();
+        var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
+        results.addAll(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
+        wordListView.setWords(results);
+    }
+
+
+    private List<String> excludeWordsWithBanishedLetters(List<String> initialResults, String excludedLettersStr){
+        if(excludedLettersStr.isEmpty()){
+            return new ArrayList<>(initialResults);
+        }
+        List<String> excludedLetters = Arrays.asList(excludedLettersStr.split(""));
+        return createListOfAllowedWords(initialResults, excludedLetters);
+    }
+
+
+
+    private List<String> createListOfAllowedWords(List<String> inputList, List<String> excludedLetters){
+        return inputList.stream().filter(word -> isWordFreeOfExcludedLetters(word, excludedLetters)).collect(Collectors.toList());
+    }
+
+
+    private boolean isWordFreeOfExcludedLetters(String word, List<String> excludedLetters){
+        String lowercaseWord = word.toLowerCase();
+        return excludedLetters.stream().noneMatch(lowercaseWord::contains);
+    }
+
+
+    private List<String> getInitialResultsFor(String inputText, boolean isUsingAnagrams){
+        var words = isUsingAnagrams ?
+                getAnagramWordsFrom(inputText) : wordSearcher.searchFor(inputText);
+        return new ArrayList<>(words);
+    }
+
+
+
+    private List<String> getAnagramWordsFrom(String inputText){
+            return anagramFinder.getWordsMatching(inputText);
     }
 
 

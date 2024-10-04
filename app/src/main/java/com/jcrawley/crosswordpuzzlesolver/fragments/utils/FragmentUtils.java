@@ -1,6 +1,9 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.utils;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -117,6 +120,22 @@ public class FragmentUtils {
 
     public static Optional<WordSearcher> getWordSearcher(Fragment fragment) {
         return getDictionaryObj(DictionaryService::getWordSearcher, fragment);
+    }
+
+    public static void fadeOut(View view){
+        AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
+        anim.setDuration(500);
+        anim.setRepeatCount(1);
+        view.startAnimation(anim);
+    }
+
+
+
+    public static void fadeIn(View view){
+        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(500);
+        anim.setRepeatCount(1);
+        view.startAnimation(anim);
     }
 
 
