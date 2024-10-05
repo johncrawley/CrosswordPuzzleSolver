@@ -42,17 +42,8 @@ public class DictionaryService extends Service {
         return wordSearcher;
     }
 
-    public void getAnagramsFor(String letters, WordListView wordListView){
-        if(anagramFinder == null){
-            return;
-        }
-        Executors.newSingleThreadExecutor().submit( ()->{
-            wordListView.setWords(anagramFinder.getWordsMatching(letters));
-        });
-    }
 
-
-    private void getPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
+    public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
         String formattedInput = inputText.trim().toLowerCase();
         if (formattedInput.isEmpty()) {
             return;

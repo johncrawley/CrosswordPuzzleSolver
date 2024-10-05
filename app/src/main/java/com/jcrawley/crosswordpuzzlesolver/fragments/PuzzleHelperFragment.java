@@ -16,17 +16,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
+import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
-import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -73,7 +71,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
     private void setupSearchButton(View parentView){
         Button searchButton = parentView.findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(v -> runSearch());
+        searchButton.setOnClickListener(v -> searchForMatches());
     }
 
 
@@ -104,7 +102,8 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 if(!hasSearchStarted) {
                     noResultsFoundView.setVisibility(View.GONE);
-                    Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
+                    searchForMatches();
+                   // Executors.newSingleThreadExecutor().submit(this::searchForCrosswordMatches);
                 }
                 return true;
             }
@@ -113,63 +112,22 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     }
 
 
-    private void searchForCrosswordMatches(){
-        hasSearchStarted = true;
-        try {
-            viewModel.dictionaryLatch.await();
-            runSearch();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }finally{
-            hasSearchStarted = false;
-        }
-    }
-
-
-    private void runSearch(){
-        String inputText = getFormattedText(lettersEditText);
-        if (inputText.isEmpty()) {
-            return;
-        }
-        results.clear();
-        var initialResults = getInitialResultsFor(inputText);
-        results.addAll(excludeWordsWithBanishedLetters(initialResults));
-        updateViewWithResults();
-    }
-
-
-    private List<String> getInitialResultsFor(String inputText){
-        var words = viewModel.isUsingAnagramsForCrossword ?
-                getAnagramWordsFrom(inputText) : getWordSearcherResultsFor(inputText);
-        return new ArrayList<>(words);
-    }
-
-
-    private List<String> getWordSearcherResultsFor(String inputText){
-        var wordSearcher = FragmentUtils.getWordSearcher(this);
-        if(wordSearcher.isPresent()){
-            return wordSearcher.get().searchFor(inputText);
-        }
-        return Collections.emptyList();
-    }
-
-
-    private List<String> getAnagramWordsFrom(String inputText){
-        var anagramFinder = FragmentUtils.getAnagramFinder(this);
-        if(anagramFinder.isPresent()){
-            return anagramFinder.get().getWordsMatching(inputText);
-        }
-        return Collections.emptyList();
-    }
-
-
-    private void updateViewWithResults(){
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(()-> {
-            arrayAdapter.notifyDataSetChanged();
-            setResultsText();
-            updateVisibilityOnListDivider();
+    private void searchForMatches(){
+        getDictionaryService().ifPresent(ds -> {
+            String inputText = lettersEditText.getText().toString();
+            String excludedText = excludedLettersEditText.getText().toString();
+            ds.runPuzzleHelperSearch(inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
         });
+
+    }
+
+
+    private Optional<DictionaryService> getDictionaryService(){
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if(mainActivity == null){
+            return Optional.empty();
+        }
+        return mainActivity.getDictionaryService();
     }
 
 
@@ -178,36 +136,10 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     }
 
 
-    private List<String> excludeWordsWithBanishedLetters(List<String> initialResults){
-        String excludedLettersStr = excludedLettersEditText.getText().toString();
-        if(excludedLettersStr.isEmpty()){
-            return new ArrayList<>(initialResults);
-        }
-        List<String> excludedLetters = Arrays.asList(excludedLettersStr.split(""));
-        return createListOfAllowedWords(initialResults, excludedLetters);
-    }
-
-
-    private List<String> createListOfAllowedWords(List<String> inputList, List<String> excludedLetters){
-        return inputList.stream().filter(word -> isWordFreeOfExcludedLetters(word, excludedLetters)).collect(Collectors.toList());
-    }
-
-
-    private boolean isWordFreeOfExcludedLetters(String word, List<String> excludedLetters){
-        String lowercaseWord = word.toLowerCase();
-        return excludedLetters.stream().noneMatch(lowercaseWord::contains);
-    }
-
-
-    private String getFormattedText(EditText editText){
-        String text = editText.getText().toString();
-        return text.trim().toLowerCase();
-    }
-
-
     private void log(String msg){
         System.out.println("^^^ CrosswordHelperFragment: " + msg);
     }
+
 
     private void setResultsText(){
         String resultsText = "";
@@ -219,6 +151,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         }
         resultsCountTextView.setText(resultsText);
     }
+
 
     @Override
     public void setWords(List<String> words) {
