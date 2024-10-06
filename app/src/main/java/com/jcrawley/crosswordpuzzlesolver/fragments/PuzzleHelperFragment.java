@@ -20,6 +20,7 @@ import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
+import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private boolean hasSearchStarted;
     private View noResultsFoundView;
     private MainViewModel viewModel;
+    private ListView resultsList;
 
     public PuzzleHelperFragment() {
         // Required empty public constructor
@@ -84,10 +86,10 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private void setupList(View parentView){
         results = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView crosswordMatchesList = parentView.findViewById(R.id.crosswordHelperList);
+        resultsList = parentView.findViewById(R.id.crosswordHelperList);
         noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
-        crosswordMatchesList.setEmptyView(noResultsFoundView);
-        crosswordMatchesList.setAdapter(arrayAdapter);
+        resultsList.setEmptyView(noResultsFoundView);
+        resultsList.setAdapter(arrayAdapter);
         noResultsFoundView.setVisibility(View.GONE);
     }
 
@@ -118,7 +120,6 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
             String excludedText = excludedLettersEditText.getText().toString();
             ds.runPuzzleHelperSearch(inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
         });
-
     }
 
 
@@ -160,5 +161,18 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
             setResultsText();
             updateVisibilityOnListDivider();
         });
+    }
+
+
+    @Override
+    public void fadeOutList() {
+        FragmentUtils.fadeOut(resultsList);
+    }
+
+
+    @Override
+    public void fadeInList() {
+        FragmentUtils.fadeIn(resultsList);
+
     }
 }
