@@ -109,6 +109,12 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             e.printStackTrace();
         }
         wordsStr = str.toString();
+        log("entered loadWordsFromFileToMaps()");
+        log("loadWordsFromFileToMaps() wordsStr length: " + wordsStr.length());
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ DictionaryLoaderImpl: " + msg);
     }
 
 

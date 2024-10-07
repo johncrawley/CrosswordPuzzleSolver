@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -72,7 +73,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void setupSearchButton(View parentView){
-        Button searchButton = parentView.findViewById(R.id.searchButton);
+        AppCompatImageButton searchButton = parentView.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(v -> searchForMatches());
     }
 
@@ -116,6 +117,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
     private void searchForMatches(){
         getDictionaryService().ifPresent(ds -> {
+            log("dictionaryService was present: running search");
             String inputText = lettersEditText.getText().toString();
             String excludedText = excludedLettersEditText.getText().toString();
             ds.runPuzzleHelperSearch(inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);

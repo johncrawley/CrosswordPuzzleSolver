@@ -1,7 +1,5 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
-import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,15 +18,9 @@ public class WordSearcher {
     private final String wordsStr;
 
 
-    public WordSearcher(MainViewModel viewModel){
-        this.wordsList = viewModel.wordsList;
-        this.wordsStr = viewModel.wordsStr;
-        setupBadCharacters();
-        foundWords = new HashSet<>();
-    }
-
-
     public WordSearcher(List<String> wordsList, String wordsStr){
+        boolean isWordsStrNull = wordsStr == null;
+        log("entered WordSearcher, wordsStr is null: " + isWordsStrNull);
         this.wordsList = wordsList;
         this.wordsStr = wordsStr;
         setupBadCharacters();
@@ -41,11 +33,19 @@ public class WordSearcher {
 
 
     public List<String> searchFor(String searchText){
+        log("Entered searchFor("  + searchText + ")");
+       // log("wordsStr length: " + wordsStr.length());
+        log("size of words list: " + wordsList.size());
         final String WORD_SEPARATOR = "\\b";
         expectedCharacters = searchText.length();
         String inputText = WORD_SEPARATOR + searchText + WORD_SEPARATOR;
         Pattern pattern = Pattern.compile(inputText);
         return getMatchingWords(pattern);
+    }
+
+
+    private void log(String msg){
+        System.out.println("^^^ WordSearcher: " + msg);
     }
 
 

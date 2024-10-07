@@ -46,12 +46,18 @@ public class DictionaryService extends Service {
     public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
         String formattedInput = inputText.trim().toLowerCase();
         if (formattedInput.isEmpty()) {
+            log("formattedInput is empty, returning");
             return;
         }
-        List<String> results = new ArrayList<>();
         var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
-        results.addAll(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
+        List<String> results = new ArrayList<>(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
+        log("setting words list, number of results: " + results.size());
         wordListView.setWords(results);
+    }
+
+
+    private void log(String msg){
+        System.out.println("^^^ DictionaryService: " + msg);
     }
 
 
@@ -62,7 +68,6 @@ public class DictionaryService extends Service {
         List<String> excludedLetters = Arrays.asList(excludedLettersStr.split(""));
         return createListOfAllowedWords(initialResults, excludedLetters);
     }
-
 
 
     private List<String> createListOfAllowedWords(List<String> inputList, List<String> excludedLetters){
@@ -79,9 +84,9 @@ public class DictionaryService extends Service {
     private List<String> getInitialResultsFor(String inputText, boolean isUsingAnagrams){
         var words = isUsingAnagrams ?
                 getAnagramWordsFrom(inputText) : wordSearcher.searchFor(inputText);
+
         return new ArrayList<>(words);
     }
-
 
 
     private List<String> getAnagramWordsFrom(String inputText){
@@ -93,6 +98,7 @@ public class DictionaryService extends Service {
         Executors.newSingleThreadExecutor().submit(
                 ()-> {
                     dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext());
+                    dictionaryLoader.retrieveAllWords();
                     wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
                     anagramFinder = new AnagramFinder(dictionaryLoader.getWordsMap(), dictionaryLoader.getWordsByLengthMap(), getApplicationContext());
                 } );
