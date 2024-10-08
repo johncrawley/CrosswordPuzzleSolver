@@ -23,7 +23,7 @@ public class DictionaryService extends Service {
     private MainActivity mainActivity;
     private DictionaryLoader dictionaryLoader;
     private WordSearcher wordSearcher;
-    private AnagramFinder anagramFinder;
+    private AnagramFinder anagramFinder = new AnagramFinder();
 
 
     public DictionaryService() {
@@ -90,6 +90,10 @@ public class DictionaryService extends Service {
 
 
     private List<String> getAnagramWordsFrom(String inputText){
+        if(anagramFinder == null){
+            log("getAnagramWordsFrom(" + inputText + ") anagram finder is null!");
+            return Collections.emptyList();
+        }
             return anagramFinder.getWordsMatching(inputText);
     }
 
@@ -100,7 +104,11 @@ public class DictionaryService extends Service {
                     dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext());
                     dictionaryLoader.retrieveAllWords();
                     wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
+                    //anagramFinder.setupWordsMap(dictionaryLoader.getWordsMap());
+                    //anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
                     anagramFinder = new AnagramFinder(dictionaryLoader.getWordsMap(), dictionaryLoader.getWordsByLengthMap(), getApplicationContext());
+                    boolean isAnagramFinderNull = anagramFinder == null;
+                    log("is anagramFinder null: " + isAnagramFinderNull);
                 } );
     }
 

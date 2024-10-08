@@ -15,6 +15,7 @@ import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.fragments.MainMenuFragment;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -78,8 +79,9 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewModel(){
         viewModel = new ViewModelProvider(MainActivity.this).get(MainViewModel.class);
         if(viewModel.wordsList == null || viewModel.wordsList.isEmpty()){
-            Executors.newSingleThreadExecutor().submit(
-                    ()->  new DictionaryLoaderImpl(this).retrieveAllWords());
+            viewModel.wordsList = new ArrayList<>();
+          //  Executors.newSingleThreadExecutor().submit(
+           //         ()->  new DictionaryLoaderImpl(this).retrieveAllWords());
         }
     }
 

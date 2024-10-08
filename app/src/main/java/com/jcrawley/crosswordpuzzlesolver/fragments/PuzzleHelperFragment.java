@@ -159,6 +159,8 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     @Override
     public void setWords(List<String> words) {
         new Handler(Looper.getMainLooper()).post(()-> {
+            results.clear();
+            results.addAll(words);
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
             updateVisibilityOnListDivider();

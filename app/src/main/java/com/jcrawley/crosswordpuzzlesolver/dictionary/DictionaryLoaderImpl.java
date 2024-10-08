@@ -38,6 +38,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         dictionaryLatch = new CountDownLatch(1);
     }
 
+
     @Override
     public String getWordsStr(){
         return wordsStr;
@@ -61,9 +62,10 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         return wordsMap;
     }
 
+
     @Override
     public Map<Integer, Map<String, Set<String>>> getWordsByLengthMap(){
-       return getWordsByLengthMap();
+       return wordsByLengthMap;
     }
 
     @Override

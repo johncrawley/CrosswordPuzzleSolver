@@ -24,7 +24,9 @@ public class WordSearcher {
         this.wordsList = wordsList;
         this.wordsStr = wordsStr;
         setupBadCharacters();
+        log("WordSearcher() bad characters set up");
         foundWords = new HashSet<>();
+        log("Exiting WordSearcher()");
     }
 
     private void setupBadCharacters(){
