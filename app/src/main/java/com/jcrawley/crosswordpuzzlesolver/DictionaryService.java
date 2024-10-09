@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class DictionaryService extends Service {
@@ -24,6 +25,7 @@ public class DictionaryService extends Service {
     private DictionaryLoader dictionaryLoader;
     private WordSearcher wordSearcher;
     private AnagramFinder anagramFinder = new AnagramFinder();
+    private AtomicBoolean isSearchRunning = new AtomicBoolean(false);
 
 
     public DictionaryService() {
@@ -44,15 +46,25 @@ public class DictionaryService extends Service {
 
 
     public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
-        String formattedInput = inputText.trim().toLowerCase();
-        if (formattedInput.isEmpty()) {
-            log("formattedInput is empty, returning");
+        ifNotSearching(()->{
+            String formattedInput = inputText.trim().toLowerCase();
+            if (formattedInput.isEmpty()) {
+                wordListView.setWords(Collections.emptyList());
+            }
+            var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
+            List<String> results = new ArrayList<>(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
+            wordListView.setWords(results);
+        });
+    }
+
+
+    private void ifNotSearching(Runnable runnable) {
+        if(isSearchRunning.get()){
             return;
         }
-        var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
-        List<String> results = new ArrayList<>(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
-        log("setting words list, number of results: " + results.size());
-        wordListView.setWords(results);
+        isSearchRunning.set(true);
+        runnable.run();
+        isSearchRunning.set(false);
     }
 
 
@@ -104,9 +116,9 @@ public class DictionaryService extends Service {
                     dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext());
                     dictionaryLoader.retrieveAllWords();
                     wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
-                    //anagramFinder.setupWordsMap(dictionaryLoader.getWordsMap());
-                    //anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
-                    anagramFinder = new AnagramFinder(dictionaryLoader.getWordsMap(), dictionaryLoader.getWordsByLengthMap(), getApplicationContext());
+                    anagramFinder.setupWordsMap(dictionaryLoader.getWordsMap());
+                    anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
+                   // anagramFinder = new AnagramFinder(dictionaryLoader.getWordsMap(), dictionaryLoader.getWordsByLengthMap(), getApplicationContext());
                     boolean isAnagramFinderNull = anagramFinder == null;
                     log("is anagramFinder null: " + isAnagramFinderNull);
                 } );

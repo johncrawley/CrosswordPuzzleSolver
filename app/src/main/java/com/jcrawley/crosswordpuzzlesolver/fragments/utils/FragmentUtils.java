@@ -1,6 +1,8 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.utils;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -21,6 +23,8 @@ import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -122,19 +126,35 @@ public class FragmentUtils {
         return getDictionaryObj(DictionaryService::getWordSearcher, fragment);
     }
 
-    public static void fadeOut(View view){
+    public static void fadeOut(View view, Runnable whenFinished){
         AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
-        anim.setDuration(500);
-        anim.setRepeatCount(1);
+        anim.setDuration(400);
         view.startAnimation(anim);
-    }
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.INVISIBLE);
+                whenFinished.run();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
 
 
     public static void fadeIn(View view){
         AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-        anim.setDuration(500);
-        anim.setRepeatCount(1);
+        anim.setStartOffset(400);
+        anim.setDuration(400);
+        view.setVisibility(View.VISIBLE);
         view.startAnimation(anim);
     }
 

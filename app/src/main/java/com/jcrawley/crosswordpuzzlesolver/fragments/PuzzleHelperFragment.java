@@ -1,5 +1,8 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments;
 
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,12 +22,12 @@ import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
-import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
@@ -116,12 +118,14 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void searchForMatches(){
-        getDictionaryService().ifPresent(ds -> {
-            log("dictionaryService was present: running search");
-            String inputText = lettersEditText.getText().toString();
-            String excludedText = excludedLettersEditText.getText().toString();
-            ds.runPuzzleHelperSearch(inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
-        });
+        getDictionaryService().ifPresent(ds -> fadeOut(resultsList, ()-> runSearch(ds)));
+    }
+
+
+    private void runSearch(DictionaryService dictionaryService){
+        String inputText = lettersEditText.getText().toString();
+        String excludedText = excludedLettersEditText.getText().toString();
+        dictionaryService.runPuzzleHelperSearch(inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
     }
 
 
@@ -164,19 +168,18 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
             updateVisibilityOnListDivider();
+            fadeIn(resultsList);
         });
     }
 
 
     @Override
     public void fadeOutList() {
-        FragmentUtils.fadeOut(resultsList);
     }
 
 
     @Override
     public void fadeInList() {
-        FragmentUtils.fadeIn(resultsList);
 
     }
 }
