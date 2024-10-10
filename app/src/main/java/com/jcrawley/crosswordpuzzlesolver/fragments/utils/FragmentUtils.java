@@ -150,6 +150,21 @@ public class FragmentUtils {
     }
 
 
+    public static void searchForResults(Fragment fragment, View resultsView, Consumer<DictionaryService> dictionaryServiceConsumer){
+        getDictionaryService(fragment).ifPresent(ds -> fadeOut(resultsView, ()-> dictionaryServiceConsumer.accept(ds)));
+    }
+
+
+    public static Optional<DictionaryService> getDictionaryService(Fragment fragment){
+        MainActivity mainActivity = (MainActivity) fragment.getActivity();
+        if(mainActivity == null){
+            return Optional.empty();
+        }
+        return mainActivity.getDictionaryService();
+    }
+
+
+
     public static void fadeIn(View view){
         AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setStartOffset(400);

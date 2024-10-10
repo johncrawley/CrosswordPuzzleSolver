@@ -2,6 +2,8 @@ package com.jcrawley.crosswordpuzzlesolver.fragments;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -27,7 +29,7 @@ import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
@@ -118,7 +120,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void searchForMatches(){
-        getDictionaryService().ifPresent(ds -> fadeOut(resultsList, ()-> runSearch(ds)));
+        searchForResults(this, resultsList, this::runSearch);
     }
 
 
@@ -129,22 +131,8 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     }
 
 
-    private Optional<DictionaryService> getDictionaryService(){
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if(mainActivity == null){
-            return Optional.empty();
-        }
-        return mainActivity.getDictionaryService();
-    }
-
-
     private void updateVisibilityOnListDivider(){
         listDivider.setVisibility(!results.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ CrosswordHelperFragment: " + msg);
     }
 
 
@@ -172,14 +160,4 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         });
     }
 
-
-    @Override
-    public void fadeOutList() {
-    }
-
-
-    @Override
-    public void fadeInList() {
-
-    }
 }

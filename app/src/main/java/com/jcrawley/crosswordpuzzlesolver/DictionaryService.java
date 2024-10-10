@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -24,15 +25,12 @@ public class DictionaryService extends Service {
     private MainActivity mainActivity;
     private DictionaryLoader dictionaryLoader;
     private WordSearcher wordSearcher;
-    private AnagramFinder anagramFinder = new AnagramFinder();
-    private AtomicBoolean isSearchRunning = new AtomicBoolean(false);
+    private final AnagramFinder anagramFinder = new AnagramFinder();
+    private final AtomicBoolean isSearchRunning = new AtomicBoolean(false);
 
 
     public DictionaryService() {
         loadDictionaryWords();
-
-      //  wordSearcher = new WordSearcher();
-      //  anagramFinder = new AnagramFinder(viewModel.wordsMap, viewModel.wordsByLengthMap, context);
     }
 
     public AnagramFinder getAnagramFinder(){
@@ -53,6 +51,14 @@ public class DictionaryService extends Service {
             }
             var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
             List<String> results = new ArrayList<>(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
+            wordListView.setWords(results);
+        });
+    }
+
+
+    public void getResultsForPattern(String pattern, WordListView wordListView){
+        ifNotSearching(()->{
+            List<String> results = wordSearcher.searchForPattern(pattern);
             wordListView.setWords(results);
         });
     }
@@ -95,18 +101,9 @@ public class DictionaryService extends Service {
 
     private List<String> getInitialResultsFor(String inputText, boolean isUsingAnagrams){
         var words = isUsingAnagrams ?
-                getAnagramWordsFrom(inputText) : wordSearcher.searchFor(inputText);
+                anagramFinder.getWordsMatching(inputText) : wordSearcher.searchFor(inputText);
 
         return new ArrayList<>(words);
-    }
-
-
-    private List<String> getAnagramWordsFrom(String inputText){
-        if(anagramFinder == null){
-            log("getAnagramWordsFrom(" + inputText + ") anagram finder is null!");
-            return Collections.emptyList();
-        }
-            return anagramFinder.getWordsMatching(inputText);
     }
 
 
@@ -118,9 +115,6 @@ public class DictionaryService extends Service {
                     wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
                     anagramFinder.setupWordsMap(dictionaryLoader.getWordsMap());
                     anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
-                   // anagramFinder = new AnagramFinder(dictionaryLoader.getWordsMap(), dictionaryLoader.getWordsByLengthMap(), getApplicationContext());
-                    boolean isAnagramFinderNull = anagramFinder == null;
-                    log("is anagramFinder null: " + isAnagramFinderNull);
                 } );
     }
 

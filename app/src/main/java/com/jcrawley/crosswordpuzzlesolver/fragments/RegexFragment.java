@@ -1,5 +1,8 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments;
 
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +20,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
+import com.jcrawley.crosswordpuzzlesolver.WordListView;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 
@@ -28,7 +33,7 @@ import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class RegexFragment extends Fragment {
+public class RegexFragment extends Fragment implements WordListView {
 
     private EditText lettersEditText;
     private TextView resultsCountTextView, noResultsFoundTextView;
@@ -37,6 +42,7 @@ public class RegexFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
     private Executor findWordsExecutor;
+    private ListView resultsList;
 
     public RegexFragment() {
         // Required empty public constructor
@@ -67,10 +73,10 @@ public class RegexFragment extends Fragment {
 
     private void setupList(View parentView){
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
-        ListView foundWordsList = parentView.findViewById(R.id.findWordsList);
+        resultsList = parentView.findViewById(R.id.findWordsList);
         noResultsFoundTextView = parentView.findViewById(R.id.noResultsFoundText);
-        foundWordsList.setAdapter(arrayAdapter);
-        foundWordsList.setEmptyView(noResultsFoundTextView);
+        resultsList.setAdapter(arrayAdapter);
+        resultsList.setEmptyView(noResultsFoundTextView);
         noResultsFoundTextView.setVisibility(View.GONE);
     }
 
@@ -92,7 +98,7 @@ public class RegexFragment extends Fragment {
             }
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             noResultsFoundTextView.setVisibility(View.GONE);
-            findWords();
+            searchForMatches();
             return true;
         });
     }
@@ -107,7 +113,19 @@ public class RegexFragment extends Fragment {
     }
 
 
-    private List<String> getResultsForPattern(String pattern){
+    private void searchForMatches(){
+        searchForResults(this, resultsList, this::runSearch);
+    }
+
+
+    private void runSearch(DictionaryService dictionaryService){
+        String pattern = lettersEditText.getText().toString().trim();
+        dictionaryService.getResultsForPattern(pattern, this);
+    }
+
+
+
+    public List<String> getResultsForPattern(String pattern){
         Optional<WordSearcher> wordSearcher = FragmentUtils.getWordSearcher(this);
        if(wordSearcher.isPresent()){
             return wordSearcher.get().searchForPattern(pattern);
@@ -147,5 +165,16 @@ public class RegexFragment extends Fragment {
         return text.trim().toLowerCase();
     }
 
+
+    @Override
+    public void setWords(List<String> words) {
+        new Handler(Looper.getMainLooper()).post(()-> {
+            results.clear();
+            results.addAll(words);
+            arrayAdapter.notifyDataSetChanged();
+            setResultsText();
+            fadeIn(resultsList);
+        });
+    }
 }
 
