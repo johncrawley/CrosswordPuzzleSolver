@@ -1,11 +1,15 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.utils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -131,21 +135,31 @@ public class FragmentUtils {
         anim.setDuration(400);
         view.startAnimation(anim);
         anim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationRepeat(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 view.setVisibility(View.INVISIBLE);
                 whenFinished.run();
             }
+        });
+    }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
 
+    public static void setupKeyboardInput(final EditText editText, final View noResultsFoundView, Context context, Runnable searchAction){
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
+                return false;
             }
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(imm == null){
+                return false;
+            }
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            noResultsFoundView.setVisibility(View.GONE);
+            searchAction.run();
+            return true;
         });
     }
 

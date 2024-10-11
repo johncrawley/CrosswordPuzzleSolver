@@ -2,6 +2,7 @@ package com.jcrawley.crosswordpuzzlesolver.fragments;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +11,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -23,25 +22,17 @@ import androidx.fragment.app.Fragment;
 import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
-import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
-import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class RegexFragment extends Fragment implements WordListView {
 
     private EditText lettersEditText;
     private TextView resultsCountTextView, noResultsFoundTextView;
-    private View listDivider;
     private Context context;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> results;
-    private Executor findWordsExecutor;
     private ListView resultsList;
 
     public RegexFragment() {
@@ -57,15 +48,13 @@ public class RegexFragment extends Fragment implements WordListView {
         results = new ArrayList<>();
         setupViews(parentView);
         setupList(parentView);
-        setupKeyAction(lettersEditText);
-        findWordsExecutor = Executors.newSingleThreadExecutor();
+        setupKeyboardInput(lettersEditText, noResultsFoundTextView, getContext(), this::searchForMatches);
         return parentView;
     }
 
 
     private void setupViews(View parentView){
         lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
-        listDivider = parentView.findViewById(R.id.listDivider);
         resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
         setupSearchButton(parentView);
     }
@@ -83,33 +72,7 @@ public class RegexFragment extends Fragment implements WordListView {
 
     private void setupSearchButton(View parentView){
         ImageButton searchButton = parentView.findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(v -> findWords());
-    }
-
-
-    private void setupKeyAction(final EditText editText){
-        editText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
-                return false;
-            }
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(imm == null){
-                return false;
-            }
-            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-            noResultsFoundTextView.setVisibility(View.GONE);
-            searchForMatches();
-            return true;
-        });
-    }
-
-
-    private void findWords(){
-        findWordsExecutor.execute(()-> {
-                results.clear();
-                results.addAll(getResultsForPattern(getFormattedText(lettersEditText)));
-                updateViewWithResults();
-        });
+        searchButton.setOnClickListener(v -> searchForMatches());
     }
 
 
@@ -124,30 +87,6 @@ public class RegexFragment extends Fragment implements WordListView {
     }
 
 
-
-    public List<String> getResultsForPattern(String pattern){
-        Optional<WordSearcher> wordSearcher = FragmentUtils.getWordSearcher(this);
-       if(wordSearcher.isPresent()){
-            return wordSearcher.get().searchForPattern(pattern);
-        };
-       return Collections.emptyList();
-    }
-
-
-    private void updateViewWithResults(){
-        new Handler(Looper.getMainLooper()).post(()->{
-            arrayAdapter.notifyDataSetChanged();
-            setResultsText();
-            setVisibilityOnListDivider(results.size());
-        });
-    }
-
-
-    private void setVisibilityOnListDivider(int numberOfResults){
-        listDivider.setVisibility(numberOfResults > 0 ? View.VISIBLE : View.GONE);
-    }
-
-
     private void setResultsText(){
         String resultsText = "";
         if(results.size() == 1){
@@ -157,12 +96,6 @@ public class RegexFragment extends Fragment implements WordListView {
             resultsText = context.getResources().getString(R.string.results_found_text, results.size());
         }
         resultsCountTextView.setText(resultsText);
-    }
-
-
-    private String getFormattedText(EditText editText){
-        String text = editText.getText().toString();
-        return text.trim().toLowerCase();
     }
 
 
