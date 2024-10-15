@@ -64,6 +64,41 @@ public class DictionaryService extends Service {
     }
 
 
+    public void findWords(String input, String requiredLetters, WordListView wordListView){
+        String completeInput = input + requiredLetters;
+        if(completeInput.isEmpty()){
+            wordListView.setWords(Collections.emptyList());
+        }
+        List<String> results = new ArrayList<>();
+        results.addAll(filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(input), requiredLetters));
+    }
+
+    //
+
+
+    private List<String> filterResultsWithRequiredLetters(List<String> words, String requiredLetters){
+        List<String> requiredLetters = createRequiredLettersList(requiredLetters);
+        if(requiredLetters.isEmpty()){
+            return words;
+        }
+        return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLetters)).collect(Collectors.toList());
+    }
+
+
+    private List<String> createRequiredLettersList(String requiredLetters){
+        String azRequiredLetters = requiredLetters.replaceAll("[^A-za-z]", "");
+        return azRequiredLetters.isEmpty() ? Collections.emptyList() : Arrays.asList(azRequiredLetters.split(""));
+    }
+
+
+    private boolean doesWordHaveAllLetters(String word, List<String> letters){
+        return letters.stream().allMatch(word::contains);
+    }
+//
+
+
+
+
     private void ifNotSearching(Runnable runnable) {
         if(isSearchRunning.get()){
             return;

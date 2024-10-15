@@ -1,5 +1,8 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.findWords;
 
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +17,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
+import com.jcrawley.crosswordpuzzlesolver.WordListView;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 
 import java.util.ArrayList;
@@ -29,7 +34,7 @@ import java.util.stream.Collectors;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class FindWordsFragment extends Fragment {
+public class FindWordsFragment extends Fragment implements WordListView {
 
     private EditText lettersEditText, requiredLettersEditText;
     private TextView resultsCountTextView, noResultsFoundTextView;
@@ -40,6 +45,7 @@ public class FindWordsFragment extends Fragment {
     private List<String> results;
     private AnagramFinder anagramFinder;
     private Executor findWordsExecutor;
+    private ListView resultsList;
 
 
     public FindWordsFragment() {
@@ -60,6 +66,8 @@ public class FindWordsFragment extends Fragment {
         setupList(parentView);
         setupKeyAction(lettersEditText, (text)-> viewModel.lettersText = text);
         setupKeyAction(requiredLettersEditText, (text) -> viewModel.requiredLettersText = text);
+
+        setupKeyboardInput(lettersEditText, noResultsFoundTextView, getContext(), this::searchForMatch);
         findWordsExecutor = Executors.newSingleThreadExecutor();
         return parentView;
     }
@@ -109,42 +117,20 @@ public class FindWordsFragment extends Fragment {
             }
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             noResultsFoundTextView.setVisibility(View.GONE);
-            findWordsExecutor.execute(this::findWords);
+            //findWordsExecutor.execute(this::findWords);
             return true;
         });
     }
 
-
-    private void findWords(){
-        String inputText = getFormattedText(lettersEditText) + getFormattedText(requiredLettersEditText);
-        if(inputText.isEmpty() || inputText.equals(previousSearch)){
-            return;
-        }
-        previousSearch = inputText;
-        results.clear();
-        results.addAll(filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(inputText)));
-        updateViewWithResults();
+    private void searchForMatch(){
+        searchForResults(this, resultsList, this::runSearch);
     }
 
 
-    private List<String> filterResultsWithRequiredLetters(List<String> words){
-        List<String> requiredLetters = createRequiredLettersList();
-        if(requiredLetters.isEmpty()){
-            return words;
-        }
-        return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLetters)).collect(Collectors.toList());
-    }
-
-
-    private List<String> createRequiredLettersList(){
-        String requiredLettersStr = requiredLettersEditText.getText().toString().trim();
-        String azRequiredLetters = requiredLettersStr.replaceAll("[^A-za-z]", "");
-        return azRequiredLetters.isEmpty() ? Collections.emptyList() : Arrays.asList(azRequiredLetters.split(""));
-    }
-
-
-    private boolean doesWordHaveAllLetters(String word, List<String> letters){
-        return letters.stream().allMatch(word::contains);
+    private void runSearch(DictionaryService dictionaryService){
+        String input = lettersEditText.getText().toString().trim().toLowerCase();
+        String requiredLetters = requiredLettersEditText.getText().toString().trim().toLowerCase();
+        dictionaryService.findWords(input, requiredLetters, this);
     }
 
 
@@ -179,4 +165,8 @@ public class FindWordsFragment extends Fragment {
         return text.trim().toLowerCase();
     }
 
+    @Override
+    public void setWords(List<String> words) {
+
+    }
 }
