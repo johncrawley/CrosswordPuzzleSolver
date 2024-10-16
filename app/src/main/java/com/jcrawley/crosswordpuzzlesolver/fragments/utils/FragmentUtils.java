@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ import com.jcrawley.crosswordpuzzlesolver.fragments.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -176,7 +178,6 @@ public class FragmentUtils {
         }
         return mainActivity.getDictionaryService();
     }
-
 
 
     public static void fadeIn(View view){

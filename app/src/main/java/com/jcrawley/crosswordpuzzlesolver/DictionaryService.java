@@ -8,13 +8,12 @@ import android.os.IBinder;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
-import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -27,6 +26,7 @@ public class DictionaryService extends Service {
     private WordSearcher wordSearcher;
     private final AnagramFinder anagramFinder = new AnagramFinder();
     private final AtomicBoolean isSearchRunning = new AtomicBoolean(false);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 
     public DictionaryService() {
@@ -65,23 +65,23 @@ public class DictionaryService extends Service {
 
 
     public void findWords(String input, String requiredLetters, WordListView wordListView){
-        String completeInput = input + requiredLetters;
-        if(completeInput.isEmpty()){
-            wordListView.setWords(Collections.emptyList());
-        }
-        List<String> results = new ArrayList<>();
-        results.addAll(filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(input), requiredLetters));
+        ifNotSearching(()->{
+            String completeInput = input + requiredLetters;
+            if(completeInput.isEmpty()){
+                wordListView.setWords(Collections.emptyList());
+            }
+            List<String> results = filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(input), requiredLetters);
+            wordListView.setWords(results);
+        });
     }
-
-    //
 
 
     private List<String> filterResultsWithRequiredLetters(List<String> words, String requiredLetters){
-        List<String> requiredLetters = createRequiredLettersList(requiredLetters);
+        List<String> requiredLettersList = createRequiredLettersList(requiredLetters);
         if(requiredLetters.isEmpty()){
             return words;
         }
-        return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLetters)).collect(Collectors.toList());
+        return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLettersList)).collect(Collectors.toList());
     }
 
 
@@ -94,9 +94,6 @@ public class DictionaryService extends Service {
     private boolean doesWordHaveAllLetters(String word, List<String> letters){
         return letters.stream().allMatch(word::contains);
     }
-//
-
-
 
 
     private void ifNotSearching(Runnable runnable) {
@@ -104,8 +101,11 @@ public class DictionaryService extends Service {
             return;
         }
         isSearchRunning.set(true);
-        runnable.run();
-        isSearchRunning.set(false);
+        Runnable task = () ->{
+            runnable.run();
+            isSearchRunning.set(false);
+        };
+        executor.submit(task);
     }
 
 
