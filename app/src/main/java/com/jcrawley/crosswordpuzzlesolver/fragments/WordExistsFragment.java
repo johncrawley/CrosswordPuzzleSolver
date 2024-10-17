@@ -1,5 +1,10 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments;
 
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
@@ -36,6 +42,7 @@ public class WordExistsFragment  extends Fragment {
         View view =  inflater.inflate(R.layout.word_exists, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         setupKeyAction(view.findViewById(R.id.wholeWordCheckEditText));
+
         statusMessage = view.findViewById(R.id.wordExistsTextView);
         return view;
     }
@@ -67,6 +74,12 @@ public class WordExistsFragment  extends Fragment {
         }
         return false;
     }
+
+
+    private void searchForWord(){
+        getDictionaryService(this).ifPresent(ds -> fadeOut(statusMessage, ()-> {} ));
+    }
+
 
 
     public String getSortedWord(String word){
