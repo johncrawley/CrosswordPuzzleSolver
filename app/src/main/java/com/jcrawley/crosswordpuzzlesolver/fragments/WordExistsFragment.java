@@ -2,8 +2,6 @@ package com.jcrawley.crosswordpuzzlesolver.fragments;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,13 +13,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -57,8 +51,7 @@ public class WordExistsFragment  extends Fragment {
                 }
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 String word = editText.getText().toString().trim();
-                //boolean doesWordExist = viewModel.dictionaryTrie.doesWordExist(word);
-                showStatusMessage(word, doesWordExist(word));
+                searchForWord(word);
                 return true;
             }
             return false;
@@ -66,24 +59,8 @@ public class WordExistsFragment  extends Fragment {
     }
 
 
-    private boolean doesWordExist(String word){
-        String sortedWord = getSortedWord(word);
-        if(viewModel.wordsMap.containsKey(sortedWord)){
-            Set<String> words = viewModel.wordsMap.get(sortedWord);
-            return words != null && words.contains(word);
-        }
-        return false;
-    }
-
-
-    private void searchForWord(){
-        getDictionaryService(this).ifPresent(ds -> fadeOut(statusMessage, ()-> {} ));
-    }
-
-
-
-    public String getSortedWord(String word){
-        return Arrays.stream(word.split("")).sorted().collect(Collectors.joining(""));
+    private void searchForWord(String word){
+        getDictionaryService(this).ifPresent(ds -> fadeOut(statusMessage, ()-> { showStatusMessage(word, ds.doesWordExist(word));} ));
     }
 
 

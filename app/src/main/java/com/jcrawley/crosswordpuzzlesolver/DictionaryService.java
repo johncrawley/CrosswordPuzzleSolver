@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -154,9 +155,27 @@ public class DictionaryService extends Service {
     }
 
 
+    public boolean doesWordExist(String word){
+        var wordsMap = dictionaryLoader.getWordsMap();
+        String sortedWord = getSortedWord(word);
+        if(wordsMap.containsKey(sortedWord)){
+            Set<String> words = wordsMap.get(sortedWord);
+            return words != null && words.contains(word);
+        }
+        return false;
+    }
+
+
+    private String getSortedWord(String word){
+        return Arrays.stream(word.split("")).sorted().collect(Collectors.joining(""));
+    }
+
+
     public DictionaryLoader getDictionaryLoader(){
         return dictionaryLoader;
     }
+
+
 
 
     @Override
