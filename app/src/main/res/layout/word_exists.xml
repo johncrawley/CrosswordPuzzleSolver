@@ -42,14 +42,16 @@
     <TextView
         android:id="@+id/wordExistsTextView"
         android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="@dimen/word_exists_status_message_margin"
-        android:visibility="invisible"
+        android:gravity="center"
+        android:textAlignment="center"
         android:textSize="@dimen/word_exists_status_message_text_size"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/whole_word_check_layout"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/whole_word_check_layout" />
 
 </LinearLayout>

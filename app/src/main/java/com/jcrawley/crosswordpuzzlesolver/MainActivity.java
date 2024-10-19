@@ -13,6 +13,7 @@ import android.os.IBinder;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoader;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.fragments.MainMenuFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
 import java.util.ArrayList;
@@ -55,14 +56,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public DictionaryLoader getDictionaryLoader(){
-        if(getDictionaryService().isPresent()){
-            return getDictionaryService().get().getDictionaryLoader();
-        }
-        return null;
-    }
-
-
     public Optional<DictionaryService> getDictionaryService(){
         return Optional.ofNullable(dictionaryService);
     }
@@ -80,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(MainActivity.this).get(MainViewModel.class);
         if(viewModel.wordsList == null || viewModel.wordsList.isEmpty()){
             viewModel.wordsList = new ArrayList<>();
-          //  Executors.newSingleThreadExecutor().submit(
-           //         ()->  new DictionaryLoaderImpl(this).retrieveAllWords());
         }
     }
 
