@@ -2,15 +2,12 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.utils;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -22,15 +19,12 @@ import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
-import com.jcrawley.crosswordpuzzlesolver.fragments.PuzzleHelperFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.puzzle.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 

@@ -1,8 +1,6 @@
-package com.jcrawley.crosswordpuzzlesolver.fragments;
+package com.jcrawley.crosswordpuzzlesolver.fragments.puzzle;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
 
 import android.content.Context;
@@ -21,16 +19,10 @@ import android.widget.TextView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
-import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
-import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -41,12 +33,11 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private View listDivider;
     private Context context;
     private ArrayAdapter<String> arrayAdapter;
-    private List<String> results;
-    private TextView resultsCountTextView;
-    private boolean hasSearchStarted;
+    private TextView resultsFoundTextView;
     private View noResultsFoundView;
-    private MainViewModel viewModel;
+    private PuzzleHelperViewModel viewModel;
     private ListView resultsList;
+    private boolean hasSearchStarted = false;
 
     public PuzzleHelperFragment() {
         // Required empty public constructor
@@ -57,7 +48,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getContext();
         View parentView = inflater.inflate(R.layout.puzzle_helper, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PuzzleHelperViewModel.class);
         setupViews(parentView);
         setupList(parentView);
         setupSearchButton(parentView);
@@ -70,7 +61,8 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         setupKeyAction(lettersEditText);
         excludedLettersEditText = parentView.findViewById(R.id.excludeLettersEditText);
         setupKeyAction(excludedLettersEditText);
-        resultsCountTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
+        resultsFoundTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
+        assignResultsFoundText();
         listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
     }
@@ -89,8 +81,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void setupList(View parentView){
-        results = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
+        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, viewModel.results);
         resultsList = parentView.findViewById(R.id.crosswordHelperList);
         noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
         resultsList.setEmptyView(noResultsFoundView);
@@ -101,6 +92,9 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
     private void setupKeyAction(final EditText editText){
         editText.setOnEditorActionListener((v, actionId, event) -> {
+            if(hasSearchStarted){
+                return false;
+            }
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
                 InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if(imm == null){
@@ -125,6 +119,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void runSearch(DictionaryService dictionaryService){
+        hasSearchStarted = true;
         String inputText = lettersEditText.getText().toString();
         String excludedText = excludedLettersEditText.getText().toString();
         dictionaryService.runPuzzleHelperSearch(inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
@@ -132,31 +127,39 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void updateVisibilityOnListDivider(){
-        listDivider.setVisibility(!results.isEmpty() ? View.VISIBLE : View.GONE);
+        listDivider.setVisibility(!viewModel.results.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
 
     private void setResultsText(){
-        String resultsText = "";
-        if(results.size() == 1){
-            resultsText = context.getResources().getString(R.string.one_result_found_text);
+        viewModel.resultsFoundText = "";
+        int numberOfResults = viewModel.results.size();
+
+        if(numberOfResults == 1){
+            viewModel.resultsFoundText = getString(R.string.one_result_found_text);
         }
-        else if(results.size() > 1){
-            resultsText = context.getResources().getString(R.string.results_found_text, results.size());
+        else if(numberOfResults > 1){
+            viewModel.resultsFoundText = getString(R.string.results_found_text, viewModel.results.size());
         }
-        resultsCountTextView.setText(resultsText);
+        assignResultsFoundText();
+    }
+
+
+    private void assignResultsFoundText(){
+        resultsFoundTextView.setText(viewModel.resultsFoundText);
     }
 
 
     @Override
     public void setWords(List<String> words) {
         new Handler(Looper.getMainLooper()).post(()-> {
-            results.clear();
-            results.addAll(words);
+            viewModel.results.clear();
+            viewModel.results.addAll(words);
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
             updateVisibilityOnListDivider();
             fadeIn(resultsList);
+            hasSearchStarted = false;
         });
     }
 
