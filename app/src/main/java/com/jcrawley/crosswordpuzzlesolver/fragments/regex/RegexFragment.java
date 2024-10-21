@@ -1,7 +1,8 @@
-package com.jcrawley.crosswordpuzzlesolver.fragments;
+package com.jcrawley.crosswordpuzzlesolver.fragments.regex;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
 
 import android.content.Context;
@@ -18,12 +19,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RegexFragment extends Fragment implements WordListView {
@@ -32,8 +33,8 @@ public class RegexFragment extends Fragment implements WordListView {
     private TextView resultsCountTextView, noResultsFoundTextView;
     private Context context;
     private ArrayAdapter<String> arrayAdapter;
-    private List<String> results;
     private ListView resultsList;
+    private RegexViewModel viewModel;
 
     public RegexFragment() {
         // Required empty public constructor
@@ -45,7 +46,7 @@ public class RegexFragment extends Fragment implements WordListView {
                              Bundle savedInstanceState) {
         context = getContext();
         View parentView = inflater.inflate(R.layout.find_words_with_pattern, container, false);
-        results = new ArrayList<>();
+        viewModel = new ViewModelProvider(this).get(RegexViewModel.class);
         setupViews(parentView);
         setupList(parentView);
         setupKeyboardInput(lettersEditText, noResultsFoundTextView, getContext(), this::searchForMatches);
@@ -61,7 +62,7 @@ public class RegexFragment extends Fragment implements WordListView {
 
 
     private void setupList(View parentView){
-        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
+        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, viewModel.results);
         resultsList = parentView.findViewById(R.id.findWordsList);
         noResultsFoundTextView = parentView.findViewById(R.id.noResultsFoundText);
         resultsList.setAdapter(arrayAdapter);
@@ -88,22 +89,15 @@ public class RegexFragment extends Fragment implements WordListView {
 
 
     private void setResultsText(){
-        String resultsText = "";
-        if(results.size() == 1){
-            resultsText = context.getResources().getString(R.string.one_result_found_text);
-        }
-        else if(results.size() > 1){
-            resultsText = context.getResources().getString(R.string.results_found_text, results.size());
-        }
-        resultsCountTextView.setText(resultsText);
+        setResultsCountText(resultsCountTextView, getContext(), viewModel.results.size());
     }
 
 
     @Override
     public void setWords(List<String> words) {
         new Handler(Looper.getMainLooper()).post(()-> {
-            results.clear();
-            results.addAll(words);
+            viewModel.results.clear();
+            viewModel.results.addAll(words);
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
             fadeIn(resultsList);

@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,7 @@ import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.puzzle.PuzzleHelperFragment;
-import com.jcrawley.crosswordpuzzlesolver.fragments.RegexFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.regex.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
@@ -192,4 +193,15 @@ public class FragmentUtils {
         return dictionaryService.map(getter);
     }
 
+
+    public static void setResultsCountText(TextView textView, Context context, int numberOfResults){
+        String resultsText = "";
+        if(numberOfResults == 1){
+            resultsText = context.getResources().getString(R.string.one_result_found_text);
+        }
+        else if(numberOfResults> 1){
+            resultsText = context.getResources().getString(R.string.results_found_text, numberOfResults);
+        }
+        textView.setText(resultsText);
+    }
 }
