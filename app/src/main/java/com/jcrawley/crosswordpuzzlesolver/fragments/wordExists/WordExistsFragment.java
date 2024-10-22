@@ -1,4 +1,4 @@
-package com.jcrawley.crosswordpuzzlesolver.fragments;
+package com.jcrawley.crosswordpuzzlesolver.fragments.wordExists;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jcrawley.crosswordpuzzlesolver.R;
-import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
-
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,8 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 public class WordExistsFragment  extends Fragment {
 
     private Context context;
-    private MainViewModel viewModel;
-    private TextView statusMessage;
+    private WordExistsViewModel viewModel;
+    private TextView statusTextView;
 
     public WordExistsFragment() {
         // Required empty public constructor
@@ -34,10 +32,10 @@ public class WordExistsFragment  extends Fragment {
                              Bundle savedInstanceState) {
         context = getContext();
         View view =  inflater.inflate(R.layout.word_exists, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(this).get(WordExistsViewModel.class);
         setupKeyAction(view.findViewById(R.id.wholeWordCheckEditText));
-
-        statusMessage = view.findViewById(R.id.wordExistsTextView);
+        statusTextView = view.findViewById(R.id.wordExistsTextView);
+        setResultsText();
         return view;
     }
 
@@ -60,14 +58,26 @@ public class WordExistsFragment  extends Fragment {
 
 
     private void searchForWord(String word){
-        getDictionaryService(this).ifPresent(ds -> fadeOut(statusMessage, ()-> { showStatusMessage(word, ds.doesWordExist(word));} ));
+        getDictionaryService(this).ifPresent(ds -> fadeOut(statusTextView, ()-> {
+            showStatusMessage(word, ds.doesWordExist(word));
+        } ));
     }
 
 
     private void showStatusMessage(String word, boolean doesWordExist){
+        if(word.isEmpty()){
+            return;
+        }
         int messageId = doesWordExist ? R.string.word_exists_message : R.string.word_does_not_exist_message;
-        statusMessage.setText(context.getString(messageId, word));
-        statusMessage.setVisibility(View.VISIBLE);
+        viewModel.resultText = context.getString(messageId, word);
+        setResultsText();
+    }
+
+    private void setResultsText(){
+        if(!viewModel.resultText.isEmpty()){
+            statusTextView.setText(viewModel.resultText);
+            statusTextView.setVisibility(View.VISIBLE);
+        }
     }
 
 }

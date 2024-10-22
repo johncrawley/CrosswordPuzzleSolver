@@ -22,7 +22,7 @@ import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.puzzle.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.regex.RegexFragment;
-import com.jcrawley.crosswordpuzzlesolver.fragments.WordExistsFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.wordExists.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
 import java.util.Optional;
