@@ -2,6 +2,7 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.puzzle;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -62,7 +63,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         excludedLettersEditText = parentView.findViewById(R.id.excludeLettersEditText);
         setupKeyAction(excludedLettersEditText);
         resultsFoundTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
-        assignResultsFoundText();
+        setResultsText();
         listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
     }
@@ -132,21 +133,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void setResultsText(){
-        viewModel.resultsFoundText = "";
-        int numberOfResults = viewModel.results.size();
-
-        if(numberOfResults == 1){
-            viewModel.resultsFoundText = getString(R.string.one_result_found_text);
-        }
-        else if(numberOfResults > 1){
-            viewModel.resultsFoundText = getString(R.string.results_found_text, viewModel.results.size());
-        }
-        assignResultsFoundText();
-    }
-
-
-    private void assignResultsFoundText(){
-        resultsFoundTextView.setText(viewModel.resultsFoundText);
+        setResultsCountText(resultsFoundTextView, getContext(), viewModel.results.size());
     }
 
 

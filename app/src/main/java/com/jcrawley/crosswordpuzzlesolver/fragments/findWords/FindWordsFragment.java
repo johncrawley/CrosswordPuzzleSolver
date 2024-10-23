@@ -2,6 +2,7 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.findWords;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -33,8 +34,8 @@ public class FindWordsFragment extends Fragment implements WordListView {
     private TextView resultsCountTextView, noResultsFoundTextView;
     private Context context;
     private ArrayAdapter<String> arrayAdapter;
-    private List<String> results;
     private ListView resultsList;
+    private FindWordsViewModel viewModel;
 
 
     public FindWordsFragment() {
@@ -47,10 +48,10 @@ public class FindWordsFragment extends Fragment implements WordListView {
                              Bundle savedInstanceState) {
         context = getContext();
         View parentView = inflater.inflate(R.layout.find_words, container, false);
-        FindWordsViewModel viewModel = new ViewModelProvider(this).get(FindWordsViewModel.class);
-        results = new ArrayList<>();
+        viewModel = new ViewModelProvider(this).get(FindWordsViewModel.class);
         setupViews(parentView, viewModel);
         setupList(parentView);
+        setResultsText();
         setupKeyAction(lettersEditText, (text)-> viewModel.lettersText = text);
         setupKeyAction(requiredLettersEditText, (text) -> viewModel.requiredLettersText = text);
         return parentView;
@@ -60,8 +61,8 @@ public class FindWordsFragment extends Fragment implements WordListView {
     @Override
     public void setWords(List<String> words) {
         new Handler(Looper.getMainLooper()).post(()-> {
-            results.clear();
-            results.addAll(words);
+            viewModel.results.clear();
+            viewModel.results.addAll(words);
             arrayAdapter.notifyDataSetChanged();
             setResultsText();
             fadeIn(resultsList);
@@ -91,7 +92,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
 
 
     private void setupList(View parentView){
-        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, results);
+        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, viewModel.results);
         resultsList = parentView.findViewById(R.id.findWordsList);
         noResultsFoundTextView = parentView.findViewById(R.id.noResultsFoundText);
         resultsList.setAdapter(arrayAdapter);
@@ -131,14 +132,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
 
 
     private void setResultsText(){
-        String resultsText = "";
-        if(results.size() == 1){
-            resultsText = context.getResources().getString(R.string.one_result_found_text);
-        }
-        else if(results.size() > 1){
-            resultsText = context.getResources().getString(R.string.results_found_text, results.size());
-        }
-        resultsCountTextView.setText(resultsText);
+        setResultsCountText(resultsCountTextView, getContext(), viewModel.results.size());
     }
 
 }
