@@ -1,9 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver.anagram;
 
-import android.content.Context;
 
 import com.jcrawley.crosswordpuzzlesolver.db.WordsRepository;
-import com.jcrawley.crosswordpuzzlesolver.db.WordsRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,33 +25,13 @@ public class AnagramFinder {
     }
 
 
-
-    public AnagramFinder(
-            Map<String, Set<String>> wordsMap, Map<Integer, Map<String, Set<String>>> wordsByLengthMap, Context context) {
-        boolean isWordsMapNull = wordsMap == null;
-        boolean wordsByLengthMapNull = wordsByLengthMap == null;
-        log("Entered AnagramFinder() maps null: " + isWordsMapNull + ","  + wordsByLengthMapNull);
-        this.binaryCounter = new BinaryCounter(2);
-        this.wordsMap = wordsMap;
-        this.wordsByLengthMap = wordsByLengthMap;
-       // wordsRepository = new WordsRepositoryImpl(context);
-        wordsRepository.getAllWords();
-    }
-
     public void setupWordsMap( Map<String, Set<String>> wordsMap){
         this.wordsMap = wordsMap;
     }
 
 
-
     public void setWordsByLengthMap(Map<Integer, Map<String, Set<String>>> wordsByLengthMap){
         this.wordsByLengthMap = wordsByLengthMap;
-    }
-
-
-
-    private void log(String msg){
-        System.out.println("^^^ AnagramFinder: " + msg);
     }
 
 
