@@ -22,7 +22,6 @@ import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import androidx.fragment.app.Fragment;
@@ -64,6 +63,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
             viewModel.results.clear();
             viewModel.results.addAll(words);
             arrayAdapter.notifyDataSetChanged();
+            System.out.println("^^^ FindWordsFragment: number of results: " + words.size());
             setResultsText();
             fadeIn(resultsList);
         });
