@@ -118,8 +118,13 @@ public class FindWordsFragment extends Fragment implements WordListView {
         });
     }
 
+    private void log(String msg){
+        System.out.println("FindWordsFragment: " + msg);
+    }
+
 
     private void searchForMatch(){
+        log("Entered searchForMatch()");
         searchForResults(this, resultsList, this::runSearch);
     }
 
@@ -127,6 +132,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
     private void runSearch(DictionaryService dictionaryService){
         String input = lettersEditText.getText().toString().trim().toLowerCase();
         String requiredLetters = requiredLettersEditText.getText().toString().trim().toLowerCase();
+        log("entered runSearch()");
         dictionaryService.findWords(input, requiredLetters, this);
     }
 

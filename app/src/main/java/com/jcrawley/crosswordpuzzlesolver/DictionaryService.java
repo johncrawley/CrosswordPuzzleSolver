@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class DictionaryService extends Service {
 
     IBinder binder = new LocalBinder();
-    private MainActivity mainActivity;
     private DictionaryLoader dictionaryLoader;
     private WordSearcher wordSearcher;
     private final AnagramFinder anagramFinder = new AnagramFinder();
@@ -72,6 +71,7 @@ public class DictionaryService extends Service {
                 wordListView.setWords(Collections.emptyList());
             }
             List<String> results = filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(input), requiredLetters);
+            log("findWords() results size: " + results.size());
             wordListView.setWords(results);
         });
     }
@@ -171,21 +171,9 @@ public class DictionaryService extends Service {
     }
 
 
-    public DictionaryLoader getDictionaryLoader(){
-        return dictionaryLoader;
-    }
-
-
-
-
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
-    }
-
-
-    public void setActivity(MainActivity activity){
-        this.mainActivity = activity;
     }
 
 
