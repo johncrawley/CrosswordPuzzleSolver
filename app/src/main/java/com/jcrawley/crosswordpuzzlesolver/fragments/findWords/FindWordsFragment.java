@@ -103,7 +103,9 @@ public class FindWordsFragment extends Fragment implements WordListView {
 
     private void setupKeyAction(final EditText editText, Consumer<String> viewModelConsumer){
         editText.setOnEditorActionListener((v, actionId, event) -> {
+            log("key pressed!");
             viewModelConsumer.accept(editText.getText().toString());
+            log("consumer accepted edit text");
             if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
                 return false;
             }
@@ -111,6 +113,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
             if(imm == null){
                 return false;
             }
+            log("key pressed! input manager is not null!");
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             noResultsFoundTextView.setVisibility(View.GONE);
             searchForMatch();
@@ -119,7 +122,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
     }
 
     private void log(String msg){
-        System.out.println("FindWordsFragment: " + msg);
+        System.out.println("^^^ FindWordsFragment: " + msg);
     }
 
 

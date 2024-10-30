@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
             log("Entered onServiceConnected()");
             DictionaryService.LocalBinder binder = (DictionaryService.LocalBinder) service;
             dictionaryService = binder.getService();
-            dictionaryService.setActivity(MainActivity.this);
             isServiceConnected.set(true);
         }
 
