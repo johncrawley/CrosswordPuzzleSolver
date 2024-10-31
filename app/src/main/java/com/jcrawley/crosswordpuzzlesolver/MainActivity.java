@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        log("entered onCreate()");
         setContentView(R.layout.activity_main);
         setupFragmentsIf(savedInstanceState == null);
         setupDictionaryService();
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void log(String msg){
-        System.out.println("MainActivity: " + msg);
+        System.out.println("^^^ MainActivity: " + msg);
     }
 
 }

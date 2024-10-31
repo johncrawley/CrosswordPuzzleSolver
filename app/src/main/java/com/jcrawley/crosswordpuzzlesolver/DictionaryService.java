@@ -67,6 +67,7 @@ public class DictionaryService extends Service {
     public void findWords(String input, String requiredLetters, WordListView wordListView){
         ifNotSearching(()->{
             String completeInput = input + requiredLetters;
+            log("entered findWords, completeInput: " + completeInput);
             if(completeInput.isEmpty()){
                 wordListView.setWords(Collections.emptyList());
             }

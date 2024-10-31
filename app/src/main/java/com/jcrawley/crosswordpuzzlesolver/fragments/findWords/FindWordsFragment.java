@@ -49,8 +49,11 @@ public class FindWordsFragment extends Fragment implements WordListView {
         View parentView = inflater.inflate(R.layout.find_words, container, false);
         viewModel = new ViewModelProvider(this).get(FindWordsViewModel.class);
         setupViews(parentView, viewModel);
+        log("onCreateView: about to set up list");
         setupList(parentView);
+        log("onCreateView: about to set results text");
         setResultsText();
+        log("onCreateView: about to set up key action on 2 text views ");
         setupKeyAction(lettersEditText, (text)-> viewModel.lettersText = text);
         setupKeyAction(requiredLettersEditText, (text) -> viewModel.requiredLettersText = text);
         return parentView;
