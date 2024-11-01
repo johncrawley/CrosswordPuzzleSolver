@@ -69,6 +69,7 @@ public class DictionaryService extends Service {
             String completeInput = input + requiredLetters;
             log("entered findWords, completeInput: " + completeInput);
             if(completeInput.isEmpty()){
+                log("complete input is empty!");
                 wordListView.setWords(Collections.emptyList());
             }
             List<String> results = filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(input), requiredLetters);
@@ -79,10 +80,13 @@ public class DictionaryService extends Service {
 
 
     private List<String> filterResultsWithRequiredLetters(List<String> words, String requiredLetters){
+        log("entered filterResultsWithRequiredLetters()");
         List<String> requiredLettersList = createRequiredLettersList(requiredLetters);
+        log("created requiredLettersList()");
         if(requiredLetters.isEmpty()){
             return words;
         }
+        log("about to return a stream that filters words that don't have all the required letters");
         return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLettersList)).collect(Collectors.toList());
     }
 

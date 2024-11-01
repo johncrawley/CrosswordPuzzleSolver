@@ -38,7 +38,7 @@ public class AnagramFinder {
     public List<String> getWordsFrom(String providedLetters){
         Set<String> foundWords = new HashSet<>();
         String sortedLetters= sort(providedLetters);
-        binaryCounter.init(sortedLetters.length());
+        binaryCounter = new BinaryCounter(sortedLetters.length());
 
         while(!binaryCounter.isIndexAtLimit()){
             addWordsTo(foundWords, sortedLetters);
