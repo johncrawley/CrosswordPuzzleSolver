@@ -49,11 +49,8 @@ public class FindWordsFragment extends Fragment implements WordListView {
         View parentView = inflater.inflate(R.layout.find_words, container, false);
         viewModel = new ViewModelProvider(this).get(FindWordsViewModel.class);
         setupViews(parentView, viewModel);
-        log("onCreateView: about to set up list");
         setupList(parentView);
-        log("onCreateView: about to set results text");
         setResultsText();
-        log("onCreateView: about to set up key action on 2 text views ");
         setupKeyAction(lettersEditText, (text)-> viewModel.lettersText = text);
         setupKeyAction(requiredLettersEditText, (text) -> viewModel.requiredLettersText = text);
         return parentView;
@@ -66,7 +63,6 @@ public class FindWordsFragment extends Fragment implements WordListView {
             viewModel.results.clear();
             viewModel.results.addAll(words);
             arrayAdapter.notifyDataSetChanged();
-            System.out.println("^^^ FindWordsFragment: number of results: " + words.size());
             setResultsText();
             fadeIn(resultsList);
         });
@@ -106,9 +102,7 @@ public class FindWordsFragment extends Fragment implements WordListView {
 
     private void setupKeyAction(final EditText editText, Consumer<String> viewModelConsumer){
         editText.setOnEditorActionListener((v, actionId, event) -> {
-            log("key pressed!");
             viewModelConsumer.accept(editText.getText().toString());
-            log("consumer accepted edit text");
             if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
                 return false;
             }
@@ -116,7 +110,6 @@ public class FindWordsFragment extends Fragment implements WordListView {
             if(imm == null){
                 return false;
             }
-            log("key pressed! input manager is not null!");
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             noResultsFoundTextView.setVisibility(View.GONE);
             searchForMatch();
@@ -124,13 +117,8 @@ public class FindWordsFragment extends Fragment implements WordListView {
         });
     }
 
-    private void log(String msg){
-        System.out.println("^^^ FindWordsFragment: " + msg);
-    }
-
 
     private void searchForMatch(){
-        log("Entered searchForMatch()");
         searchForResults(this, resultsList, this::runSearch);
     }
 
@@ -138,7 +126,6 @@ public class FindWordsFragment extends Fragment implements WordListView {
     private void runSearch(DictionaryService dictionaryService){
         String input = lettersEditText.getText().toString().trim().toLowerCase();
         String requiredLetters = requiredLettersEditText.getText().toString().trim().toLowerCase();
-        log("entered runSearch()");
         dictionaryService.findWords(input, requiredLetters, this);
     }
 
