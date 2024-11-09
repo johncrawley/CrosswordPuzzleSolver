@@ -12,7 +12,9 @@ import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,6 +29,7 @@ public class DictionaryService extends Service {
     private final AnagramFinder anagramFinder = new AnagramFinder();
     private final AtomicBoolean isSearchRunning = new AtomicBoolean(false);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private Map<Character, Integer> requiredLettersMap;
 
 
     public DictionaryService() {
@@ -70,9 +73,43 @@ public class DictionaryService extends Service {
             if(completeInput.isEmpty()){
                 wordListView.setWords(Collections.emptyList());
             }
+            initRequiredLettersMap(requiredLetters);
             List<String> results = filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(completeInput), requiredLetters);
-            wordListView.setWords(results);
+
+            wordListView.setWords(filterResultsWithMultipleLetters(results));
         });
+    }
+
+
+    private void initRequiredLettersMap(String requiredLetters){
+        requiredLettersMap = new HashMap<>();
+        for(int i = 0; i < requiredLetters.length(); i++){
+            requiredLettersMap.merge(requiredLetters.charAt(i), 1, Integer::sum);
+        }
+    }
+
+
+    private List<String> filterResultsWithMultipleLetters(List<String> results){
+        return results.stream().filter(this::hasAllRequiredChars).collect(Collectors.toList());
+    }
+
+
+    private boolean hasAllRequiredChars(String results){
+        if(requiredLettersMap.isEmpty()){
+            return true;
+        }
+        for(char ch : requiredLettersMap.keySet()){
+            Integer requiredNumber = requiredLettersMap.get(ch);
+            if(requiredNumber == null || !isContainingAmount(results, ch, requiredNumber)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private boolean isContainingAmount(String str, char charVal, int expectedAmount){
+        return str.chars().filter(ch -> ch == charVal).count() >= expectedAmount;
     }
 
 
