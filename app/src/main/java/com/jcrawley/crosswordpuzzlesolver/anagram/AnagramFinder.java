@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class AnagramFinder {
     private  WordsRepository wordsRepository;
     private  Map<String, Set<String>> wordsMap;
     private  Map<Integer, Map<String, Set<String>>> wordsByLengthMap;
+    private Map<Character, Integer> requiredLettersMap;
 
     public AnagramFinder(){
 
@@ -36,6 +38,9 @@ public class AnagramFinder {
 
 
     public List<String> getWordsFrom(String providedLetters){
+        if(providedLetters.trim().isEmpty()){
+            return Collections.emptyList();
+        }
         Set<String> foundWords = new HashSet<>();
         String sortedLetters= sort(providedLetters);
         binaryCounter = new BinaryCounter(sortedLetters.length());
@@ -45,6 +50,56 @@ public class AnagramFinder {
             //addWordsFromRepositoryTo(foundWords, sortedLetters);
         }
         return getSortedListOf(foundWords);
+    }
+
+
+    public List<String> getWordsFrom(String providedLetters, String requiredLetters){
+        String completeInput = providedLetters + requiredLetters;
+        initRequiredLettersMap(requiredLetters);
+        List<String> results = getWordsFrom(completeInput);
+        return requiredLetters.trim().isEmpty()? results : filterResultsWithMultipleLetters(results);
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ AnagramFinder: " + msg);
+    }
+
+    private void initRequiredLettersMap(String requiredLetters){
+        requiredLettersMap = buildLettersMapFrom(requiredLetters);
+    }
+
+
+    private List<String> filterResultsWithMultipleLetters(List<String> results){
+        return results.stream().filter(this::hasAllRequiredChars).collect(Collectors.toList());
+    }
+
+
+    private boolean hasAllRequiredChars(String result){
+        if(requiredLettersMap.isEmpty()){
+            return true;
+        }
+        Map<Character, Integer> resultLettersMap = buildLettersMapFrom(result);
+
+        for(char charVal : requiredLettersMap.keySet()){
+            Integer requiredCount = requiredLettersMap.get(charVal);
+            Integer resultCount = resultLettersMap.get(charVal);
+            if (requiredCount == null || resultCount == null) {
+                return false;
+            }
+            if (requiredCount > resultCount) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private Map<Character, Integer> buildLettersMapFrom(String str){
+        Map <Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < str.length(); i++){
+            map.merge(str.charAt(i), 1, Integer::sum);
+        }
+        return map;
     }
 
 

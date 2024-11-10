@@ -12,9 +12,7 @@ import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +27,6 @@ public class DictionaryService extends Service {
     private final AnagramFinder anagramFinder = new AnagramFinder();
     private final AtomicBoolean isSearchRunning = new AtomicBoolean(false);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Map<Character, Integer> requiredLettersMap;
 
 
     public DictionaryService() {
@@ -53,7 +50,7 @@ public class DictionaryService extends Service {
                 wordListView.setWords(Collections.emptyList());
             }
             var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
-            List<String> results = new ArrayList<>(excludeWordsWithBanishedLetters(initialResults, excludedLettersStr));
+            List<String> results = new ArrayList<>(excludeWordsWithDisallowedLetters(initialResults, excludedLettersStr));
             wordListView.setWords(results);
         });
     }
@@ -68,68 +65,7 @@ public class DictionaryService extends Service {
 
 
     public void findWords(String input, String requiredLetters, WordListView wordListView){
-        ifNotSearching(()->{
-            String completeInput = input + requiredLetters;
-            if(completeInput.isEmpty()){
-                wordListView.setWords(Collections.emptyList());
-            }
-            initRequiredLettersMap(requiredLetters);
-            List<String> results = filterResultsWithRequiredLetters(anagramFinder.getWordsFrom(completeInput), requiredLetters);
-
-            wordListView.setWords(filterResultsWithMultipleLetters(results));
-        });
-    }
-
-
-    private void initRequiredLettersMap(String requiredLetters){
-        requiredLettersMap = new HashMap<>();
-        for(int i = 0; i < requiredLetters.length(); i++){
-            requiredLettersMap.merge(requiredLetters.charAt(i), 1, Integer::sum);
-        }
-    }
-
-
-    private List<String> filterResultsWithMultipleLetters(List<String> results){
-        return results.stream().filter(this::hasAllRequiredChars).collect(Collectors.toList());
-    }
-
-
-    private boolean hasAllRequiredChars(String results){
-        if(requiredLettersMap.isEmpty()){
-            return true;
-        }
-        for(char ch : requiredLettersMap.keySet()){
-            Integer requiredNumber = requiredLettersMap.get(ch);
-            if(requiredNumber == null || !isContainingAmount(results, ch, requiredNumber)){
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    private boolean isContainingAmount(String str, char charVal, int expectedAmount){
-        return str.chars().filter(ch -> ch == charVal).count() >= expectedAmount;
-    }
-
-
-    private List<String> filterResultsWithRequiredLetters(List<String> words, String requiredLetters){
-        List<String> requiredLettersList = createRequiredLettersList(requiredLetters);
-        if(requiredLetters.isEmpty()){
-            return words;
-        }
-        return words.stream().filter(word -> doesWordHaveAllLetters(word, requiredLettersList)).collect(Collectors.toList());
-    }
-
-
-    private List<String> createRequiredLettersList(String requiredLetters){
-        String azRequiredLetters = requiredLetters.replaceAll("[^A-za-z]", "");
-        return azRequiredLetters.isEmpty() ? Collections.emptyList() : Arrays.asList(azRequiredLetters.split(""));
-    }
-
-
-    private boolean doesWordHaveAllLetters(String word, List<String> letters){
-        return letters.stream().allMatch(word::contains);
+        ifNotSearching(()-> wordListView.setWords(anagramFinder.getWordsFrom(input, requiredLetters)));
     }
 
 
@@ -151,7 +87,7 @@ public class DictionaryService extends Service {
     }
 
 
-    private List<String> excludeWordsWithBanishedLetters(List<String> initialResults, String excludedLettersStr){
+    private List<String> excludeWordsWithDisallowedLetters(List<String> initialResults, String excludedLettersStr){
         if(excludedLettersStr.isEmpty()){
             return new ArrayList<>(initialResults);
         }
