@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/panel_background"
+        android:paddingTop="@dimen/input_panel_padding_top"
         android:orientation="vertical">
 
         <include layout="@layout/find_words_input"/>

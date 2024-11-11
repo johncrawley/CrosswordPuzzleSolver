@@ -4,6 +4,8 @@
     <dimen name="instruction_text_bottom_margin">28dp</dimen>
     <dimen name="instruction_text_side_margin">12dp</dimen>
     <dimen name="instruction_text_size">18sp</dimen>
+    <dimen name="input_panel_padding_top">22dp</dimen>
+    <dimen name="top_text_margin_top">12sp</dimen>
     <dimen name="input_text_size">26sp</dimen>
     <dimen name="pager_top_margin">0dp</dimen>
     <dimen name="page_top_margin">22dp</dimen>
