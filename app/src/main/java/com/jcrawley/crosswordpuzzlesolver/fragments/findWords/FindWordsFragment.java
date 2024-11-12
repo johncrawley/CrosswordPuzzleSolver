@@ -132,6 +132,9 @@ public class FindWordsFragment extends Fragment implements WordListView {
 
     private void setResultsText(){
         setResultsCountText(resultsCountTextView, getContext(), viewModel.results.size());
+        if(viewModel.results.isEmpty() && !viewModel.lettersText.trim().isEmpty()) {
+            noResultsFoundTextView.setVisibility(View.VISIBLE);
+        }
     }
 
 }

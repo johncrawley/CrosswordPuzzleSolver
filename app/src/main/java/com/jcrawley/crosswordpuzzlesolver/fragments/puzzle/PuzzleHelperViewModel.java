@@ -10,5 +10,6 @@ public class PuzzleHelperViewModel extends ViewModel {
     public List<String> results = new ArrayList<>();
     public boolean isUsingAnagramsForCrossword = false;
     public String resultsFoundText = "";
+    public String inputText = "";
 
 }
