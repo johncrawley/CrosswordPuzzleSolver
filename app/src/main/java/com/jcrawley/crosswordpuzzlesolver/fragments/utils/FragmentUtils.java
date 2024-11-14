@@ -1,5 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -25,9 +28,11 @@ import com.jcrawley.crosswordpuzzlesolver.fragments.regex.RegexFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.wordExists.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FragmentUtils {
 
@@ -203,5 +208,27 @@ public class FragmentUtils {
             resultsText = context.getResources().getString(R.string.results_found_text, numberOfResults);
         }
         textView.setText(resultsText);
+    }
+
+
+    public static void copyWordToClipBoard(Context context, String word){
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("colour", word);
+        clipboard.setPrimaryClip(clip);
+        toast(context, R.string.toast_copied_selected_word_to_clipboard);
+    }
+
+
+    public static void copyAllWordsToClipBoard(Context context, List<String> wordsList){
+        String allWords = String.join(" ", wordsList);
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("colour", allWords);
+        clipboard.setPrimaryClip(clip);
+        toast(context, R.string.toast_copied_all_words_to_clipboard);
+    }
+
+
+    private static void toast(Context context, int strId){
+        Toast.makeText(context, strId, Toast.LENGTH_SHORT).show();
     }
 }

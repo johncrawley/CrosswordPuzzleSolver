@@ -27,4 +27,7 @@
     <string name="menu_button_dictionaries"> Dictionaries</string>
 
     <string name="search_button_content_description">Search For Results</string>
+
+    <string name="toast_copied_selected_word_to_clipboard">Copied selected word to clipboard</string>
+    <string name="toast_copied_all_words_to_clipboard">Copied all words to clipboard</string>
 </resources>
