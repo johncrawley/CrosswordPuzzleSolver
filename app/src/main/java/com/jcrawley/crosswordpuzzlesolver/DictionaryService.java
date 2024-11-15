@@ -44,7 +44,9 @@ public class DictionaryService extends Service {
 
 
     public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
+        log("Entered runPuzzleHelperSearch() inputText: " + inputText);
         ifNotSearching(()->{
+            log("runPizzleHelperSearch() is not already searching...");
             String formattedInput = inputText.trim().toLowerCase();
             if (formattedInput.isEmpty()) {
                 wordListView.setWords(Collections.emptyList());
@@ -120,6 +122,7 @@ public class DictionaryService extends Service {
                 ()-> {
                     dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext());
                     dictionaryLoader.retrieveAllWords();
+                    log("loadDictionaryWords() number of words = " + dictionaryLoader.getWordCount());
                     wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
                     anagramFinder.setupWordsMap(dictionaryLoader.getWordsMap());
                     anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
