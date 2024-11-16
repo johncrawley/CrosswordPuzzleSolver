@@ -27,6 +27,7 @@ public class DictionaryService extends Service {
     private final AnagramFinder anagramFinder = new AnagramFinder();
     private final AtomicBoolean isSearchRunning = new AtomicBoolean(false);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final AtomicBoolean isDictionaryLoaded = new AtomicBoolean(false);
 
 
     public DictionaryService() {
@@ -44,9 +45,7 @@ public class DictionaryService extends Service {
 
 
     public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
-        log("Entered runPuzzleHelperSearch() inputText: " + inputText);
         ifNotSearching(()->{
-            log("runPizzleHelperSearch() is not already searching...");
             String formattedInput = inputText.trim().toLowerCase();
             if (formattedInput.isEmpty()) {
                 wordListView.setWords(Collections.emptyList());
@@ -120,12 +119,14 @@ public class DictionaryService extends Service {
     private void loadDictionaryWords(){
         Executors.newSingleThreadExecutor().submit(
                 ()-> {
+                    isDictionaryLoaded.set(false);
                     dictionaryLoader = new DictionaryLoaderImpl(getApplicationContext());
                     dictionaryLoader.retrieveAllWords();
                     log("loadDictionaryWords() number of words = " + dictionaryLoader.getWordCount());
                     wordSearcher = new WordSearcher(dictionaryLoader.getWordsList(), dictionaryLoader.getWordsStr());
                     anagramFinder.setupWordsMap(dictionaryLoader.getWordsMap());
                     anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
+                    isDictionaryLoaded.set(true);
                 } );
     }
 
@@ -148,6 +149,9 @@ public class DictionaryService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        if(!isDictionaryLoaded.get()){
+            loadDictionaryWords();
+        }
         return binder;
     }
 
