@@ -30,4 +30,6 @@
 
     <string name="toast_copied_selected_word_to_clipboard">Copied selected word to clipboard</string>
     <string name="toast_copied_all_words_to_clipboard">Copied all words to clipboard</string>
+
+    <string name="button_text_copy_word">Copy Word</string>
 </resources>
