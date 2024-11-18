@@ -133,9 +133,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
     private void setResultsText(){
         setResultsCountText(resultsFoundTextView, getContext(), viewModel.results.size());
-        log("setResultsText() numberOfResults: " + viewModel.results.size() + "  viewModel inputText: "+ viewModel.inputText);
         if(viewModel.results.isEmpty() && !viewModel.inputText.isEmpty()) {
-            log("setting no results view to visible!");
             noResultsFoundView.setVisibility(View.VISIBLE);
             resultsList.setVisibility(View.GONE);
         }

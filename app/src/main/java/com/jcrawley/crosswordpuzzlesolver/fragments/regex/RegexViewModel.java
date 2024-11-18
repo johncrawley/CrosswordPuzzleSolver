@@ -9,5 +9,6 @@ public class RegexViewModel extends ViewModel {
 
     public List<String> results = new ArrayList<>();
     public String resultsFoundText = "";
+    public String inputText = "";
 
 }

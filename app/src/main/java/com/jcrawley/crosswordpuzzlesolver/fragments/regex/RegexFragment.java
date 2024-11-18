@@ -30,10 +30,11 @@ import java.util.List;
 public class RegexFragment extends Fragment implements WordListView {
 
     private EditText lettersEditText;
-    private TextView resultsCountTextView, noResultsFoundTextView;
     private Context context;
     private ArrayAdapter<String> arrayAdapter;
     private ListView resultsList;
+    private TextView resultsFoundTextView;
+    private View noResultsFoundView;
     private RegexViewModel viewModel;
 
     public RegexFragment() {
@@ -49,14 +50,15 @@ public class RegexFragment extends Fragment implements WordListView {
         viewModel = new ViewModelProvider(this).get(RegexViewModel.class);
         setupViews(parentView);
         setupList(parentView);
-        setupKeyboardInput(lettersEditText, noResultsFoundTextView, getContext(), this::searchForMatches);
+        setupKeyboardInput(lettersEditText, noResultsFoundView, getContext(), this::searchForMatches);
         return parentView;
     }
 
 
     private void setupViews(View parentView){
+        noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
+        resultsFoundTextView = parentView.findViewById(R.id.resultsCountTextView);
         lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
-        resultsCountTextView = parentView.findViewById(R.id.resultsCountTextView);
         setupSearchButton(parentView);
     }
 
@@ -64,10 +66,9 @@ public class RegexFragment extends Fragment implements WordListView {
     private void setupList(View parentView){
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, viewModel.results);
         resultsList = parentView.findViewById(R.id.findWordsList);
-        noResultsFoundTextView = parentView.findViewById(R.id.noResultsFoundText);
         resultsList.setAdapter(arrayAdapter);
-        resultsList.setEmptyView(noResultsFoundTextView);
-        noResultsFoundTextView.setVisibility(View.GONE);
+        resultsList.setEmptyView(noResultsFoundView);
+        noResultsFoundView.setVisibility(View.GONE);
     }
 
 
@@ -83,13 +84,17 @@ public class RegexFragment extends Fragment implements WordListView {
 
 
     private void runSearch(DictionaryService dictionaryService){
-        String pattern = lettersEditText.getText().toString().trim();
-        dictionaryService.getResultsForPattern(pattern, this);
+        viewModel.inputText = lettersEditText.getText().toString().trim();
+        dictionaryService.getResultsForPattern(viewModel.inputText, this);
     }
 
 
     private void setResultsText(){
-        setResultsCountText(resultsCountTextView, getContext(), viewModel.results.size());
+        setResultsCountText(resultsFoundTextView, getContext(), viewModel.results.size());
+        if(viewModel.results.isEmpty() && !viewModel.inputText.isEmpty()) {
+            noResultsFoundView.setVisibility(View.VISIBLE);
+            resultsList.setVisibility(View.GONE);
+        }
     }
 
 
