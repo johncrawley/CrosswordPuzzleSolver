@@ -56,7 +56,7 @@ public class RegexFragment extends Fragment implements WordListView {
 
 
     private void setupViews(View parentView){
-        noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
+        noResultsFoundView = parentView.findViewById(R.id.noResultsFoundText);
         resultsFoundTextView = parentView.findViewById(R.id.resultsCountTextView);
         lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
         setupSearchButton(parentView);
