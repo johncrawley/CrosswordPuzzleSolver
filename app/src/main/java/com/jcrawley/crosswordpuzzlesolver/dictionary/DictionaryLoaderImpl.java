@@ -107,6 +107,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
                 addWordSetToDataStructures(line);
                 line = br.readLine();
             }
+            is.close();
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -114,6 +115,28 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         log("entered loadWordsFromFileToMaps()");
         log("loadWordsFromFileToMaps() wordsStr length: " + wordsStr.length());
     }
+
+
+    private void loadWordsFromFileToMaps2(){
+        str = new StringBuilder();
+        InputStream is = context.getResources().openRawResource(R.raw.sorted_british_english);
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            String key = br.readLine();
+            String line = br.readLine();
+            while (key != null && line!= null){
+                addWordSetToDataStructures(key, line);
+                key = br.readLine();
+                line = br.readLine();
+            }
+            is.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        wordsStr = str.toString();
+        log("entered loadWordsFromFileToMaps2()");
+        log("loadWordsFromFileToMaps() wordsStr length: " + wordsStr.length());
+    }
+
 
     private void log(String msg){
         System.out.println("^^^ DictionaryLoaderImpl: " + msg);
@@ -148,6 +171,25 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     }
 
 
+    public void addWordSetToDataStructures(String key, String word) {
+        wordCount++;
+        Set<String> wordSet = wordsMap.computeIfAbsent(key, k -> new HashSet<>() );
+        wordSet.add(word);
+        addWordToStr(word);
+        addWordSetToLengthMap(key, wordSet);
+    }
+
+
+    private void addAllWordsSetsToLengthMap(){
+        for(String key : wordsMap.keySet()){
+            Map<String, Set<String>> lengthMap = wordsByLengthMap.get(key.length());
+            if(lengthMap != null){
+                lengthMap.put(key, wordsMap.get(key));
+            }
+        }
+    }
+
+
     private void addWordSetToLengthMap(String key, Set<String> words){
         Map<String, Set<String>> lengthMap = wordsByLengthMap.get(key.length());
         if (lengthMap != null) {
@@ -162,6 +204,13 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             str.append(wordsArray[i]);
             wordsList.add(wordsArray[i]);
         }
+    }
+
+
+    private void addWordToStr(String word){
+        str.append(" ");
+        str.append(word);
+        wordsList.add(word);
     }
 
 }

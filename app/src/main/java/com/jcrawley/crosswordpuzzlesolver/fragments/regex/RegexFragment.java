@@ -85,7 +85,12 @@ public class RegexFragment extends Fragment implements WordListView {
 
     private void runSearch(DictionaryService dictionaryService){
         viewModel.inputText = lettersEditText.getText().toString().trim();
+        log("entered runSearch() inputText: " + viewModel.inputText);
         dictionaryService.getResultsForPattern(viewModel.inputText, this);
+    }
+
+    private void log(String msg){
+        System.out.println("RegexFragment: " + msg);
     }
 
 

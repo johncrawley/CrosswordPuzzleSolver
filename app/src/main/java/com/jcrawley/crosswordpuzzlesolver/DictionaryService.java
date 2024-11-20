@@ -58,7 +58,9 @@ public class DictionaryService extends Service {
 
 
     public void getResultsForPattern(String pattern, WordListView wordListView){
+        log("Entered getResultsForPattern() pattern: " + pattern);
         ifNotSearching(()->{
+            log("getResultsForPattern() not searching so going to run wordSearcher.searchForPattern");
             List<String> results = wordSearcher.searchForPattern(pattern);
             wordListView.setWords(results);
         });
