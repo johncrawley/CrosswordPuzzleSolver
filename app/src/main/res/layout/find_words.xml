@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/results_count_padding_start"
         android:paddingEnd="@dimen/results_count_padding_end"
+        android:textSize="@dimen/results_found_text_size"
         android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
         android:text="" />
     <View

@@ -52,11 +52,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     <TextView
         android:id="@+id/resultsCountTextView"
@@ -64,6 +60,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/results_count_padding_start"
         android:paddingEnd="@dimen/results_count_padding_end"
+        android:textSize="@dimen/results_found_text_size"
         android:layout_marginHorizontal="@dimen/results_count_horizontal_margin"
         android:text="" />
     <View
@@ -92,6 +89,5 @@
         android:layout_height="match_parent"
         android:text="@string/no_result_found_text"
         />
-
 
 </LinearLayout>

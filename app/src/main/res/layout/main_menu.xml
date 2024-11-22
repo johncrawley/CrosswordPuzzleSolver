@@ -39,6 +39,7 @@
     <Button
         android:id="@+id/dictionaries"
         android:text="@string/menu_button_dictionaries"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
