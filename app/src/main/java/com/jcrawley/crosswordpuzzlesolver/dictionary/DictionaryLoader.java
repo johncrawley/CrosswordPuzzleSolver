@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 public interface DictionaryLoader {
 
-    String retrieveAllWords();
+    void retrieveAllWords();
     void loadWordsIntoDb(Consumer<String> lineConsumer);
     String getWordsStr();
     Map<String, Set<String>> getWordsMap();
