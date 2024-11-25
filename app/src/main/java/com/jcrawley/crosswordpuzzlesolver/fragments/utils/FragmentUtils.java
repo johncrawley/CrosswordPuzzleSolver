@@ -25,6 +25,7 @@ import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.puzzle.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.regex.RegexFragment;
+import com.jcrawley.crosswordpuzzlesolver.fragments.regex.RegexGuideFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.wordExists.WordExistsFragment;
 import com.jcrawley.crosswordpuzzlesolver.R;
 
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class FragmentUtils {
 
@@ -63,6 +63,11 @@ public class FragmentUtils {
 
     public static void loadCheckWord(Fragment parentFragment){
         loadFragment(parentFragment, new WordExistsFragment(), "check_word");
+    }
+
+
+    public static void loadRegexGuide(Fragment parentFragment){
+        loadFragment(parentFragment, new RegexGuideFragment(), "regex_guide");
     }
 
 

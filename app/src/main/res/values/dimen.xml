@@ -25,5 +25,6 @@
     <dimen name="puzzle_helper_edit_text_margin_bottom">4dp</dimen>
     <dimen name="search_button_horizontal_margin">12dp</dimen>
     <dimen name="search_button_bottom_margin">4dp</dimen>
+    <dimen name="regex_guide_title_text_size">32sp</dimen>
 
 </resources>
