@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
+import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
 
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class RegexFragment extends Fragment implements WordListView {
         resultsFoundTextView = parentView.findViewById(R.id.resultsCountTextView);
         lettersEditText = parentView.findViewById(R.id.lettersInputEditText);
         setupSearchButton(parentView);
+        setupRegexGuideButton(parentView);
     }
 
 
@@ -75,6 +77,11 @@ public class RegexFragment extends Fragment implements WordListView {
     private void setupSearchButton(View parentView){
         ImageButton searchButton = parentView.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(v -> searchForMatches());
+    }
+
+    private void setupRegexGuideButton(View parentView){
+        ImageButton regexGuideButton = parentView.findViewById(R.id.guideButton);
+        regexGuideButton.setOnClickListener(v -> FragmentUtils.loadRegexGuide(RegexFragment.this));
     }
 
 
