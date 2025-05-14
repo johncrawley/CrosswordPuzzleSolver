@@ -81,18 +81,22 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
 
     private void initMaps(){
-        final int MIN_LENGTH_OF_WORD = 1;
-        final int MAX_LENGTH_OF_WORD = 28;
         if(wordsMap == null){
-            wordsMap = new HashMap<>(50_000);
+            wordsMap = new HashMap<>(110_000);
         }
         if(wordsList == null){
-            wordsList = new ArrayList<>(50_000);
+            wordsList = new ArrayList<>(110_000);
         }
+        initWordsByLengthMap();
+    }
+
+    private void initWordsByLengthMap(){
+        final int MIN_LENGTH_OF_WORD = 1;
+        final int MAX_LENGTH_OF_WORD = 28;
         if(wordsByLengthMap == null){
             wordsByLengthMap = new HashMap<>(30);
             for(int i = MIN_LENGTH_OF_WORD; i < MAX_LENGTH_OF_WORD; i++){
-                Map<String, Set<String>> map = new HashMap<>(500);
+                Map<String, Set<String>> map = new HashMap<>(5_000);
                 wordsByLengthMap.put(i, map);
             }
         }
@@ -100,22 +104,23 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
 
     private void loadWordsFromFileToMaps(){
+        log("entered loadWordsFromFileToMaps()");
         str = new StringBuilder();
-        InputStream is = context.getResources().openRawResource(R.raw.sorted_british_english_2);
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+        var is = context.getResources().openRawResource(R.raw.sorted_british_english_2);
+        try(var br = new BufferedReader(new InputStreamReader(is))) {
             String key = br.readLine();
-            String line = br.readLine();
-            while (key != null && line!= null){
-                addWordSetToDataStructures(key, line);
+            String word = br.readLine();
+            while (key != null && word != null){
+                add(word);
+                addWordSetToDataStructures(key, word);
                 key = br.readLine();
-                line = br.readLine();
+                word = br.readLine();
             }
             is.close();
         }catch (IOException e){
             e.printStackTrace();
         }
         wordsStr = str.toString();
-        log("entered loadWordsFromFileToMaps()");
     }
 
 
@@ -124,7 +129,33 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     }
 
 
+    public void addWordSetToDataStructures(String key, String word) {
+        wordCount++;
+        var wordSet = wordsMap.computeIfAbsent(key, k -> new HashSet<>() );
+        wordSet.add(word);
+      //  addWordSetToLengthMap(key, wordSet);
+    }
+
+
+    private void add(String word){
+        str.append(" ");
+        str.append(word);
+        wordsList.add(word);
+    }
+
+
+    private void addWordSetToLengthMap(String key, Set<String> words){
+        var lengthMap = wordsByLengthMap.get(key.length());
+        if(lengthMap != null){
+            lengthMap.put(key, words);
+        }
+    }
+
+
+
+    @Override
     public void loadWordsIntoDb(Consumer<String> lineConsumer){
+        log("Entered loadWordsIntoDB()");
         str = new StringBuilder();
         InputStream is = context.getResources().openRawResource(R.raw.sorted_british_english);
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -135,33 +166,10 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
                 line =br.readLine();
             }
         }catch (IOException e){
+
             e.printStackTrace();
         }
         wordsStr = str.toString();
-    }
-
-
-    public void addWordSetToDataStructures(String key, String word) {
-        wordCount++;
-        Set<String> wordSet = wordsMap.computeIfAbsent(key, k -> new HashSet<>() );
-        wordSet.add(word);
-        addWordToStr(word);
-        addWordSetToLengthMap(key, wordSet);
-    }
-
-
-    private void addWordSetToLengthMap(String key, Set<String> words){
-        Map<String, Set<String>> lengthMap = wordsByLengthMap.get(key.length());
-        if (lengthMap != null) {
-            lengthMap.put(key, words);
-        }
-    }
-
-
-    private void addWordToStr(String word){
-        str.append(" ");
-        str.append(word);
-        wordsList.add(word);
     }
 
 }
