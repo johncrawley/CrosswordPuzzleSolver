@@ -79,6 +79,7 @@ public class RegexFragment extends Fragment implements WordListView {
         searchButton.setOnClickListener(v -> searchForMatches());
     }
 
+
     private void setupRegexGuideButton(View parentView){
         ImageButton regexGuideButton = parentView.findViewById(R.id.guideButton);
         regexGuideButton.setOnClickListener(v -> FragmentUtils.loadRegexGuide(RegexFragment.this));

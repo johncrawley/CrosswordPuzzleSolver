@@ -36,7 +36,6 @@ public class WordSearcher {
 
     public List<String> searchFor(String searchText){
         log("Entered searchFor("  + searchText + ")");
-       // log("wordsStr length: " + wordsStr.length());
         log("size of words list: " + wordsList.size());
         final String WORD_SEPARATOR = "\\b";
         expectedCharacters = searchText.length();
