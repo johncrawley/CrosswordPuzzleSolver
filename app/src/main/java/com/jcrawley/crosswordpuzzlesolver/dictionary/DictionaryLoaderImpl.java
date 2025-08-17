@@ -21,7 +21,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
     private final Context context;
     private StringBuilder str;
-    
     private String wordsStr;
     public Map<String, Set<String>> wordsMap;
     public Map<Integer, Map<String, Set<String>>> wordsByLengthMap;
@@ -90,6 +89,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         initWordsByLengthMap();
     }
 
+
     private void initWordsByLengthMap(){
         final int MIN_LENGTH_OF_WORD = 1;
         final int MAX_LENGTH_OF_WORD = 28;
@@ -150,7 +150,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             lengthMap.put(key, words);
         }
     }
-
 
 
     @Override

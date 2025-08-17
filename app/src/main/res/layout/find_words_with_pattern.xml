@@ -29,7 +29,6 @@
         android:paddingTop="@dimen/input_panel_padding_top"
         android:layout_gravity="center">
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/lettersInputEditTextLayout"
             android:layout_width="0dp"

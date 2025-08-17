@@ -37,12 +37,21 @@ public class AnagramFinder {
     }
 
 
+   /*
+       The binary counter is used to iterate over all the combinations of input letters
+       For a 5 letter input, for example, it counts from 00001 to 11111
+       For a given counter value, the input letters chosen for checking  will correspond to the '1's
+       E.g. with a binary value of 01101 and the (sorted) input letters 'abemt', 'bet' will be checked
+        The next iteration would be 01110, and thus 'bem' will be checked
+     */
+
     public List<String> getWordsFrom(String providedLetters){
-        if(providedLetters.trim().isEmpty()){
+        String justLetters = providedLetters.trim();
+        if(justLetters.isEmpty()){
             return Collections.emptyList();
         }
         Set<String> foundWords = new HashSet<>();
-        String sortedLetters= sort(providedLetters);
+        String sortedLetters = sort(justLetters);
         binaryCounter = new BinaryCounter(sortedLetters.length());
 
         while(!binaryCounter.isIndexAtLimit()){
@@ -53,6 +62,24 @@ public class AnagramFinder {
     }
 
 
+    private void addWordsTo(Set<String> words, String sortedLetters){
+        words.addAll(getAllWordsFromMap(getSearchLetters(sortedLetters)));
+    }
+
+
+    private String getSearchLetters(String letters){
+        binaryCounter.inc();
+        String binaryFlag = binaryCounter.getFlag();
+        StringBuilder str = new StringBuilder();
+        for(int i = 0; i < letters.length(); i++){
+            if(binaryFlag.charAt(i) == '1'){
+                str.append(letters.charAt(i));
+            }
+        }
+        return str.toString();
+    }
+
+
     public List<String> getWordsFrom(String providedLetters, String requiredLetters){
         String completeInput = providedLetters + requiredLetters;
         initRequiredLettersMap(requiredLetters);
@@ -60,9 +87,11 @@ public class AnagramFinder {
         return requiredLetters.trim().isEmpty()? results : filterResultsWithMultipleLetters(results);
     }
 
+
     private void log(String msg){
         System.out.println("^^^ AnagramFinder: " + msg);
     }
+
 
     private void initRequiredLettersMap(String requiredLetters){
         requiredLettersMap = buildLettersMapFrom(requiredLetters);
@@ -162,11 +191,6 @@ public class AnagramFinder {
     }
 
 
-    private void addWordsTo(Set<String> words, String sortedLetters){
-        words.addAll(getAllWordsFromMap(getSearchLetters(sortedLetters)));
-    }
-
-
     private void addWordsFromRepositoryTo(Set<String> words, String sortedLetters){
         words.addAll(wordsRepository.findWordsWithKey(getSearchLetters(sortedLetters)));
     }
@@ -188,19 +212,6 @@ public class AnagramFinder {
         char[] charArray = str.toCharArray();
         Arrays.sort(charArray);
         return new String(charArray);
-    }
-
-
-    private String getSearchLetters(String letters){
-        binaryCounter.inc();
-        String binaryFlag = binaryCounter.getFlag();
-        StringBuilder str = new StringBuilder();
-        for(int i=0; i< letters.length();i++){
-            if(binaryFlag.charAt(i) == '1'){
-                str.append(letters.charAt(i));
-            }
-        }
-        return str.toString();
     }
 
 }

@@ -48,7 +48,7 @@ public class BinaryCounter {
             str.append("0");
         }
         String printableString = str.toString() + binaryStr;
-        System.out.println("binStr for " + currentIndex
+        log("getFlag() binStr for " + currentIndex
                 + " is: " + printableString
                 + " is at max Index: " + isIndexAtLimit
                 + "  maxIndexString: " + maxIndexString);
@@ -56,9 +56,14 @@ public class BinaryCounter {
     }
 
 
+    private void log(String msg){
+        System.out.println("^^^ BinaryCounter: " + msg);
+    }
+
+
     public void generateMaxIndexString(){
         StringBuilder str=  new StringBuilder();
-        for(int i=0; i< size; i++){
+        for(int i = 0; i < size; i++){
             str.append("1");
         }
         maxIndexString = str.toString();
