@@ -45,6 +45,7 @@ public class DictionaryService extends Service {
 
 
     public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView){
+        waitForDictionaryToLoad();
         ifNotSearching(()->{
             String formattedInput = inputText.trim().toLowerCase();
             if (formattedInput.isEmpty()) {
@@ -59,6 +60,7 @@ public class DictionaryService extends Service {
 
     public void getResultsForPattern(String pattern, WordListView wordListView){
         log("Entered getResultsForPattern() pattern: " + pattern);
+        waitForDictionaryToLoad();
         ifNotSearching(()->{
             log("getResultsForPattern() not searching so going to run wordSearcher.searchForPattern");
             List<String> results = wordSearcher.searchForPattern(pattern);
@@ -68,7 +70,36 @@ public class DictionaryService extends Service {
 
 
     public void findWords(String input, String requiredLetters, WordListView wordListView){
+        waitForDictionaryToLoad();
         ifNotSearching(()-> wordListView.setWords(anagramFinder.getWordsFrom(input, requiredLetters)));
+    }
+    
+
+    public boolean doesWordExist(String word){
+        waitForDictionaryToLoad();
+        var wordsMap = dictionaryLoader.getWordsMap();
+        String sortedWord = getSortedWord(word);
+        if(wordsMap.containsKey(sortedWord)){
+            Set<String> words = wordsMap.get(sortedWord);
+            return words != null && words.contains(word);
+        }
+        return false;
+    }
+
+
+    private void waitForDictionaryToLoad(){
+        try{
+            dictionaryLoader.getDictionaryLatch().await();
+        }catch (InterruptedException e){
+            handleException(e);
+        }
+
+    }
+
+
+    private void handleException(Exception e){
+       var message = e.getMessage();
+       log(message);
     }
 
 
@@ -130,17 +161,6 @@ public class DictionaryService extends Service {
                     anagramFinder.setWordsByLengthMap(dictionaryLoader.getWordsByLengthMap());
                     isDictionaryLoaded.set(true);
                 } );
-    }
-
-
-    public boolean doesWordExist(String word){
-        var wordsMap = dictionaryLoader.getWordsMap();
-        String sortedWord = getSortedWord(word);
-        if(wordsMap.containsKey(sortedWord)){
-            Set<String> words = wordsMap.get(sortedWord);
-            return words != null && words.contains(word);
-        }
-        return false;
     }
 
 

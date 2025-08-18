@@ -54,6 +54,11 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         dictionaryLatch.countDown();
     }
 
+    @Override
+    public CountDownLatch getDictionaryLatch(){
+        return dictionaryLatch;
+    }
+
 
     @Override
     public Map<String, Set<String>> getWordsMap(){
