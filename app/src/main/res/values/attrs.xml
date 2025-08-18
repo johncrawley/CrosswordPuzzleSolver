@@ -3,4 +3,6 @@
     <attr name="fragment_background"/>
     <attr name="main_menu_background"/>
     <attr name="panel_background"/>
+    <attr name="button_layout_background_color"/>
+    <attr name="button_layout_outline_color"/>
 </resources>
