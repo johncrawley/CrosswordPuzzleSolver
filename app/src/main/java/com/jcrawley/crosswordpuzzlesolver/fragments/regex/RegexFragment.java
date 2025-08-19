@@ -47,7 +47,7 @@ public class RegexFragment extends Fragment implements WordListView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getContext();
-        View parentView = inflater.inflate(R.layout.find_words_with_pattern, container, false);
+        View parentView = inflater.inflate(R.layout.find_words_with_regex, container, false);
         viewModel = new ViewModelProvider(this).get(RegexViewModel.class);
         setupViews(parentView);
         setupList(parentView);
