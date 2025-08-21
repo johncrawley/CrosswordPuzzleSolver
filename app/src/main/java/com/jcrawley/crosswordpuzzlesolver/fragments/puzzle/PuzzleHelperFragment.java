@@ -1,5 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.puzzle;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
@@ -15,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +27,6 @@ import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 
 import java.util.List;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -39,6 +41,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private PuzzleHelperViewModel viewModel;
     private ListView resultsList;
     private boolean hasSearchStarted = false;
+    private ImageButton searchButton;
 
     public PuzzleHelperFragment() {
         // Required empty public constructor
@@ -61,7 +64,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private void setupViews(View parentView){
         noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
         lettersEditText = parentView.findViewById(R.id.wordInputEditText);
-        setupKeyAction(lettersEditText);
+        setupKeyAction(lettersEditText, this::setVisibilityOnSearchButton);
         excludedLettersEditText = parentView.findViewById(R.id.excludeLettersEditText);
         setupKeyAction(excludedLettersEditText);
         resultsFoundTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
@@ -71,7 +74,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void setupSearchButton(View parentView){
-        AppCompatImageButton searchButton = parentView.findViewById(R.id.searchButton);
+        searchButton = parentView.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(v -> searchForMatches());
     }
 
@@ -90,26 +93,59 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         noResultsFoundView.setVisibility(View.GONE);
     }
 
-
     private void setupKeyAction(final EditText editText){
+       setupKeyAction(editText, null);
+    }
+
+
+    private void setupKeyAction(final EditText editText, Runnable onNormalKeyInput){
         editText.setOnEditorActionListener((v, actionId, event) -> {
             if(hasSearchStarted){
                 return false;
             }
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(imm == null){
-                    return false;
-                }
-                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                if(!hasSearchStarted) {
-                    noResultsFoundView.setVisibility(View.GONE);
-                    searchForMatches();
-                }
-                return true;
+                onKeyDone(editText);
+            }
+            else if(onNormalKeyInput != null){
+                onNormalKeyInput.run();
             }
             return false;
         });
+    }
+
+
+    private void setVisibilityOnSearchButton(){
+        var input = lettersEditText.getText().toString();
+        if(input.isEmpty()){
+            hideSearchButton();
+        }
+        else{
+            showSearchButton();
+        }
+    }
+
+
+    private void hideSearchButton(){
+        searchButton.setVisibility(INVISIBLE);
+    }
+
+
+    private void showSearchButton(){
+        searchButton.setVisibility(VISIBLE);
+    }
+
+
+    private boolean onKeyDone(EditText editText){
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm == null){
+            return false;
+        }
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        if(!hasSearchStarted) {
+            noResultsFoundView.setVisibility(View.GONE);
+            searchForMatches();
+        }
+        return true;
     }
 
 
@@ -127,14 +163,14 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void updateVisibilityOnListDivider(){
-        listDivider.setVisibility(!viewModel.results.isEmpty() ? View.VISIBLE : View.GONE);
+        listDivider.setVisibility(!viewModel.results.isEmpty() ? VISIBLE : View.GONE);
     }
 
 
     private void setResultsText(){
         setResultsCountText(resultsFoundTextView, getContext(), viewModel.results.size());
         if(viewModel.results.isEmpty() && !viewModel.inputText.isEmpty()) {
-            noResultsFoundView.setVisibility(View.VISIBLE);
+            noResultsFoundView.setVisibility(VISIBLE);
             resultsList.setVisibility(View.GONE);
         }
     }

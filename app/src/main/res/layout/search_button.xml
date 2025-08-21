@@ -14,7 +14,7 @@
         android:minWidth="40dp"
         android:minHeight="40dp"
         android:src="@drawable/ic_search"
-        android:background="@null"
+        android:backgroundTint="?attr/button_layout_background_color"
         android:layout_marginVertical="2dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

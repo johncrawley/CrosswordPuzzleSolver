@@ -88,11 +88,6 @@ public class AnagramFinder {
     }
 
 
-    private void log(String msg){
-        System.out.println("^^^ AnagramFinder: " + msg);
-    }
-
-
     private void initRequiredLettersMap(String requiredLetters){
         requiredLettersMap = buildLettersMapFrom(requiredLetters);
     }
@@ -134,7 +129,6 @@ public class AnagramFinder {
 
     // used to get words containing the provided letters and including unknown letters
     public List<String> getWordsMatching(String providedLetters){
-        log("entered getWordsMatching() providedLetters: " + providedLetters);
         List<String> matchingWords = new ArrayList<>();
         String[] lettersArray = createLettersArrayFrom(providedLetters);
         Map<String, Set<String>> wordsMap = wordsByLengthMap.get(providedLetters.length());

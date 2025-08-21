@@ -9,7 +9,7 @@
         <item name="main_menu_background">@color/main_menu_background</item>
         <item name="panel_background">@color/panel_background</item>
         <item name="android:windowBackground">@color/main_menu_background</item>
-        <item name="button_layout_background_color">@color/main_menu_background</item>
+        <item name="button_layout_background_color">@color/fragment_background</item>
         <item name="button_layout_outline_color">@color/colorPrimaryDark</item>
     </style>
 

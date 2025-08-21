@@ -138,7 +138,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
         wordCount++;
         var wordSet = wordsMap.computeIfAbsent(key, k -> new HashSet<>() );
         wordSet.add(word);
-      //  addWordSetToLengthMap(key, wordSet);
+        addWordSetToLengthMap(key, wordSet);
     }
 
 
