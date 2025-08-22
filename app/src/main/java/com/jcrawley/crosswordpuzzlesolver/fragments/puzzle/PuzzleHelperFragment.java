@@ -144,6 +144,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         if(!hasSearchStarted) {
             noResultsFoundView.setVisibility(View.GONE);
             searchForMatches();
+            startSearchingAnimation();
         }
         return true;
     }
@@ -154,9 +155,17 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     }
 
 
+    private void startSearchingAnimation(){
+
+    }
+
+
     private void runSearch(DictionaryService dictionaryService){
         hasSearchStarted = true;
-        viewModel.inputText = lettersEditText.getText().toString();
+        viewModel.inputText = lettersEditText.getText().toString().trim();
+        if(viewModel.inputText.isEmpty()){
+            return;
+        }
         String excludedText = excludedLettersEditText.getText().toString();
         dictionaryService.runPuzzleHelperSearch(viewModel.inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
     }
