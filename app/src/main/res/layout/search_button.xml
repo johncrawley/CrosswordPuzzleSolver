@@ -13,7 +13,7 @@
         android:contentDescription="@string/search_button_content_description"
         android:minWidth="40dp"
         android:minHeight="40dp"
-        android:src="@drawable/ic_search"
+        android:src="?attr/search_icon"
         android:backgroundTint="?attr/button_layout_background_color"
         android:layout_marginVertical="2dp"
         app:layout_constraintTop_toTopOf="parent"

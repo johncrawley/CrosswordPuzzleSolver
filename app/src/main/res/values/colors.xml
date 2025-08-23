@@ -14,4 +14,9 @@
     <color name="fragment_background">#E6D8D8</color>
     <color name="main_menu_background">#BFAD90</color>
     <color name="panel_background">#EAD4B0</color>
+
+    <color name="panel_background_night">#000</color>
+    <color name="main_menu_background_night">#000</color>
+    <color name="fragment_background_night">#000</color>
+    <color name="color_secondary_dark">#A2A198</color>
 </resources>

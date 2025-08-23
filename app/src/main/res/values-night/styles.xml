@@ -1,0 +1,17 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="fragment_background">@color/fragment_background_night</item>
+        <item name="main_menu_background">@color/main_menu_background_night</item>
+        <item name="panel_background">@color/panel_background_night</item>
+        <item name="android:windowBackground">@color/main_menu_background_night</item>
+        <item name="button_layout_background_color">@color/fragment_background_night</item>
+        <item name="button_layout_outline_color">@color/colorPrimaryDark</item>
+        <item name="search_icon">@drawable/ic_search_night</item>
+    </style>
+
+</resources>

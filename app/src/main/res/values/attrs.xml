@@ -5,4 +5,5 @@
     <attr name="panel_background"/>
     <attr name="button_layout_background_color"/>
     <attr name="button_layout_outline_color"/>
+    <attr name="search_icon"/>
 </resources>
