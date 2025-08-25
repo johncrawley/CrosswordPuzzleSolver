@@ -15,4 +15,8 @@
         <item name="search_icon">@drawable/ic_search</item>
     </style>
 
+    <style name="customSwitchStyle" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="trackTint">@color/custom_switch_track</item>
+        <item name="thumbTint">@color/custom_switch_thumb</item>
+    </style>
 </resources>

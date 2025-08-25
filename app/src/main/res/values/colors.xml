@@ -15,8 +15,21 @@
     <color name="main_menu_background">#BFAD90</color>
     <color name="panel_background">#EAD4B0</color>
 
+
+    <color name="custom_switch_track_checked">#BFBFBF</color>
+    <color name="custom_switch_track_unchecked">#BFBFBF</color>
+    <color name="custom_switch_thumb_checked">#AB9B0D</color>
+    <color name="custom_switch_thumb_unchecked">#8A8A88</color>
+
     <color name="panel_background_night">#000</color>
     <color name="main_menu_background_night">#000</color>
     <color name="fragment_background_night">#000</color>
     <color name="color_secondary_dark">#A2A198</color>
+    <color name="material_button_text_night">#B3B2B1</color>
+    <color name="material_button_background_night">#4E4602</color>
+    <color name="custom_switch_track_checked_night">#999898</color>
+    <color name="custom_switch_track_unchecked_night">#6F6F6F</color>
+    <color name="custom_switch_thumb_checked_night">#AB9B0D</color>
+    <color name="custom_switch_thumb_unchecked_night">#494948</color>
+
 </resources>

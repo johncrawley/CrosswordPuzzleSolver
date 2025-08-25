@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/panel_background</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="fragment_background">@color/fragment_background_night</item>
@@ -12,6 +13,20 @@
         <item name="button_layout_background_color">@color/fragment_background_night</item>
         <item name="button_layout_outline_color">@color/colorPrimaryDark</item>
         <item name="search_icon">@drawable/ic_search_night</item>
+        <item name="materialButtonStyle">@style/customMaterialButtonStyle</item>
+        <item name="materialSwitchStyle">@style/customSwitchStyle</item>
+    </style>
+
+
+    <style name="customMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/material_button_text_night</item>
+        <item name="backgroundColor">@color/material_button_background_night</item>
+        <item name="cornerRadius">15dp</item>
+    </style>
+
+    <style name="customSwitchStyle" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="trackTint">@color/custom_switch_track_night</item>
+        <item name="thumbTint">@color/custom_switch_thumb_night</item>
     </style>
 
 </resources>

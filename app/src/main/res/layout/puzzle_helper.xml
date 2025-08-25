@@ -41,6 +41,7 @@
                     android:layout_height="match_parent"
                     android:checked="false"
                     android:gravity="center_vertical"
+                    style="@style/customSwitchStyle"
                     android:paddingHorizontal="@dimen/switch_padding_horizontal"
                     android:paddingVertical="@dimen/switch_padding_vertical"
                     android:text="@string/allow_anagrams_switch_label" />
