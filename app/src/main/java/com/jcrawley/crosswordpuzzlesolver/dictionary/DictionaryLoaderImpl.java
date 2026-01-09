@@ -6,7 +6,6 @@ import com.jcrawley.crosswordpuzzlesolver.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,17 +41,16 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
 
     @Override
-    public void retrieveAllWords(){
-        if(wordsStr != null){
-            return;
-        }
+    public Dictionary loadDictionary(){
         initMaps();
         long startTime = System.currentTimeMillis();
         loadWordsFromFileToMaps();
         long duration = System.currentTimeMillis() - startTime;
         log("retrieveAllWords() time taken: " + duration);
         dictionaryLatch.countDown();
+        return new Dictionary(wordsStr, wordsMap, wordsByLengthMap, wordsList);
     }
+
 
     @Override
     public CountDownLatch getDictionaryLatch(){
@@ -161,7 +159,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     public void loadWordsIntoDb(Consumer<String> lineConsumer){
         log("Entered loadWordsIntoDB()");
         str = new StringBuilder();
-        InputStream is = context.getResources().openRawResource(R.raw.sorted_british_english);
+        var is = context.getResources().openRawResource(R.raw.sorted_british_english);
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line = br.readLine();
             while (line!= null){
