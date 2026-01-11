@@ -52,12 +52,6 @@ public class DictionaryHelperImpl implements DictionaryHelper{
 
 
     @Override
-    public void setWords(List<String> words) {
-
-    }
-
-
-    @Override
     public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView) {
         waitForDictionaryToLoad();
         ifNotSearching(()->{

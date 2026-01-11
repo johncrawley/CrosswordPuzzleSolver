@@ -22,6 +22,7 @@ import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
 import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
+import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryHelper;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.puzzle.PuzzleHelperFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.regex.RegexFragment;
@@ -182,6 +183,15 @@ public class FragmentUtils {
             return Optional.empty();
         }
         return mainActivity.getDictionaryService();
+    }
+
+
+    public static Optional<DictionaryHelper> getDictionaryHelper(Fragment fragment){
+        var mainActivity = (MainActivity) fragment.getActivity();
+        if(mainActivity == null){
+            return Optional.empty();
+        }
+        return Optional.of(mainActivity.getDictionaryHelper());
     }
 
 

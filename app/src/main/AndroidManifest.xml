@@ -9,17 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service
-            android:name=".DictionaryService"
-            android:enabled="true"
-            android:exported="false"
-            android:label="DictionaryService"
-            android:stopWithTask="true">
-            <intent-filter>
-                <action android:name="com.jcrawley.crosswordpuzzlesolver.DictionaryService" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
