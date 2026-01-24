@@ -172,6 +172,17 @@ public class FragmentUtils {
     }
 
 
+
+    public static DictionaryHelper getDictionaryHelper(Fragment fragment){
+        var mainActivity = (MainActivity)fragment.getActivity();
+        if(mainActivity == null){
+            return null;
+        }
+        return mainActivity.getDictionaryHelper();
+    }
+
+
+
     public static void searchForResults(Fragment fragment, View resultsView, Consumer<DictionaryService> dictionaryServiceConsumer){
         getDictionaryService(fragment).ifPresent(ds -> fadeOut(resultsView, ()-> dictionaryServiceConsumer.accept(ds)));
     }
@@ -186,7 +197,7 @@ public class FragmentUtils {
     }
 
 
-    public static Optional<DictionaryHelper> getDictionaryHelper(Fragment fragment){
+    public static Optional<DictionaryHelper> getDictionaryHelperOpt(Fragment fragment){
         var mainActivity = (MainActivity) fragment.getActivity();
         if(mainActivity == null){
             return Optional.empty();
