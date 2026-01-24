@@ -1,6 +1,8 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,9 +30,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupInsets();
         setupViewModel();
         initDictionaryHelper();
         setupFragmentsIf(savedInstanceState == null);
+    }
+
+
+    private void setupInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), (v, insets) -> {
+            var systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
     }
 
 
@@ -62,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         if(!isSavedStateNull){
             return;
         }
-        Fragment mainMenuFragment = new MainMenuFragment();
+        var mainMenuFragment = new MainMenuFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, mainMenuFragment)
                 .commit();
