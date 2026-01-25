@@ -3,7 +3,6 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.findWords;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 
 import android.content.Context;
@@ -20,14 +19,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
-import com.jcrawley.crosswordpuzzlesolver.MainActivity;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
-import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryHelper;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -117,24 +112,29 @@ public class FindWordsFragment extends Fragment implements WordListView {
             }
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             noResultsFoundTextView.setVisibility(View.GONE);
-            searchForMatch();
+            fadeOut(resultsList, this::runSearch);
             return true;
         });
     }
 
 
-    private void searchForMatch(){
-        var dictionaryHelper =  getDictionaryHelper(this);
+    private void runSearch(){
+        var input = getFormattedTextFrom(lettersEditText);
+        var requiredLetters = getFormattedTextFrom(requiredLettersEditText);
+        var dictionaryHelper = getDictionaryHelper(this);
         if(dictionaryHelper != null){
-            fadeOut(resultsList, ()-> runSearch(dictionaryHelper));
+            dictionaryHelper.findWords(input, requiredLetters, this);
         }
     }
 
 
-    private void runSearch(DictionaryHelper dictionaryHelper){
-        var input = lettersEditText.getText().toString().trim().toLowerCase();
-        var requiredLetters = requiredLettersEditText.getText().toString().trim().toLowerCase();
-        dictionaryHelper.findWords(input, requiredLetters, this);
+    private void log(String msg){
+        System.out.println("FindWordsFragment:" +  msg);
+    }
+
+
+    private String getFormattedTextFrom(EditText editText){
+        return editText.getText().toString().trim().toLowerCase();
     }
 
 

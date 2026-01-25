@@ -3,6 +3,8 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.puzzle;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 
@@ -136,38 +138,39 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private boolean onKeyDone(EditText editText){
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        var imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(imm == null){
             return false;
         }
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         if(!hasSearchStarted) {
             noResultsFoundView.setVisibility(View.GONE);
-            searchForMatches();
             startSearchingAnimation();
+            searchForMatches();
         }
         return true;
     }
 
-
     private void searchForMatches(){
-        searchForResults(this, resultsList, this::runSearch);
+        fadeOut(resultsList, this::runSearch);
     }
-
 
     private void startSearchingAnimation(){
 
     }
 
 
-    private void runSearch(DictionaryService dictionaryService){
+    private void runSearch(){
         hasSearchStarted = true;
         viewModel.inputText = lettersEditText.getText().toString().trim();
         if(viewModel.inputText.isEmpty()){
             return;
         }
-        String excludedText = excludedLettersEditText.getText().toString();
-        dictionaryService.runPuzzleHelperSearch(viewModel.inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
+        var excludedText = excludedLettersEditText.getText().toString();
+        var dictionaryHelper = getDictionaryHelper(this);
+        if(dictionaryHelper != null){
+            dictionaryHelper.runPuzzleHelperSearch(viewModel.inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
+        }
     }
 
 
