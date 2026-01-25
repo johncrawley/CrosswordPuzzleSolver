@@ -19,14 +19,10 @@ public class WordSearcher {
 
 
     public WordSearcher(List<String> wordsList, String wordsStr){
-        boolean isWordsStrNull = wordsStr == null;
-        log("entered WordSearcher, wordsStr is null: " + isWordsStrNull);
         this.wordsList = wordsList;
         this.wordsStr = wordsStr;
         setupBadCharacters();
-        log("WordSearcher() bad characters set up");
         foundWords = new HashSet<>();
-        log("Exiting WordSearcher()");
     }
 
     private void setupBadCharacters(){
@@ -35,18 +31,11 @@ public class WordSearcher {
 
 
     public List<String> searchFor(String searchText){
-        log("Entered searchFor("  + searchText + ")");
-        log("size of words list: " + wordsList.size());
         final String WORD_SEPARATOR = "\\b";
         expectedCharacters = searchText.length();
         String inputText = WORD_SEPARATOR + searchText + WORD_SEPARATOR;
         Pattern pattern = Pattern.compile(inputText);
         return getMatchingWords(pattern);
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ WordSearcher: " + msg);
     }
 
 

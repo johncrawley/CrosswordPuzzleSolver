@@ -1,6 +1,7 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.wordExists;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
 
 import android.content.Context;
@@ -58,9 +59,19 @@ public class WordExistsFragment  extends Fragment {
 
 
     private void searchForWord(String word){
-        getDictionaryService(this).ifPresent(ds -> fadeOut(statusTextView, ()-> {
-            showStatusMessage(word, ds.doesWordExist(word));
-        } ));
+        var dictionaryHelper = getDictionaryHelper(this);
+        if(dictionaryHelper != null){
+            fadeOut(statusTextView, ()-> search(word));
+        }
+    }
+
+
+    private void search(String word){
+        var dictionaryHelper = getDictionaryHelper(this);
+        if(dictionaryHelper != null){
+            var doesExist = dictionaryHelper.doesWordExist(word);
+            showStatusMessage(word, doesExist);
+        }
     }
 
 
@@ -72,6 +83,7 @@ public class WordExistsFragment  extends Fragment {
         viewModel.resultText = context.getString(messageId, word);
         setResultsText();
     }
+
 
     private void setResultsText(){
         if(!viewModel.resultText.isEmpty()){

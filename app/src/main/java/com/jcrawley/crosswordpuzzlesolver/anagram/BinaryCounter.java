@@ -41,23 +41,14 @@ public class BinaryCounter {
 
 
     public String getFlag(){
-        StringBuilder str = new StringBuilder();
+        var str = new StringBuilder();
         String binaryStr = Integer.toBinaryString(currentIndex);
         int numberOfZerosToPrefix = size - binaryStr.length();
         for(int i=0; i < numberOfZerosToPrefix; i++){
             str.append("0");
         }
-        String printableString = str.toString() + binaryStr;
-        log("getFlag() binStr for " + currentIndex
-                + " is: " + printableString
-                + " is at max Index: " + isIndexAtLimit
-                + "  maxIndexString: " + maxIndexString);
-        return printableString;
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ BinaryCounter: " + msg);
+        str.append(binaryStr);
+        return str.toString();
     }
 
 
