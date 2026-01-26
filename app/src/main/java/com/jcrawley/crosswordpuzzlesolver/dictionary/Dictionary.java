@@ -9,6 +9,4 @@ public record Dictionary(
         Map<String, Set<String>> wordsMap,
         Map<Integer, Map<String, Set<String>>> wordsByLengthMap,
         List<String> wordsList) {
-
-
 }

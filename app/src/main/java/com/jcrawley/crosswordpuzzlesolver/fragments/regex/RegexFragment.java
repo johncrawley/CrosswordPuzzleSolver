@@ -1,7 +1,8 @@
 package com.jcrawley.crosswordpuzzlesolver.fragments.regex;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
 
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 import com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils;
@@ -87,15 +87,19 @@ public class RegexFragment extends Fragment implements WordListView {
 
 
     private void searchForMatches(){
-        searchForResults(this, resultsList, this::runSearch);
+        fadeOut(resultsList, this::runSearch);
     }
 
 
-    private void runSearch(DictionaryService dictionaryService){
+    private void runSearch(){
         viewModel.inputText = lettersEditText.getText().toString().trim();
-        log("entered runSearch() inputText: " + viewModel.inputText);
-        dictionaryService.getResultsForPattern(viewModel.inputText, this);
+        var dictionaryHelper = getDictionaryHelper(this);
+        if(dictionaryHelper != null && dictionaryHelper.isNotCurrentlySearching()){
+            var results = dictionaryHelper.getResultsForPattern(viewModel.inputText, this);
+            setWords(results);
+        }
     }
+
 
     private void log(String msg){
         System.out.println("RegexFragment: " + msg);

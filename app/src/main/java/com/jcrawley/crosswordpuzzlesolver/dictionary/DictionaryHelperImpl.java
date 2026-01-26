@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -67,12 +68,30 @@ public class DictionaryHelperImpl implements DictionaryHelper{
 
 
     @Override
-    public void getResultsForPattern(String pattern, WordListView wordListView) {
+    public List<String> runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams) {
         waitForDictionaryToLoad();
-        ifNotSearching(()->{
-            List<String> results = wordSearcher.searchForPattern(pattern);
-            wordListView.setWords(results);
-        });
+        isSearchRunning.set(true);
+        var formattedInput = inputText.trim().toLowerCase();
+        var results = formattedInput.isEmpty() ? Collections.emptyList() : getPuzzleHelperResults(formattedInput, excludedLettersStr, isUsingAnagrams);
+        isSearchRunning.set(false);
+        return results;
+    }
+
+
+    private List<String> getPuzzleHelperResults(String formattedInput, String excludedLettersStr, boolean isUsingAnagrams){
+        var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
+        var paredDownResults = excludeWordsWithDisallowedLetters(initialResults, excludedLettersStr);
+        return new ArrayList<>(paredDownResults);
+    }
+
+
+    @Override
+    public List<String> getResultsForPattern(String pattern, WordListView wordListView) {
+        waitForDictionaryToLoad();
+        isSearchRunning.set(true);
+        var results = wordSearcher.searchForPattern(pattern);
+        isSearchRunning.set(false);
+        return results;
     }
 
 
@@ -135,6 +154,11 @@ public class DictionaryHelperImpl implements DictionaryHelper{
 
     }
 
+    @Override
+    public boolean isNotCurrentlySearching(){
+        return !isSearchRunning.get();
+    }
+
 
     private void ifNotSearching(Runnable runnable) {
         if(isSearchRunning.get()){
@@ -147,6 +171,7 @@ public class DictionaryHelperImpl implements DictionaryHelper{
         };
         executor.submit(task);
     }
+
 
     private void handleException(Exception e){
         var message = e.getMessage();
