@@ -2,7 +2,6 @@ package com.jcrawley.crosswordpuzzlesolver.fragments.wordExists;
 
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryService;
 
 import android.content.Context;
 import android.os.Bundle;

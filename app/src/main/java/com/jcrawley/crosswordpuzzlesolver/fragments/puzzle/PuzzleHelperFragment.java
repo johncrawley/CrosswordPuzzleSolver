@@ -5,7 +5,6 @@ import static android.view.View.VISIBLE;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeIn;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
-import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.searchForResults;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 
 import android.content.Context;
@@ -24,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 
@@ -168,8 +166,9 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         }
         var excludedText = excludedLettersEditText.getText().toString();
         var dictionaryHelper = getDictionaryHelper(this);
-        if(dictionaryHelper != null){
-            dictionaryHelper.runPuzzleHelperSearch(viewModel.inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
+        if(dictionaryHelper != null && dictionaryHelper.isNotCurrentlySearching()){
+           var results = dictionaryHelper.runPuzzleHelperSearch(viewModel.inputText, excludedText, viewModel.isUsingAnagramsForCrossword, this);
+           setWords(results);
         }
     }
 

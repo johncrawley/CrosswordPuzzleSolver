@@ -18,10 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.jcrawley.crosswordpuzzlesolver.DictionaryService;
 import com.jcrawley.crosswordpuzzlesolver.MainActivity;
-import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
-import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryHelper;
 import com.jcrawley.crosswordpuzzlesolver.fragments.findWords.FindWordsFragment;
 import com.jcrawley.crosswordpuzzlesolver.fragments.puzzle.PuzzleHelperFragment;
@@ -31,9 +28,7 @@ import com.jcrawley.crosswordpuzzlesolver.fragments.wordExists.WordExistsFragmen
 import com.jcrawley.crosswordpuzzlesolver.R;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class FragmentUtils {
 
@@ -129,15 +124,6 @@ public class FragmentUtils {
     }
 
 
-    public static Optional<AnagramFinder> getAnagramFinder(Fragment fragment){
-        return getDictionaryObj(DictionaryService::getAnagramFinder, fragment);
-    }
-
-
-    public static Optional<WordSearcher> getWordSearcher(Fragment fragment) {
-        return getDictionaryObj(DictionaryService::getWordSearcher, fragment);
-    }
-
     public static void fadeOut(View view, Runnable whenFinished){
         AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
         anim.setDuration(400);
@@ -182,46 +168,12 @@ public class FragmentUtils {
     }
 
 
-
-    public static void searchForResults(Fragment fragment, View resultsView, Consumer<DictionaryService> dictionaryServiceConsumer){
-        getDictionaryService(fragment).ifPresent(ds -> fadeOut(resultsView, ()-> dictionaryServiceConsumer.accept(ds)));
-    }
-
-
-    public static Optional<DictionaryService> getDictionaryService(Fragment fragment){
-        MainActivity mainActivity = (MainActivity) fragment.getActivity();
-        if(mainActivity == null){
-            return Optional.empty();
-        }
-        return mainActivity.getDictionaryService();
-    }
-
-
-    public static Optional<DictionaryHelper> getDictionaryHelperOpt(Fragment fragment){
-        var mainActivity = (MainActivity) fragment.getActivity();
-        if(mainActivity == null){
-            return Optional.empty();
-        }
-        return Optional.of(mainActivity.getDictionaryHelper());
-    }
-
-
     public static void fadeIn(View view){
         AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setStartOffset(400);
         anim.setDuration(400);
         view.setVisibility(View.VISIBLE);
         view.startAnimation(anim);
-    }
-
-
-    public static <T> Optional<T> getDictionaryObj(Function<DictionaryService, T> getter, Fragment fragment){
-        MainActivity mainActivity = (MainActivity) fragment.getActivity();
-        if(mainActivity == null){
-            return Optional.empty();
-        }
-        var dictionaryService = mainActivity.getDictionaryService();
-        return dictionaryService.map(getter);
     }
 
 

@@ -46,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public Optional<DictionaryService> getDictionaryService(){
-        return Optional.ofNullable(null);
-    }
-
-
     public DictionaryHelper getDictionaryHelper(){
         return viewModel.dictionaryHelper;
     }

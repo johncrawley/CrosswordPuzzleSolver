@@ -51,28 +51,12 @@ public class DictionaryHelperImpl implements DictionaryHelper{
         dictionaryLatch.countDown();
     }
 
-
     @Override
-    public void runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView) {
-        waitForDictionaryToLoad();
-        ifNotSearching(()->{
-            String formattedInput = inputText.trim().toLowerCase();
-            if (formattedInput.isEmpty()) {
-                wordListView.setWords(Collections.emptyList());
-            }
-            var initialResults = getInitialResultsFor(formattedInput, isUsingAnagrams);
-            List<String> results = new ArrayList<>(excludeWordsWithDisallowedLetters(initialResults, excludedLettersStr));
-            wordListView.setWords(results);
-        });
-    }
-
-
-    @Override
-    public List<String> runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams) {
+    public List<String> runPuzzleHelperSearch(String inputText, String excludedLettersStr, boolean isUsingAnagrams, WordListView wordListView) {
         waitForDictionaryToLoad();
         isSearchRunning.set(true);
         var formattedInput = inputText.trim().toLowerCase();
-        var results = formattedInput.isEmpty() ? Collections.emptyList() : getPuzzleHelperResults(formattedInput, excludedLettersStr, isUsingAnagrams);
+        List<String> results = formattedInput.isEmpty() ? Collections.emptyList() : getPuzzleHelperResults(formattedInput, excludedLettersStr, isUsingAnagrams);
         isSearchRunning.set(false);
         return results;
     }
