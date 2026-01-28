@@ -6,6 +6,7 @@ import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.f
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.KeyboardUtils.setupKeyAction;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +15,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +26,8 @@ import com.jcrawley.crosswordpuzzlesolver.R;
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,7 +41,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private View noResultsFoundView;
     private PuzzleHelperViewModel viewModel;
     private ListView resultsList;
-    private boolean hasSearchStarted = false;
+    private final AtomicBoolean hasSearchStarted = new AtomicBoolean(false);
     private ImageButton searchButton;
 
     public PuzzleHelperFragment() {
@@ -64,9 +65,9 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     private void setupViews(View parentView){
         noResultsFoundView = parentView.findViewById(R.id.noCrosswordResultsFoundText);
         lettersEditText = parentView.findViewById(R.id.wordInputEditText);
-        setupKeyAction(lettersEditText, this::setVisibilityOnSearchButton);
+        setupKeyAction(lettersEditText, this::setVisibilityOnSearchButton, this::onKeyDone, hasSearchStarted);
         excludedLettersEditText = parentView.findViewById(R.id.excludeLettersEditText);
-        setupKeyAction(excludedLettersEditText);
+        setupKeyAction(excludedLettersEditText, this::onKeyDone, hasSearchStarted);
         resultsFoundTextView = parentView.findViewById(R.id.crosswordResultsCountTextView);
         listDivider = parentView.findViewById(R.id.listDivider);
         setupSwitch(parentView);
@@ -93,25 +94,6 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
         noResultsFoundView.setVisibility(View.GONE);
     }
 
-    private void setupKeyAction(final EditText editText){
-       setupKeyAction(editText, null);
-    }
-
-
-    private void setupKeyAction(final EditText editText, Runnable onNormalKeyInput){
-        editText.setOnEditorActionListener((v, actionId, event) -> {
-            if(hasSearchStarted){
-                return false;
-            }
-            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                onKeyDone(editText);
-            }
-            else if(onNormalKeyInput != null){
-                onNormalKeyInput.run();
-            }
-            return false;
-        });
-    }
 
 
     private void setVisibilityOnSearchButton(){
@@ -135,19 +117,12 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     }
 
 
-    private boolean onKeyDone(EditText editText){
-        var imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm == null){
-            return false;
-        }
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-        if(!hasSearchStarted) {
-            noResultsFoundView.setVisibility(View.GONE);
-            startSearchingAnimation();
-            searchForMatches();
-        }
-        return true;
+    private void onKeyDone(){
+        noResultsFoundView.setVisibility(View.GONE);
+        startSearchingAnimation();
+        searchForMatches();
     }
+
 
     private void searchForMatches(){
         fadeOut(resultsList, this::runSearch);
@@ -159,7 +134,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void runSearch(){
-        hasSearchStarted = true;
+        hasSearchStarted.set(true);
         viewModel.inputText = lettersEditText.getText().toString().trim();
         if(viewModel.inputText.isEmpty()){
             return;
@@ -199,7 +174,7 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
             setResultsText();
             updateVisibilityOnListDivider();
             fadeIn(resultsList);
-            hasSearchStarted = false;
+            hasSearchStarted.set(false);
         });
     }
 

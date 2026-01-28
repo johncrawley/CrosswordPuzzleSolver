@@ -4,6 +4,8 @@ import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.f
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.KeyboardUtils.getInputMethodManager;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.KeyboardUtils.hideKeyboard;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -106,16 +108,18 @@ public class FindWordsFragment extends Fragment implements WordListView {
             if (actionId != EditorInfo.IME_ACTION_DONE && actionId != EditorInfo.IME_ACTION_SEARCH) {
                 return false;
             }
-            var imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(imm == null){
-                return false;
+            var context = getContext();
+            hideKeyboard(context, editText);;
+            if(getInputMethodManager(context) != null){
+                noResultsFoundTextView.setVisibility(View.GONE);
+                fadeOut(resultsList, this::runSearch);
+                return true;
             }
-            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-            noResultsFoundTextView.setVisibility(View.GONE);
-            fadeOut(resultsList, this::runSearch);
-            return true;
+            return false;
         });
     }
+
+
 
 
     private void runSearch(){
