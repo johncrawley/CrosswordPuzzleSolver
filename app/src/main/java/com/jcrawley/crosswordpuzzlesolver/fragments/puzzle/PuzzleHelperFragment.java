@@ -6,6 +6,7 @@ import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.f
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.fadeOut;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.KeyboardUtils.hideKeyboard;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.KeyboardUtils.setupKeyAction;
 
 import android.content.Context;
@@ -95,7 +96,6 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
     }
 
 
-
     private void setVisibilityOnSearchButton(){
         var input = lettersEditText.getText().toString();
         if(input.isEmpty()){
@@ -125,8 +125,10 @@ public class PuzzleHelperFragment extends Fragment implements WordListView {
 
 
     private void searchForMatches(){
+        hideKeyboard(context, lettersEditText);
         fadeOut(resultsList, this::runSearch);
     }
+
 
     private void startSearchingAnimation(){
 

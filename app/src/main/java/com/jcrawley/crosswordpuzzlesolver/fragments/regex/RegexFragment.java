@@ -5,6 +5,7 @@ import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.f
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.getDictionaryHelper;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setResultsCountText;
 import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.FragmentUtils.setupKeyboardInput;
+import static com.jcrawley.crosswordpuzzlesolver.fragments.utils.KeyboardUtils.hideKeyboard;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -87,6 +88,7 @@ public class RegexFragment extends Fragment implements WordListView {
 
 
     private void searchForMatches(){
+        hideKeyboard(getContext(), lettersEditText);
         fadeOut(resultsList, this::runSearch);
     }
 
