@@ -43,10 +43,7 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
     @Override
     public Dictionary loadDictionary(){
         initMaps();
-        long startTime = System.currentTimeMillis();
         loadWordsFromFileToMaps();
-        long duration = System.currentTimeMillis() - startTime;
-        log("retrieveAllWords() time taken: " + duration);
         dictionaryLatch.countDown();
         return new Dictionary(wordsStr, wordsMap, wordsByLengthMap, wordsList);
     }
@@ -107,7 +104,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
 
     private void loadWordsFromFileToMaps(){
-        log("entered loadWordsFromFileToMaps()");
         str = new StringBuilder();
         var is = context.getResources().openRawResource(R.raw.sorted_british_english_2);
         try(var br = new BufferedReader(new InputStreamReader(is))) {
@@ -121,14 +117,9 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
             }
             is.close();
         }catch (IOException e){
-            e.printStackTrace();
+            printError(e.getMessage());
         }
         wordsStr = str.toString();
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ DictionaryLoaderImpl: " + msg);
     }
 
 
@@ -157,7 +148,6 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
 
     @Override
     public void loadWordsIntoDb(Consumer<String> lineConsumer){
-        log("Entered loadWordsIntoDB()");
         str = new StringBuilder();
         var is = context.getResources().openRawResource(R.raw.sorted_british_english);
         try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -168,10 +158,13 @@ public class DictionaryLoaderImpl implements DictionaryLoader{
                 line =br.readLine();
             }
         }catch (IOException e){
-
-            e.printStackTrace();
+            printError(e.getMessage());
         }
         wordsStr = str.toString();
+    }
+
+    private void printError(String msg){
+        System.out.println("ERRROR: " + msg);
     }
 
 }

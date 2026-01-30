@@ -10,6 +10,18 @@
         android:id="@+id/copyWordButton"
         android:text="@string/button_text_copy_word"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/copyAllWordsButton"
+        android:text="@string/button_text_copy_all_words"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/findOnWebsiteButton"
+        android:text="@string/button_find_word_on_website"/>
+
 
 
 </LinearLayout>

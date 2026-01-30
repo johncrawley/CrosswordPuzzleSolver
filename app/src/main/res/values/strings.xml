@@ -32,6 +32,8 @@
     <string name="toast_copied_all_words_to_clipboard">Copied all words to clipboard</string>
 
     <string name="button_text_copy_word">Copy Word</string>
+    <string name="button_text_copy_all_words">Copy All</string>
+    <string name="button_find_word_on_website">Search on Dictionary.com</string>
 
     <string name="regex_guide_title">Regular Expressions</string>
 </resources>
