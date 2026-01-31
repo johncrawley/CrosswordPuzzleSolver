@@ -1,6 +1,6 @@
 package com.jcrawley.crosswordpuzzlesolver;
 
-import com.jcrawley.crosswordpuzzlesolver.anagram.BinaryCounter;
+import com.jcrawley.crosswordpuzzlesolver.dictionary.anagram.BinaryCounter;
 
 
 public class BinaryCounterTest {

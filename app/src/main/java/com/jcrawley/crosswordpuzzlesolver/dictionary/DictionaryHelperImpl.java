@@ -2,14 +2,13 @@ package com.jcrawley.crosswordpuzzlesolver.dictionary;
 
 import com.jcrawley.crosswordpuzzlesolver.WordListView;
 import com.jcrawley.crosswordpuzzlesolver.WordSearcher;
-import com.jcrawley.crosswordpuzzlesolver.anagram.AnagramFinder;
+import com.jcrawley.crosswordpuzzlesolver.dictionary.anagram.AnagramFinder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

@@ -1,4 +1,4 @@
-package com.jcrawley.crosswordpuzzlesolver.anagram;
+package com.jcrawley.crosswordpuzzlesolver.dictionary.anagram;
 
 
 public class BinaryCounter {

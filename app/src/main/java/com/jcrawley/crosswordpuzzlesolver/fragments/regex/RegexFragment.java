@@ -71,6 +71,10 @@ public class RegexFragment extends Fragment implements WordListView {
         resultsList = parentView.findViewById(R.id.findWordsList);
         resultsList.setAdapter(arrayAdapter);
         resultsList.setEmptyView(noResultsFoundView);
+        resultsList.setOnLongClickListener(view -> {
+            onLongClick((TextView)view);
+            return false;
+        });
         noResultsFoundView.setVisibility(View.GONE);
     }
 
@@ -80,6 +84,11 @@ public class RegexFragment extends Fragment implements WordListView {
         searchButton.setOnClickListener(v -> searchForMatches());
     }
 
+
+    private void onLongClick(TextView listItem){
+       var word = listItem.getText().toString().trim();
+       FragmentUtils.loadWordOptionsDialog(this);
+    }
 
     private void setupRegexGuideButton(View parentView){
         ImageButton regexGuideButton = parentView.findViewById(R.id.guideButton);
