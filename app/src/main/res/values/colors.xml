@@ -25,11 +25,18 @@
     <color name="main_menu_background_night">#000</color>
     <color name="fragment_background_night">#000</color>
     <color name="color_secondary_dark">#A2A198</color>
-    <color name="material_button_text_night">#B3B2B1</color>
-    <color name="material_button_background_night">#4E4602</color>
+    <color name="material_button_text_night">#D3D2D1</color>
+    <color name="material_button_background_night">#2E2602</color>
     <color name="custom_switch_track_checked_night">#999898</color>
     <color name="custom_switch_track_unchecked_night">#6F6F6F</color>
     <color name="custom_switch_thumb_checked_night">#AB9B0D</color>
     <color name="custom_switch_thumb_unchecked_night">#494948</color>
+
+    <color name="test_green">#0f0</color>
+    <color name="test_red">#f00</color>
+    <color name="test_blue">#00f</color>
+    <color name="test_yellow">#ff0</color>
+
+    <color name="window_background_dark">#000</color>
 
 </resources>
