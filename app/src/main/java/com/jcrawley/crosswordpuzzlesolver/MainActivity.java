@@ -3,22 +3,13 @@ package com.jcrawley.crosswordpuzzlesolver;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryHelper;
 import com.jcrawley.crosswordpuzzlesolver.dictionary.DictionaryLoaderImpl;
 import com.jcrawley.crosswordpuzzlesolver.fragments.MainMenuFragment;
 import com.jcrawley.crosswordpuzzlesolver.viewModel.MainViewModel;
-
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class MainActivity extends AppCompatActivity {
