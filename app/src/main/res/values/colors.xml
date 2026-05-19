@@ -25,7 +25,7 @@
     <color name="main_menu_background_night">#000</color>
     <color name="fragment_background_night">#000</color>
     <color name="color_secondary_dark">#A2A198</color>
-    <color name="material_button_text_night">#D3D2D1</color>
+    <color name="material_button_text_night">#F6F6F6</color>
     <color name="material_button_background_night">#2E2602</color>
     <color name="custom_switch_track_checked_night">#999898</color>
     <color name="custom_switch_track_unchecked_night">#6F6F6F</color>

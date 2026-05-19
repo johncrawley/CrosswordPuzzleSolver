@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         setupInsets();
         setupViewModel();
         initDictionaryHelper();
-        setupFragmentsIf(savedInstanceState == null);
     }
 
 
@@ -57,16 +56,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
 
-
-    private void setupFragmentsIf(boolean isSavedStateNull) {
-        if(!isSavedStateNull){
-            return;
-        }
-        var mainMenuFragment = new MainMenuFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, mainMenuFragment)
-                .commit();
-    }
 
     private void log(String msg){
         System.out.println("^^^ MainActivity: " + msg);
